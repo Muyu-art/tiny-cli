@@ -24,7 +24,7 @@ export default async function () {
   if (toolkitName) {
     try {
       const pkgPath = path.join(home.getModulesPath(), toolkitName, 'package.json');
-      log.debug(`${toolkitName} pacage.json path = ${pkgPath}`);
+      log.debug(`${toolkitName} package.json path = ${pkgPath}`);
       const pkg = require(pkgPath);
       console.log(chalk.magenta(`${toolkitName} v${pkg.version}`));
     } catch (e) {
