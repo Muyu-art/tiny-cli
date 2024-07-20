@@ -14,7 +14,9 @@ export interface ITreeNodeData {
   // 子节点
   children?: ITreeNodeData[];
   // 链接
-  url?: string;
+  url: string;
+  //组件
+  component: string;
 }
 
 interface MenuMap {
@@ -27,6 +29,7 @@ const toNode = (menu: Menu): ITreeNodeData => {
     id: menu.id,
     children: [],
     url: menu.path,
+    component: menu.component,
   };
 };
 
