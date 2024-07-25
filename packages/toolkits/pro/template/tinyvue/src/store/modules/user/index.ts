@@ -1,20 +1,23 @@
-import { defineStore } from 'pinia';
+import {defineStore} from 'pinia';
 import {
   login as userLogin,
-  loginMail as userLoginMail,
-  getUserInfo,
-  updateUserInfo,
+  logout as userLogout,
   LoginData,
   LoginDataMail,
+  loginMail as userLoginMail,
+  updateUserInfo,
+  getUserInfo,
+  getAllUser,
 } from '@/api/user';
-import { setToken, clearToken } from '@/utils/auth';
-import { removeRouteListener } from '@/utils/route-listener';
-import { UserState, UserInfo } from './types';
+import {clearToken, getToken, setToken} from '@/utils/auth';
+import {removeRouteListener} from '@/utils/route-listener';
+import {UserInfo, UserState} from './types';
 
 const useUserStore = defineStore('user', {
   state: (): UserState => ({
-    userId: '10000',
-    username: 'admin',
+    id: '10000',
+    name: 'admin',
+    email: 'admin@no-reply.com',
     department: 'Tiny-Vue-Pro',
     employeeType: 'social recruitment',
     job: 'Front end',
@@ -66,12 +69,6 @@ const useUserStore = defineStore('user', {
       this.filterType = [];
     },
 
-    // Get user's information
-    async info() {
-      const res = await getUserInfo();
-      this.setInfo(res.data);
-    },
-
     async updateInfo(data: UserInfo) {
       const res = await updateUserInfo(data);
       this.setInfo(res.data);
@@ -81,8 +78,17 @@ const useUserStore = defineStore('user', {
     async login(loginForm: LoginData) {
       try {
         const res = await userLogin(loginForm);
-        const { token, userInfo } = res.data;
+        const { token } = res.data;
         setToken(token);
+        const userRes = await getUserInfo(loginForm.email)
+        const userInfo = {
+          id: userRes.data.id,
+          name:userRes.data.name,
+          role:userRes.data.role[0].name,
+          createTime:userRes.data.createTime,
+          updateTime:userRes.data.updateTime,
+          email:userRes.data.email,
+        }
         this.setInfo(userInfo);
       } catch (err) {
         clearToken();
@@ -102,6 +108,10 @@ const useUserStore = defineStore('user', {
 
     // Logout
     async logout() {
+      const data = {
+        token:getToken()
+      }
+      await userLogout(data);
       this.resetInfo();
       clearToken();
       removeRouteListener();
