@@ -4,7 +4,7 @@ export class CreateUserDto {
   @IsNotEmpty({
     message: '用户名不能为空',
   })
-  username: string;
+  name: string;
   @IsNotEmpty({
     message: '邮箱不能为空',
   })
@@ -14,4 +14,13 @@ export class CreateUserDto {
   })
   password: string;
   roleIds: number[] = [];
+  department?: string;
+  employeeType?: string;
+  probationStart?: string;
+  probationEnd?: string;
+  probationDuration?: string;
+  protocolStart?: string;
+  protocolEnd?: string;
+  address?: string;
+  status?: number;
 }

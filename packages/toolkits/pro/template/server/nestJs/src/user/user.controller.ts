@@ -13,7 +13,9 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Permission } from '../public/permission.decorator';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PaginationQueryDto } from './dto/pagination-query.dto'
+import { PaginationQueryDto } from './dto/pagination-query.dto';
+import {UpdatePwdAdminDto} from "./dto/update-pwd-admin.dto";
+import {UpdatePwdUserDto} from "./dto/update-pwd-user.dto";
 
 @Controller('user')
 export class UserController {
@@ -35,7 +37,7 @@ export class UserController {
   @Patch('/update')
   @Permission('user::update')
   async UpdateUser(@Body() body: UpdateUserDto) {
-    return this.userService.updateUserPwd(body);
+    return this.userService.updateUserInfo(body);
   }
   @Get()
   @Permission('user::query')
@@ -43,5 +45,17 @@ export class UserController {
     @Query() paginationQuery: PaginationQueryDto,
   ) {
     return this.userService.getAllUser(paginationQuery);
+  }
+
+  @Patch('/admin/updatePwd')
+  @Permission('user::password::force-update')
+  async updatePwdAdmin(@Body() body: UpdatePwdAdminDto) {
+    return this.userService.updatePwdAdmin(body);
+  }
+
+  @Patch('/updatePwd')
+  @Permission('user::update')
+  async updatePwdUser(@Body() body: UpdatePwdUserDto) {
+    return this.userService.updatePwdUser(body);
   }
 }

@@ -50,8 +50,8 @@ export function logout(data: LogoutData) {
 }
 
 // 获取全部用户
-export function getAllUser() {
-  return axios.get<UserInfo>(`/api/user`);
+export function getAllUser(page?: number, limit?: number) {
+  return axios.get<UserInfo>(`/api/user?page=${page}&limit=${limit}`);
 }
 
 // 获取单个用户
@@ -59,18 +59,27 @@ export function getUserInfo(email: string) {
   return axios.get<UserInfo>(`/api/user/info/${email}`);
 }
 
-export function delUser(email: string) {
+export function deleteUser(email: string) {
   return axios.delete<UserInfo>(`/api/user/${email}`);
 }
 
-export function updateUserInfo(data: UserInfo) {
-  return axios.put<UserInfo>(`/api/user/userInfo`, data);
+export function updateUserInfo(data: any) {
+  return axios.patch('/api/user/update', data);
 }
 
 export function getUserData(data?: UserData) {
   return axios.post<UserRes>('/api/user/data', data);
 }
 
-export function registerUser(data: LoginData) {
-  return axios.post<UserInfo>('/api/user/register', data);
+export function registerUser(data: any) {
+  return axios.post<UserInfo>('/api/user/reg', data);
 }
+
+export function updatePwdAdmin(data: any) {
+  return axios.patch('/api/user/admin/updatePwd', data);
+}
+
+export function updatePwdUser(data: any) {
+  return axios.patch('/api/user/updatePwd', data);
+}
+
