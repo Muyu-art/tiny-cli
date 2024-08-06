@@ -4,22 +4,27 @@ import {
   Post,
   Body,
   Patch,
-  Req,
-  Delete,
+  Query,
+  Delete, Param,
 } from '@nestjs/common';
 import { MenuService } from './menu.service';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { Permission } from '../public/permission.decorator';
 import { UpdateMenuDto } from './dto/update-menu.dto';
-import { DeleteMenuDto } from './dto/delete-menu.dto';
 
 @Controller('menu')
 export class MenuController {
   constructor(private readonly menuService: MenuService) {}
 
+  @Get('/role/:email')
+  async getMenus(@Param('email') email: string) {
+    return this.menuService.findRoleMenu(email);
+  }
+
   @Get()
-  async getMenus(@Req() req) {
-    return this.menuService.findAll(req.user);
+  @Permission('menu::query')
+  async getAllMenus() {
+    return this.menuService.findAllMenu();
   }
 
   @Post()
@@ -36,7 +41,7 @@ export class MenuController {
 
   @Delete()
   @Permission('menu::remove')
-  async deleteMenu(@Body() dto: DeleteMenuDto) {
-    return this.menuService.deleteMenu(dto);
+  async deleteMenu(@Query('id') id: number, @Query('parentId') parentId: number) {
+    return this.menuService.deleteMenu(id, parentId);
   }
 }

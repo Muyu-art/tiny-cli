@@ -4,7 +4,6 @@ import { Menu, User } from '@app/models';
 import { Repository } from 'typeorm';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
-import { DeleteMenuDto } from './dto/delete-menu.dto';
 
 export interface ITreeNodeData {
   // node-key='id' 设置节点的唯一标识
@@ -17,6 +16,14 @@ export interface ITreeNodeData {
   url: string;
   //组件
   component: string;
+  //图标
+  icon: string;
+  //类型
+  menuType: string;
+  //父节点
+  parentId: number;
+  //排序
+  order: number;
 }
 
 interface MenuMap {
@@ -30,6 +37,10 @@ const toNode = (menu: Menu): ITreeNodeData => {
     children: [],
     url: menu.path,
     component: menu.component,
+    icon: menu.icon,
+    menuType: menu.menuType,
+    parentId: menu.parentId,
+    order: menu.order,
   };
 };
 
@@ -58,13 +69,13 @@ export class MenuService {
     @InjectRepository(Menu)
     private menu: Repository<Menu>
   ) {}
-  async findAll(user: User) {
+  async findRoleMenu(email: string) {
     const userInfo = await this.user
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.role', 'role')
       .leftJoinAndSelect('role.menus', 'menus')
       .where({
-        email: user.email,
+        email: email,
       })
       .orderBy('menus.order', 'ASC')
       .getOne();
@@ -75,6 +86,12 @@ export class MenuService {
     });
     return convertToTree(menus);
   }
+
+  async findAllMenu(){
+    const menu = this.menu.find();
+    return convertToTree(await menu)
+  }
+
   async createMenu(dto: CreateMenuDto) {
     const {
       order,
@@ -107,13 +124,23 @@ export class MenuService {
     });
     return true;
   }
-  async deleteMenu(dto: DeleteMenuDto) {
+  async deleteMenu(id: number, parentId: number) {
     const menu = this.menu.findOne({
       where: {
-        id: dto.id,
-        name: dto.name,
+        id: id,
       },
     });
+    const allMenu = await this.menu.find();
+    for (const tmp of allMenu){
+      if(Number(tmp.parentId) === Number(id)){
+        if(Number(parentId) === -1){
+          tmp.parentId = null;
+        }else {
+          tmp.parentId = parentId;
+        }
+        await this.updateMenu(tmp)
+      }
+    }
     return this.menu.remove(await menu);
   }
 }

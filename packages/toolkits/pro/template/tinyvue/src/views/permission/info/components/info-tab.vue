@@ -2,7 +2,7 @@
   <div class="tiny-fullscreen-scroll">
     <div class="tiny-fullscreen-wrapper">
       <div class="permission-add-btn">
-        <tiny-button type="primary" @click="handleAddPermission">添加权限</tiny-button>
+        <tiny-button type="primary" @click="handleAddPermission">{{ $t('permissionInfo.modal.title.add') }}</tiny-button>
       </div>
       <div class="table">
         <tiny-grid ref="expandGrid"
@@ -54,7 +54,7 @@
       show-header
       show-footer
       mask-closable="true"
-      height="350"
+      height="auto"
       width="600"
       :title="$t('permissionInfo.modal.title.update')"
     >
@@ -114,7 +114,7 @@
       show-header
       show-footer
       mask-closable="true"
-      height="350"
+      height="auto"
       width="600"
       :title="$t('permissionInfo.modal.title.add')"
     >
@@ -237,6 +237,7 @@ async function handleDelete (id: string){
     });
     state.isPermissionUpdate = false;
     state.permissionUpdData = {} as any;
+    await fetchData();
   } catch (error) {
     if (error.response && error.response.data) {
       const errorMessage = error.response.data.message || '未知错误';
@@ -273,6 +274,7 @@ async function handlePermissionUpdateSubmit(){
     });
     state.isPermissionUpdate = false;
     state.permissionUpdData = {} as any;
+    await fetchData();
   } catch (error) {
     if (error.response && error.response.data) {
       const errorMessage = error.response.data.message || '未知错误';
@@ -291,7 +293,6 @@ function handleAddPermission() {
 async function handlePermissionAddSubmit() {
   let data = state.permissionAddData;
   let newTemp = {
-    id: data.id,
     name: data.name,
     desc: data.desc,
   };
@@ -303,6 +304,7 @@ async function handlePermissionAddSubmit() {
     });
     state.isPermissionAdd = false;
     state.permissionAddData = {} as any;
+    await fetchData();
   } catch (error) {
     if (error.response && error.response.data) {
       const errorMessage = error.response.data.message || '未知错误';

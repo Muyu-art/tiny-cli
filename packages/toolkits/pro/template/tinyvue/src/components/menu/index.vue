@@ -35,6 +35,8 @@
     IconApplication,
     IconGroup,
     IconFolderOpened,
+    IconActivation,
+    IconGrade,
   } from '@opentiny/vue-icon';
   import { TreeMenu as tinyTreeMenu } from '@opentiny/vue';
   import router from '@/router';
@@ -52,6 +54,8 @@
   const iconApplication = IconApplication();
   const iconFolderOpened = IconFolderOpened();
   const iconGroup = IconGroup();
+  const iconActivation = IconActivation();
+  const iconGrade = IconGrade();
   const tree = ref();
   const expandeArr = ref();
   const routerTitle = [
@@ -230,14 +234,26 @@
       bold: 'title',
     },
     {
-      value: 'PermissionSetting',
-      name: 'menu.permission.setting',
+      value: 'Role',
+      name: 'menu.role',
+      icon: iconActivation,
+      bold: 'main-title',
+    },
+    {
+      value: 'AllRole',
+      name: 'menu.role.info',
       icon: null,
       bold: 'title',
     },
     {
-      value: 'PermissionAdd',
-      name: 'menu.permission.permissionAdd',
+      value: 'Menu',
+      name: 'menu.menu',
+      icon: iconGrade,
+      bold: 'main-title',
+    },
+    {
+      value: 'AllMenu',
+      name: 'menu.menu.info',
       icon: null,
       bold: 'title',
     },
@@ -311,6 +327,9 @@
       'User',
       'Cloud',
       'UserManager',
+      'Permission',
+      'Role',
+      'Menu',
     ];
     if (filter.indexOf(data.id) === -1) {
       router.push({ name: data.id });
