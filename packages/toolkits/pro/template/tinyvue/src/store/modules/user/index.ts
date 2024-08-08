@@ -9,9 +9,13 @@ import {
   getUserInfo,
   getAllUser,
 } from '@/api/user';
+import {getRoleMenu} from "@/api/menu";
 import {clearToken, getToken, setToken} from '@/utils/auth';
 import {removeRouteListener} from '@/utils/route-listener';
+import {useRouter} from "vue-router";
 import {UserInfo, UserState} from './types';
+
+const router = useRouter();
 
 const useUserStore = defineStore('user', {
   state: (): UserState => ({
