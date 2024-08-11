@@ -80,9 +80,9 @@ import {
   Row as TinyRow,
   Col as TinyCol,
 } from '@opentiny/vue';
-import { useUserInfoStore } from '@/stores';
+import { useUserStore } from '@/stores/user';
 
-const userStore = useUserInfoStore();
+const userStore = useUserStore();
 </script>
 
 <style scoped lang="less">

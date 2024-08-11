@@ -6,16 +6,26 @@ export interface LoginData {
   password: string;
 }
 
-export function login(data: LoginData){
-  return axios.post<string>('/api/auth/login', data)
+export interface LogoutData {
+  token: string | null;
 }
 
-export function getUserInfo(email: string){
-  return axios.get<User>('/api/user', {
-    params:{
-      email
-    }
-  })
+export interface LoginRes {
+  token: string;
+  userInfo: User;
+}
+
+export function login(data: LoginData){
+  return axios.post<LoginRes>('/api/auth/login', data)
+}
+
+export function logout(data: LogoutData) {
+  return axios.post<LoginRes>('/api/auth/logout', data);
+}
+
+// 获取单个用户
+export function getUserInfo(email: string) {
+  return axios.get<User>(`/api/user/info/${email}`);
 }
 
 export function getUserData(){

@@ -1,14 +1,14 @@
 import { useRouter } from '@/router';
 import { useI18n } from '@/locale';
 import { Modal } from '@opentiny/vue';
-import { useUserInfoStore } from '@/stores';
+import { useUserStore } from '@/stores/user';
+import {t} from '@opentiny/vue-locale';
 
 export default function useUser() {
-  const { t } = useI18n();
   const router = useRouter();
-  const userStore = useUserInfoStore();
+  const userStore = useUserStore();
   const logout = async (logoutTo?: string) => {
-    // TODO: await userStore.logout();
+    await userStore.logout();
     const currentRoute = router.currentRoute;
     Modal.message({
       message: t('setting.loginout'),

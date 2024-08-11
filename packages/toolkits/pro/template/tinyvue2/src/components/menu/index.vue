@@ -28,7 +28,7 @@ import {
 } from '@opentiny/vue-icon';
 import { TreeMenu as tinyTreeMenu } from '@opentiny/vue';
 import { useRoute, useRouter } from '@/router';
-import {useUserInfoStore} from '@/stores';
+import {useUserStore} from '@/stores/user';
 import type { RouteConfig } from 'vue-router';
 import {t} from '@opentiny/vue-locale';
 
@@ -47,7 +47,7 @@ interface ITreeNodeData {
   // "customIcon": Component,
 }
 
-const store = useUserInfoStore();
+const store = useUserStore();
 const route = useRoute();
 const routes = route.sort((a,b) => (a.meta?.order ?? 0) - (b.meta?.order ??0))
 const toNodeData = (route: RouteConfig, parent: RouteConfig|null) => {

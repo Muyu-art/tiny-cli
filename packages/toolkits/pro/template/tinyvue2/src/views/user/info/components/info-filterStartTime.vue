@@ -12,10 +12,10 @@
 <script lang="ts" setup>
 import { watch, ref, defineExpose } from 'vue';
 import { DatePicker as TinyDatePicker } from '@opentiny/vue';
-import { useUserInfoStore } from '@/stores';
+import { useUserStore } from '@/stores/user';
 
 // 变量设置
-const userStore = useUserInfoStore();
+const userStore = useUserStore();
 const startTime = ref('');
 
 const reset = () => {

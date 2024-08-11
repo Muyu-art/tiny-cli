@@ -35,7 +35,7 @@ import {
 } from '@opentiny/vue-icon';
 import { TreeMenu as tinyTreeMenu } from '@opentiny/vue';
 import router from '@/router';
-import {useUserInfoStore} from '@/stores';
+import {useUserStore} from '@/stores/user';
 import { TabItem } from '@opentiny/vue';
 
 // icon图标
@@ -201,7 +201,7 @@ copyRouter.sort((a, b) => {
   return (a.meta.order || 0) - (b.meta.order || 0);
 });
 
-const userStore = useUserInfoStore();
+const userStore = useUserStore();
 const role = computed(() => userStore.info?.role ?? []);
 const treeData = ref(copyRouter);
 const treeDataForEach = (arr: any[]) => {

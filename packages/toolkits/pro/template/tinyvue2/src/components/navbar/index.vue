@@ -77,10 +77,17 @@ import { useAppStore } from '@/stores';
 import { IconCheckOut, IconReplace, IconUser, IconWriting } from '@opentiny/vue-icon';
 import { defineComponent, ref } from 'vue';
 import { UserHead as TinyUserHead, Modal } from '@opentiny/vue';
+import { useUserStore } from '@/stores/user';
+import {getToken} from '@/utils/auth';
+import useUser from '@/hooks/user';
 
 export default defineComponent({
   components:{
     TinyUserHead,
+    IconCheckOut, 
+    IconReplace, 
+    IconUser, 
+    IconWriting
   },
   setup(){
     const lan = ref(false);
@@ -92,6 +99,8 @@ export default defineComponent({
     const iconWriting = IconWriting();
 
     const locales = [...LOCALE_OPTIONS];
+
+    const { logout } = useUser();
 
     const jumpUrl = () => {
       window.location.href = `${window.location.protocol}//${window.location.host}`;
@@ -135,7 +144,7 @@ export default defineComponent({
         router.push({ name: 'Setting' });
         break;
       case 4:
-        // logout();
+        logout()
         break;
       default:
       // eslint-disable-next-line no-console
