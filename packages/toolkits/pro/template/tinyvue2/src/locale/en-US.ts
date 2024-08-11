@@ -24,10 +24,21 @@ import localeHello from '@/views/cloud/hello/locale/en-US';
 
 import localeContracts from '@/views/cloud/contracts/locale/en-US';
 
+// import localeUserManager from '@/views/userManager/info/locale/en-US';
+//
+// import localeUserManagerSetting from '@/views/userManager/setting/locale/en-US';
+//
+// import localeUserManagerUserAdd from '@/views/userManager/useradd/locale/en-US';
+
+import localePermission from '@/views/permission/info/locale/en-US';
+
+// import localeRole from '@/views/role/info/locale/en-US';
+//
+// import localeMenu from '@/views/menu/info/locale/en-US';
+
 import localeSettings from './en-US/settings';
 
 import localeHttpError from './en-US/httpError';
-import localeMenu from '@/components/menu/locales/en-US';
 
 export default {
   'menu.board': 'Dashboard Page',
@@ -41,12 +52,25 @@ export default {
   'menu.profile.detail': 'Basic details page',
   'menu.visualization': 'Data Visualization',
   'menu.user': 'User Center',
+  'menu.userManager': 'User Manager',
+  'menu.userManager.info': 'All User Info',
+  'menu.userManager.setting': 'All User Setting',
+  'menu.userManager.useradd': 'Add User',
+  'menu.permission':'Permission Manager',
+  'menu.permission.info':'All Permission Info',
+  'menu.permission.setting':'Permission Setting',
+  'menu.permission.permissionAdd':'Add Permission',
+  'menu.role': 'Role Manager',
+  'menu.role.info':'All Role Info',
+  'menu.menu': 'Menu Manager',
+  'menu.menu.info': 'All Menu Info',
   'navbar.docs': 'Docs',
   'navbar.action.locale': 'Switch to English',
   'messageBox.switchRoles': 'Switch Roles',
   'messageBox.userCenter': 'User Center',
   'messageBox.userSettings': 'User Settings',
   'messageBox.logout': 'Logout',
+  'messageBox.updatePwd': 'Update Password',
   'menu.cloud': 'Cloud service capability',
   ...localeTheme,
   ...localeSettings,
@@ -66,5 +90,10 @@ export default {
   ...localeHello,
   ...localeContracts,
   ...localeHttpError,
-  ...localeMenu
+  // ...localeUserManager,
+  // ...localeUserManagerSetting,
+  // ...localeUserManagerUserAdd,
+  ...localePermission,
+  // ...localeRole,
+  // ...localeMenu,
 };

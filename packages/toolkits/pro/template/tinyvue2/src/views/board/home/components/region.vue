@@ -116,7 +116,6 @@ onMounted(() => {
     myChart.resize();
   });
   options && myChart.setOption(options);
-  console.log(options);
   nextTick(() => {
     myChart.resize()
   });

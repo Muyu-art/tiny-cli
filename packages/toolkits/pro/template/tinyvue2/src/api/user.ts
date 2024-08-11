@@ -32,3 +32,7 @@ export function getUserData(){
   return axios.get('/mock/user/data')
 }
 
+export function updateUserInfo(data: any) {
+  return axios.patch('/api/user/update', data);
+}
+

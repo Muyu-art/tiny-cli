@@ -14,7 +14,6 @@ import useLocale from '@/hooks/locale';
 const { currentLocale } = useLocale();
 const echarts = inject<any>('echarts');
 const echartsDom = ref();
-console.log(currentLocale);
 const list = [
   {
     label: 'Dns',

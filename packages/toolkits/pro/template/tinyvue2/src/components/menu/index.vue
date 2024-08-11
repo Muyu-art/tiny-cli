@@ -52,7 +52,7 @@ const route = useRoute();
 const routes = route.sort((a,b) => (a.meta?.order ?? 0) - (b.meta?.order ??0))
 const toNodeData = (route: RouteConfig, parent: RouteConfig|null) => {
   return {
-    id: route.meta?.id,
+    id: route.meta.id ?? route.id,
     label: t(route.meta?.locale) || route.meta?.locale,
     url: parent ? [parent.path.replace(/\\/, ''), route.path.replace(/\\/, '')].join('/') : route.path,
     children: []
@@ -94,6 +94,7 @@ const currentChange = (data: any) => {
     'Result',
     'User',
     'Cloud',
+    'Permission',
   ];
   if (!data.children.length){
     router.push({name: data.id});
