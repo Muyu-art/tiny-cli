@@ -46,7 +46,7 @@ import {
   Loading,
 } from '@opentiny/vue';
 import { IconChevronDown } from '@opentiny/vue-icon';
-import { useUserInfoStore } from '@/stores';
+import { useUserStore } from '@/stores/user';
 import { getUserData } from '@/api/user';
 import infofilter from './info-filter.vue';
 import infocard from './info-card.vue';
@@ -66,7 +66,7 @@ const state = reactive<{
   });
 
 // 变量设置
-const userStore = useUserInfoStore();
+const userStore = useUserStore();
 const ChevronDown = IconChevronDown();
 const activeName = ref('1');
 const Filter = ref(false);

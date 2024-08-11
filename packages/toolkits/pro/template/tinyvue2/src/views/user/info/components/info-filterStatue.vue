@@ -14,9 +14,9 @@
 import { watch, ref, defineExpose } from 'vue';
 import { CheckboxGroup as TinyCheckboxGroup } from '@opentiny/vue';
 import { t } from '@opentiny/vue-locale';
-import { useUserInfoStore } from '@/stores';
+import { useUserStore } from '@/stores/user';
 
-const userStore = useUserInfoStore();
+const userStore = useUserStore();
 const checkList = ref([]);
 const options = ref([
   { label: 'A', text: t('userInfo.statue.optionA') },

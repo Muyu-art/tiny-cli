@@ -28,12 +28,12 @@ import { ref } from 'vue';
 import {t} from '@opentiny/vue-locale';
 import { Button as TinyButton, Modal } from '@opentiny/vue';
 import { getSimpleDate } from '@/utils/time';
-import { useUserInfoStore } from '@/stores';
+import { useUserStore } from '@/stores/user';
 import headtop from '../../form/step/components/head.vue';
 import setFrom from './components/set-from.vue';
 
 const setFormRef = ref();
-const userStore = useUserInfoStore();
+const userStore = useUserStore();
 
 // btn操作
 function handleFormReset() {
