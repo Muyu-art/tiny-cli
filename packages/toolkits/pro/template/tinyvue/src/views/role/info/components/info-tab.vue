@@ -2,7 +2,7 @@
   <div class="tiny-fullscreen-scroll">
     <div class="tiny-fullscreen-wrapper">
       <div class="role-add-btn">
-        <tiny-button type="primary" @click="handleAddRole">{{ $t('roleInfo.modal.title.add') }}</tiny-button>
+        <tiny-button v-permission="'role::add'" type="primary" @click="handleAddRole">{{ $t('roleInfo.modal.title.add') }}</tiny-button>
       </div>
       <div class="table">
         <tiny-grid ref="expandGrid"
@@ -77,10 +77,10 @@
             align="center"
           >
             <template v-slot="data">
-              <a class="operation-update" @click="handleUpdate(data.row.id)">
+              <a class="operation-update" v-permission="'role::update'" @click="handleUpdate(data.row.id)">
                 {{ $t('roleInfo.table.operations.update') }}
               </a>
-              <a class="operation-delete" @click="handleDelete(data.row.id)">
+              <a class="operation-delete" v-permission="'role::remove'" @click="handleDelete(data.row.id)">
                 {{ $t('roleInfo.table.operations.delete') }}
               </a>
             </template>
@@ -286,7 +286,7 @@ import {
 } from '@opentiny/vue';
 import {IconChevronDown} from '@opentiny/vue-icon';
 import {useUserStore} from '@/store';
-import {getAllRoleDetail, updateRole ,createRole, deleteRole} from '@/api/role';
+import {getAllRoleDetail, updateRole, createRole, deleteRole, getRoleInfo} from '@/api/role';
 import {getAllPermission} from "@/api/permission";
 import {getAllMenu} from "@/api/menu";
 import { useRouter } from 'vue-router';
@@ -440,6 +440,12 @@ async function handleRoleUpdateSubmit(){
     state.isRoleUpdate = false;
     state.roleUpdData = {} as any;
     await fetchRoleData();
+    const userInfo = userStore
+    const {roleTmp} = await getRoleInfo(userInfo.roleId)
+    const permissions = roleTmp.permission;
+    for (let i = 0; i < permissions.length; i += 1) {
+      userInfo.rolePermission.push(permissions[i].name)
+    }
   } catch (error) {
     if (error.response && error.response.data) {
       const errorMessage = error.response.data.message || '未知错误';

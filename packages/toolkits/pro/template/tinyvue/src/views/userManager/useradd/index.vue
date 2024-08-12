@@ -149,6 +149,7 @@
 
         <div class="general-btn">
           <tiny-button
+            v-permission="'user::add'"
             type="primary"
             native-type="submit"
             @click="handleSubmit"

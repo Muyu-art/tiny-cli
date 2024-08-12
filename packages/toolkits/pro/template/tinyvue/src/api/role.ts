@@ -21,3 +21,7 @@ export function deleteRole(id: number) {
 export function createRole(data: any) {
   return axios.post(`/api/role`, data);
 }
+
+export function getRoleInfo(id: number) {
+  return axios.get(`/api/role/info/${id}`);
+}

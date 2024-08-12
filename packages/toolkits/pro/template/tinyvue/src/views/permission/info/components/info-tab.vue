@@ -2,7 +2,7 @@
   <div class="tiny-fullscreen-scroll">
     <div class="tiny-fullscreen-wrapper">
       <div class="permission-add-btn">
-        <tiny-button type="primary" @click="handleAddPermission">{{ $t('permissionInfo.modal.title.add') }}</tiny-button>
+        <tiny-button v-permission="'menu::remove'" type="primary" @click="handleAddPermission">{{ $t('permissionInfo.modal.title.add') }}</tiny-button>
       </div>
       <div class="table">
         <tiny-grid ref="expandGrid"
@@ -35,10 +35,10 @@
             align="center"
           >
             <template v-slot="data">
-              <a class="operation-update" @click="handleUpdate(data.row.id)">
+              <a class="operation-update" v-permission="'menu::update'" @click="handleUpdate(data.row.id)">
                 {{ $t('permissionInfo.table.operations.update') }}
               </a>
-              <a class="operation-delete" @click="handleDelete(data.row.id)">
+              <a class="operation-delete" v-permission="'menu::remove'" @click="handleDelete(data.row.id)">
                 {{ $t('permissionInfo.table.operations.delete') }}
               </a>
             </template>

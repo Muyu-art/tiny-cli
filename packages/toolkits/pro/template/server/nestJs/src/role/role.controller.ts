@@ -22,13 +22,13 @@ export class RoleController {
     return this.roleService.create(createRoleDto, false);
   }
 
-  @Permission('role::get')
+  @Permission('role::query')
   @Get()
   getAllRole() {
     return this.roleService.findAll();
   }
 
-  @Permission('role::get')
+  @Permission('role::query')
   @Get('/detail')
   getAllRoleDetail() {
     return this.roleService.findAllDetail();
@@ -46,7 +46,6 @@ export class RoleController {
     return this.roleService.delete(id);
   }
 
-  @Permission('role::get')
   @Get('/info/:id')
   getRoleInfo(@Param('id') id: string) {
     return this.roleService.findOne(id);

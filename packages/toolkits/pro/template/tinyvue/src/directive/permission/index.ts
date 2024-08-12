@@ -1,30 +1,22 @@
-import { DirectiveBinding } from 'vue';
-import { useUserStore } from '@/store';
+import {useUserStore} from '@/store';
 
-function checkPermission(el: HTMLElement, binding: DirectiveBinding) {
-  const { value } = binding;
+async function checkPermission(el: any, binding: any) {
+  const {value} = binding;
+  // 获取role的permission
   const userStore = useUserStore();
-  const { role } = userStore;
-
-  if (Array.isArray(value)) {
-    if (value.length > 0) {
-      const permissionValues = value;
-
-      const hasPermission = permissionValues.includes(role);
-      if (!hasPermission && el.parentNode) {
-        el.parentNode.removeChild(el);
-      }
-    }
-  } else {
-    throw new Error(`need roles! Like v-permission="['admin','user']"`);
+  const {rolePermission} = userStore
+  const permissionList = rolePermission
+  const hasPermission = permissionList.includes(value) || permissionList.includes('*');
+  if (!hasPermission) {
+    el.remove()
   }
 }
 
 export default {
-  mounted(el: HTMLElement, binding: DirectiveBinding) {
+  mounted(el: any, binding: any) {
     checkPermission(el, binding);
   },
-  updated(el: HTMLElement, binding: DirectiveBinding) {
+  updated(el: any, binding: any) {
     checkPermission(el, binding);
-  },
+  }
 };

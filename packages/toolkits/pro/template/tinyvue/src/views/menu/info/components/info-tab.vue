@@ -2,7 +2,7 @@
   <div class="tiny-fullscreen-scroll">
     <div class="tiny-fullscreen-wrapper">
       <div class="menu-add-btn">
-        <tiny-button type="primary" @click="handleAddMenu">{{ $t('menuInfo.modal.title.add') }}</tiny-button>
+        <tiny-button v-permission="'menu::add'" type="primary" @click="handleAddMenu">{{ $t('menuInfo.modal.title.add') }}</tiny-button>
       </div>
       <div class="table">
         <tiny-tree
@@ -13,9 +13,9 @@
           default-expand-all
         >
           <template #operation="{node}">
-              <a class="operation-info" @click="handleCheck(node)"> {{$t('menuInfo.table.operations.info')}} </a>
-              <a class="operation-update" @click="handleUpdate(node)"> {{$t('menuInfo.table.operations.update')}} </a> &nbsp;
-              <a class="operation-delete" @click="handleDelete(node)"> {{$t('menuInfo.table.operations.delete')}} </a>
+              <a class="operation-info" @click="handleCheck(node)" v-permission="'menu::query'"> {{$t('menuInfo.table.operations.info')}} </a>
+              <a class="operation-update" @click="handleUpdate(node)" v-permission="'menu::update'"> {{$t('menuInfo.table.operations.update')}} </a> &nbsp;
+              <a class="operation-delete" @click="handleDelete(node)" v-permission="'menu::remove'"> {{$t('menuInfo.table.operations.delete')}} </a>
           </template>
         </tiny-tree>
       </div>
