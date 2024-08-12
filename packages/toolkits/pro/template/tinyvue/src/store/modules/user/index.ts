@@ -13,6 +13,7 @@ import {getRoleMenu} from "@/api/menu";
 import {clearToken, getToken, setToken} from '@/utils/auth';
 import {removeRouteListener} from '@/utils/route-listener';
 import {useRouter} from "vue-router";
+import {getRoleInfo} from "@/api/role";
 import {UserInfo, UserState} from './types';
 
 const router = useRouter();
@@ -41,6 +42,7 @@ const useUserStore = defineStore('user', {
     submit: false,
     reset: false,
     roleId: 0,
+    rolePermission: [],
   }),
 
   getters: {
@@ -102,11 +104,17 @@ const useUserStore = defineStore('user', {
           address: userRes.data.address,
           status: userRes.data.status,
           roleId: 0,
+          rolePermission: []
         }
         if(userRes.data.role){
           userInfo.role = userRes.data.role[0].name;
           userInfo.job = userRes.data.role[0].name;
           userInfo.roleId = userRes.data.role[0].id;
+        }
+        const {data} = await getRoleInfo(userInfo.roleId)
+        const permissions = data.permission;
+        for (let i = 0; i < permissions.length; i += 1) {
+          userInfo.rolePermission.push(permissions[i].name)
         }
         this.setInfo(userInfo);
       } catch (err) {

@@ -286,7 +286,7 @@ import {
 } from '@opentiny/vue';
 import {IconChevronDown} from '@opentiny/vue-icon';
 import {useUserStore} from '@/store';
-import {getAllRoleDetail, updateRole ,createRole, deleteRole} from '@/api/role';
+import {getAllRoleDetail, updateRole, createRole, deleteRole, getRoleInfo} from '@/api/role';
 import {getAllPermission} from "@/api/permission";
 import {getAllMenu} from "@/api/menu";
 import { useRouter } from 'vue-router';
@@ -440,6 +440,12 @@ async function handleRoleUpdateSubmit(){
     state.isRoleUpdate = false;
     state.roleUpdData = {} as any;
     await fetchRoleData();
+    const userInfo = userStore
+    const {roleTmp} = await getRoleInfo(userInfo.roleId)
+    const permissions = roleTmp.permission;
+    for (let i = 0; i < permissions.length; i += 1) {
+      userInfo.rolePermission.push(permissions[i].name)
+    }
   } catch (error) {
     if (error.response && error.response.data) {
       const errorMessage = error.response.data.message || '未知错误';
