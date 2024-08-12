@@ -3,23 +3,25 @@ import {getRoleInfo} from "@/api/role";
 
 async function checkPermission(el: any, binding: any) {
   const {value} = binding;
-  if(value){
-    // 获取role的permission
-    const userStore = useUserStore();
-    const { roleId } = userStore;
-    const { data } = await getRoleInfo(roleId)
+  // 获取role的permission
+  const userStore = useUserStore();
+  const {roleId} = userStore
+  let permissionList = [] as any;
+  if(localStorage.getItem(`role-permission:${roleId}`)){
+    permissionList = JSON.parse(localStorage.getItem(`role-permission:${roleId}`))
+  }else{
+    const {data} = await getRoleInfo(roleId)
     const permissions = data.permission;
-    let permissionList = [] as any;
-    for ( let i = 0; i < permissions.length; i += 1 ){
+    for (let i = 0; i < permissions.length; i += 1) {
       permissionList.push(permissions[i].name)
     }
-    const hasPermission = permissionList.includes(value) || permissionList.includes('*');
-    if(!hasPermission && el.parentNode){
-      el.parentNode.removeChild(el)
-    }
-  }else{
-    throw new Error(`need permissions! Like v-permission="'user::add'"`);
+    localStorage.setItem(`role-permission:${roleId}`,JSON.stringify(permissionList));
   }
+  const hasPermission = permissionList.includes(value) || permissionList.includes('*');
+  if (!hasPermission && el.parentNode) {
+    el.parentNode.removeChild(el)
+  }
+
 }
 
 export default {
