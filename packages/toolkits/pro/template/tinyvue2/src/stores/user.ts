@@ -73,11 +73,6 @@ export const useUserStore = defineStore('user', {
       this.$reset();
     },
 
-    // async updateInfo(data: User) {
-    //   const res = await updateUserInfo(data);
-    //   this.setInfo(res.data);
-    // },
-
     // Login
     async login(loginForm: LoginData) {
       try {

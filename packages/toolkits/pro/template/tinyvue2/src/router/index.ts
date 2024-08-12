@@ -58,15 +58,4 @@ const router = new VueRouter({
 export const useRouter = () => router
 export const useRoute = () => appRoutes;
 
-// router.beforeEach((to, from, next) => {
-//   if (!to.meta?.public && !getToken()){
-//     next({
-//       path: '/login'
-//     });
-//     return;
-//   }
-//   next();
-//   return;
-// })
-
 export default router;
