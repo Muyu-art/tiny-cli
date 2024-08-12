@@ -39,6 +39,7 @@ const config = {
   },
   define: {
     'process.env': {},
+    BUILD_TOOLS: "'VITE'"
   },
   css: {
     preprocessorOptions: {

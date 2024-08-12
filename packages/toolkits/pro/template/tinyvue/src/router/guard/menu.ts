@@ -1,3 +1,4 @@
+
 import { useMenuStore } from "@/store/modules/router";
 import { nextTick } from "vue";
 import { Router, RouteRecordRaw } from "vue-router";
@@ -25,8 +26,17 @@ export interface ITreeNodeData {
   locale: string;
 }
 const reg = /\.vue$/gim;
-const views = import.meta.glob ? import.meta.glob('../../views/**/*.vue') : require.context('../../views', true, reg, 'sync');
-console.log(views)
+let views = {} as any;
+if(BUILD_TOOLS === 'VITE' || BUILD_TOOLS === 'WEBPACK'){
+  views = import.meta.glob('../../views/**/*.vue')
+}else if(BUILD_TOOLS === 'RSPACK'){
+  const components = require.context('../../views', true, reg, 'sync');
+  components.keys().forEach((path) => {
+    if(path.endsWith('.vue')){
+      views[`../../views/${path.replace('./','')}`] = ()=>components(path);
+    }
+  })
+}
 const toRoutes = (menus: ITreeNodeData[]) => {
   const router: RouteRecordRaw[] = [];
   for (let i=0;i<menus.length;i+=1) {

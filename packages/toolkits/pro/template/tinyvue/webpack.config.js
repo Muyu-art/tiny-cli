@@ -128,6 +128,7 @@ module.exports = {
       'import.meta.env.VITE_USE_MOCK': 'false',
       'import.meta.env.VITE_MOCK_IGNORE': '"/api/user/userInfo,/api/user/login,/api/user/register,/api/employee/getEmployee"',
       'import.meta.env.VITE_MOCK_SERVER_HOST': '"/mock"',
+      BUILD_TOOLS: "'WEBPACK'",
     })
   ],
   resolve: {
