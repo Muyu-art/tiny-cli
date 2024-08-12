@@ -1,10 +1,9 @@
-import { MockMethod } from 'vite-plugin-mock';
 import {
   successResponseWrap,
   failResponseWrap,
   initData,
-} from '@/utils/setup-mock';
-import { isLogin } from '@/utils/auth';
+} from '../utils/setup-mock';
+import { isLogin } from '../utils/auth';
 
 const positive = JSON.parse(JSON.stringify(initData.tableData));
 const negative = JSON.parse(JSON.stringify(initData.tableData.reverse()));
@@ -15,7 +14,7 @@ export default [
   {
     url: '/api/user/register',
     method: 'post',
-    response: (params) => {
+    response: (params: { body: any; }) => {
       localStorage.setItem('registerUser', JSON.stringify(params.body));
       return successResponseWrap({ ...userInfo, role: 'admin' });
     },
@@ -57,7 +56,7 @@ export default [
   {
     url: '/api/user/login',
     method: 'post',
-    response: (params) => {
+    response: (params: { body: any; }) => {
       const registerUser = JSON.parse(
         localStorage.getItem('registerUser') || '{}'
       );
@@ -96,7 +95,7 @@ export default [
 
   // 用户中心数据
   {
-    url: '/mock/user/data',
+    url: '/api/user/data',
     method: 'post',
     response: (params: any) => {
       const { sort, startTime, endTime, filterStatus, filterType } = JSON.parse(
@@ -145,4 +144,4 @@ export default [
       return successResponseWrap(initData);
     },
   },
-] as MockMethod[];
+] as any;

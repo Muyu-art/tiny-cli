@@ -28,7 +28,7 @@ import {
 } from '@opentiny/vue-icon';
 import { TreeMenu as tinyTreeMenu } from '@opentiny/vue';
 import { useRoute, useRouter } from '@/router';
-import {useUserInfoStore} from '@/stores';
+import {useUserStore} from '@/stores/user';
 import type { RouteConfig } from 'vue-router';
 import {t} from '@opentiny/vue-locale';
 
@@ -47,12 +47,12 @@ interface ITreeNodeData {
   // "customIcon": Component,
 }
 
-const store = useUserInfoStore();
+const store = useUserStore();
 const route = useRoute();
 const routes = route.sort((a,b) => (a.meta?.order ?? 0) - (b.meta?.order ??0))
 const toNodeData = (route: RouteConfig, parent: RouteConfig|null) => {
   return {
-    id: route.meta?.id,
+    id: route.meta.id ?? route.id,
     label: t(route.meta?.locale) || route.meta?.locale,
     url: parent ? [parent.path.replace(/\\/, ''), route.path.replace(/\\/, '')].join('/') : route.path,
     children: []
@@ -94,6 +94,7 @@ const currentChange = (data: any) => {
     'Result',
     'User',
     'Cloud',
+    'Permission',
   ];
   if (!data.children.length){
     router.push({name: data.id});

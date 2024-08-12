@@ -4,7 +4,7 @@ import initI18 from '@/locale';
 
 import App from "./App.vue";
 import router from "./router";
-
+import '@/api/interceptor';
 import '@/assets/style/global.less';
 import { pinia } from "./stores/pinia";
 import 'echarts4/map/js/china.js';

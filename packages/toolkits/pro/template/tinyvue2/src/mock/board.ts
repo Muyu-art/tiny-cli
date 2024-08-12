@@ -1,6 +1,5 @@
-import { MockMethod } from 'vite-plugin-mock';
 import Mock from 'mockjs';
-import { successResponseWrap } from '@/utils/setup-mock';
+import { successResponseWrap } from '../utils/setup-mock';
 
 const initData = Mock.mock({
   options: [
@@ -60,28 +59,28 @@ const changeDate = Mock.mock({
 });
 export default [
   {
-    url: '/mock/user/getdata',
+    url: '/api/user/getdata',
     method: 'get',
     response: () => {
       return successResponseWrap(initData);
     },
   },
   {
-    url: '/mock/user/getrpractic',
+    url: '/api/user/getrpractic',
     method: 'get',
     response: () => {
       return successResponseWrap(initData1);
     },
   },
   {
-    url: '/mock/user/getrtrain',
+    url: '/api/user/getrtrain',
     method: 'get',
     response: () => {
       return successResponseWrap(initData2);
     },
   },
   {
-    url: '/mock/user/getselect',
+    url: '/api/user/getselect',
     method: 'post',
     response: (data: any) => {
       let result = null;
@@ -95,4 +94,4 @@ export default [
       return result;
     },
   },
-] as MockMethod[];
+] as any;

@@ -67,11 +67,10 @@ import {
   Notify,
 } from '@opentiny/vue';
 import {t} from '@opentiny/vue-locale';
-import { useUserInfoStore } from '@/stores/user';
+import { useUserStore } from '@/stores/user';
 import useLoading from '@/hooks/loading';
-import { login } from '@/api/user';
 
-const userInfo = useUserInfoStore();
+const userStore = useUserStore();
 
 const router = useRouter();
 const { loading, setLoading } = useLoading();
@@ -114,13 +113,10 @@ function handleSubmit() {
     setLoading(true);
 
     try {
-      const {data} = await login({
+      await userStore.login({
         email: loginMail.mailname,
-        password: loginMail.mailpassword
-      })
-      userInfo.$patch({
-        token: data,
-      })
+        password: loginMail.mailpassword,
+      });
       Modal.message({
         message: t('login.form.login.success'),
         status: 'success',

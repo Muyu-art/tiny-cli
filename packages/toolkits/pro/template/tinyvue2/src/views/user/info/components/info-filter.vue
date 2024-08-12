@@ -21,7 +21,7 @@
 import { defineProps, ref } from 'vue';
 import { t } from '@opentiny/vue-locale';
 import { Button as TinyButton, Modal } from '@opentiny/vue';
-import { useUserInfoStore } from '@/stores';
+import { useUserStore } from '@/stores/user';
 import infofilterstatus from './info-filterStatus.vue';
 import infofiltertype from './info-filterType.vue';
 import infofilterstarttime from './info-filterStartTime.vue';
@@ -30,7 +30,7 @@ import infofilterendtime from './info-filterEndTime.vue';
 const props = defineProps({
   activeName: String,
 });
-const userStore = useUserInfoStore();
+const userStore = useUserStore();
 const filterstarttime = ref();
 const filterendtime = ref();
 const filterstatus = ref();

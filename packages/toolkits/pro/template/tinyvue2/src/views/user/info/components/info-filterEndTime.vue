@@ -14,9 +14,9 @@
 import { watch, ref, defineExpose } from 'vue';
 import { DatePicker as TinyDatePicker, Modal } from '@opentiny/vue';
 import {t} from '@opentiny/vue-locale';
-import { useUserInfoStore } from '@/stores';
+import { useUserStore } from '@/stores/user';
 
-const userStore = useUserInfoStore();
+const userStore = useUserStore();
 const endTime = ref('');
 
 const reset = () => {
