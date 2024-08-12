@@ -64,12 +64,15 @@ export class RoleService {
   }
 
   async findOne(id: string) {
-    const roleInfo = await this.role.find({
-      where: {
+    const roleInfo = await this.role
+      .createQueryBuilder('role')
+      .leftJoinAndSelect('role.menus', 'menus')
+      .leftJoinAndSelect('role.permission', 'permission')
+      .where({
         id: parseInt(id),
-      },
-    });
-    if (roleInfo.length===0) {
+      })
+      .getOne()
+    if (!roleInfo) {
       throw new HttpException('角色不存在', HttpStatus.NOT_FOUND);
     }
     return roleInfo;
