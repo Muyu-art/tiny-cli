@@ -145,13 +145,13 @@
             align="center"
           >
             <template v-slot="data">
-              <a class="operation-update" @click="handleUpdate(data.row.email)">
+              <a class="operation-update" v-permission="'user::update'" @click="handleUpdate(data.row.email)">
                 {{ $t('userInfo.table.operations.update') }}
               </a>
-              <a class="operation-delete" @click="handleDelete(data.row.email)">
+              <a class="operation-delete" v-permission="'user::remove'" @click="handleDelete(data.row.email)">
                 {{ $t('userInfo.table.operations.delete') }}
               </a>
-              <a class="operation-pwd-update" @click="handlePwdUpdate(data.row.email)">
+              <a class="operation-pwd-update" v-permission="'user::update'" @click="handlePwdUpdate(data.row.email)">
                 {{ $t('userInfo.table.operations.pwdUpdate') }}
               </a>
             </template>

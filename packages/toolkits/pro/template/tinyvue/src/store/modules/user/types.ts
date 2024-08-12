@@ -16,6 +16,7 @@ export interface UserInfo {
   role: RoleType;
   updateTime?: any;
   createTime?: any;
+  roleId ?: number;
 }
 export interface UserFilterData {
   sort?: number;

@@ -40,6 +40,7 @@ const useUserStore = defineStore('user', {
     filterType: [],
     submit: false,
     reset: false,
+    roleId: 0,
   }),
 
   getters: {
@@ -100,10 +101,12 @@ const useUserStore = defineStore('user', {
           protocolEnd: userRes.data.protocolEnd,
           address: userRes.data.address,
           status: userRes.data.status,
+          roleId: 0,
         }
         if(userRes.data.role){
           userInfo.role = userRes.data.role[0].name;
           userInfo.job = userRes.data.role[0].name;
+          userInfo.roleId = userRes.data.role[0].id;
         }
         this.setInfo(userInfo);
       } catch (err) {

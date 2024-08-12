@@ -2,7 +2,7 @@
   <div class="tiny-fullscreen-scroll">
     <div class="tiny-fullscreen-wrapper">
       <div class="role-add-btn">
-        <tiny-button type="primary" @click="handleAddRole">{{ $t('roleInfo.modal.title.add') }}</tiny-button>
+        <tiny-button v-permission="'role::add'" type="primary" @click="handleAddRole">{{ $t('roleInfo.modal.title.add') }}</tiny-button>
       </div>
       <div class="table">
         <tiny-grid ref="expandGrid"
@@ -77,10 +77,10 @@
             align="center"
           >
             <template v-slot="data">
-              <a class="operation-update" @click="handleUpdate(data.row.id)">
+              <a class="operation-update" v-permission="'role::update'" @click="handleUpdate(data.row.id)">
                 {{ $t('roleInfo.table.operations.update') }}
               </a>
-              <a class="operation-delete" @click="handleDelete(data.row.id)">
+              <a class="operation-delete" v-permission="'role::remove'" @click="handleDelete(data.row.id)">
                 {{ $t('roleInfo.table.operations.delete') }}
               </a>
             </template>

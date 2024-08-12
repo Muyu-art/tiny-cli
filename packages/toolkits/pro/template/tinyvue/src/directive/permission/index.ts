@@ -1,30 +1,32 @@
-import { DirectiveBinding } from 'vue';
-import { useUserStore } from '@/store';
+import {useUserStore} from '@/store';
+import {getRoleInfo} from "@/api/role";
 
-function checkPermission(el: HTMLElement, binding: DirectiveBinding) {
-  const { value } = binding;
-  const userStore = useUserStore();
-  const { role } = userStore;
-
-  if (Array.isArray(value)) {
-    if (value.length > 0) {
-      const permissionValues = value;
-
-      const hasPermission = permissionValues.includes(role);
-      if (!hasPermission && el.parentNode) {
-        el.parentNode.removeChild(el);
-      }
+async function checkPermission(el: any, binding: any) {
+  const {value} = binding;
+  if(value){
+    // 获取role的permission
+    const userStore = useUserStore();
+    const { roleId } = userStore;
+    const { data } = await getRoleInfo(roleId)
+    const permissions = data.permission;
+    let permissionList = [] as any;
+    for ( let i = 0; i < permissions.length; i += 1 ){
+      permissionList.push(permissions[i].name)
     }
-  } else {
-    throw new Error(`need roles! Like v-permission="['admin','user']"`);
+    const hasPermission = permissionList.includes(value) || permissionList.includes('*');
+    if(!hasPermission && el.parentNode){
+      el.parentNode.removeChild(el)
+    }
+  }else{
+    throw new Error(`need permissions! Like v-permission="'user::add'"`);
   }
 }
 
 export default {
-  mounted(el: HTMLElement, binding: DirectiveBinding) {
+  mounted(el: any, binding: any) {
     checkPermission(el, binding);
   },
-  updated(el: HTMLElement, binding: DirectiveBinding) {
+  updated(el: any, binding: any) {
     checkPermission(el, binding);
-  },
+  }
 };
