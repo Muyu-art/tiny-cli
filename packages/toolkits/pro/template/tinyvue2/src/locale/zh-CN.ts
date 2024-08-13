@@ -32,7 +32,7 @@ import localeContracts from '@/views/cloud/contracts/locale/zh-CN';
 
 import localePermission from '@/views/permission/info/locale/zh-CN';
 
-// import localeRole from '@/views/role/info/locale/zh-CN';
+import localeRole from '@/views/role/info/locale/zh-CN';
 
 import localeMenu from '@/views/menu/info/locale/zh-CN';
 
@@ -72,6 +72,7 @@ export default {
   'messageBox.logout': '退出登录',
   'messageBox.updatePwd': '修改密码',
   'menu.cloud': '云服务能力展示',
+  'menu.btn.confirm': '确定',
   ...localeTheme,
   ...localeSettings,
   ...localeLogin,
@@ -94,6 +95,6 @@ export default {
   // ...localeUserManagerSetting,
   // ...localeUserManagerUserAdd,
   ...localePermission,
-  // ...localeRole,
+  ...localeRole,
   ...localeMenu,
 };

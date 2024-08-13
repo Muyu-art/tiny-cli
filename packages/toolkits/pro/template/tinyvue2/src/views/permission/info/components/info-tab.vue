@@ -3,12 +3,15 @@
     <div class="tiny-fullscreen-scroll">
       <div class="tiny-fullscreen-wrapper">
         <div class="permission-add-btn">
-          <tiny-button type="primary" @click="handleAddPermission">{{ $t('permissionInfo.modal.title.add') }}</tiny-button>
+          <tiny-button type="primary" @click="handleAddPermission">{{
+            $t('permissionInfo.modal.title.add')
+          }}</tiny-button>
         </div>
         <div class="table">
-          <tiny-grid ref="expandGrid"
-                     :data="state.tableData"
-                     :auto-resize="true"
+          <tiny-grid
+            ref="expandGrid"
+            :data="state.tableData"
+            :auto-resize="true"
           >
             <tiny-grid-column
               field="name"
@@ -26,7 +29,10 @@
                 <span>{{ $t(`${data.row.desc}`) }}</span>
               </template>
             </tiny-grid-column>
-            <tiny-grid-column field="type" :title="$t('permissionInfo.table.name')">
+            <tiny-grid-column
+              field="type"
+              :title="$t('permissionInfo.table.name')"
+            >
               <template #default="data">
                 <span>{{ $t(`${data.row.name}`) }}</span>
               </template>
@@ -69,33 +75,35 @@
               label-position="left"
               size="small"
             >
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
-                  <tiny-form-item
-                    :label="$t('permissionInfo.modal.input.id')"
-                  >
+                  <tiny-form-item :label="$t('permissionInfo.modal.input.id')">
                     <label>{{ state.permissionUpdData.id }}</label>
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item
                     :label="$t('permissionInfo.modal.input.permission')"
                     prop="desc"
                   >
-                    <tiny-input v-model="state.permissionUpdData.desc"></tiny-input>
+                    <tiny-input
+                      v-model="state.permissionUpdData.desc"
+                    ></tiny-input>
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
 
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item
                     :label="$t('permissionInfo.modal.input.name')"
                     prop="name"
                   >
-                    <tiny-input v-model="state.permissionUpdData.name"></tiny-input>
+                    <tiny-input
+                      v-model="state.permissionUpdData.name"
+                    ></tiny-input>
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
@@ -103,8 +111,12 @@
           </tiny-layout>
         </template>
         <template #footer>
-          <tiny-button type="primary" @click="handlePermissionUpdateSubmit">确定</tiny-button>
-          <tiny-button @click="handlePermissionUpdateCancel">取消</tiny-button>
+          <tiny-button type="primary" @click="handlePermissionUpdateSubmit">{{
+            $t('menu.btn.confirm')
+          }}</tiny-button>
+          <tiny-button @click="handlePermissionUpdateCancel">{{
+            $t('menu.btn.cancel')
+          }}</tiny-button>
         </template>
       </tiny-modal>
     </div>
@@ -129,24 +141,28 @@
               label-position="left"
               size="small"
             >
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item
                     :label="$t('permissionInfo.modal.input.permission')"
                     prop="desc"
                   >
-                    <tiny-input v-model="state.permissionAddData.desc"></tiny-input>
+                    <tiny-input
+                      v-model="state.permissionAddData.desc"
+                    ></tiny-input>
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
 
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item
                     :label="$t('permissionInfo.modal.input.name')"
                     prop="name"
                   >
-                    <tiny-input v-model="state.permissionAddData.name"></tiny-input>
+                    <tiny-input
+                      v-model="state.permissionAddData.name"
+                    ></tiny-input>
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
@@ -154,8 +170,12 @@
           </tiny-layout>
         </template>
         <template #footer>
-          <tiny-button type="primary" @click="handlePermissionAddSubmit">确定</tiny-button>
-          <tiny-button @click="handlePermissionAddCancel">取消</tiny-button>
+          <tiny-button type="primary" @click="handlePermissionAddSubmit">{{
+            $t('menu.btn.confirm')
+          }}</tiny-button>
+          <tiny-button @click="handlePermissionAddCancel">{{
+            $t('menu.btn.cancel')
+          }}</tiny-button>
         </template>
       </tiny-modal>
     </div>
@@ -163,27 +183,36 @@
 </template>
 
 <script lang="ts" setup>
-import {ref, reactive, onMounted, watch, computed} from 'vue';
+import { ref, reactive, onMounted, watch, computed } from 'vue';
 import {
   Tabs as TinyTabs,
   TabItem as TinyTabItem,
   Loading,
   GridColumn as TinyGridColumn,
-  Grid as TinyGrid, Pager as TinyPager, Modal as TinyModal,
+  Grid as TinyGrid,
+  Pager as TinyPager,
+  Modal as TinyModal,
   Button as TinyButton,
   Form as TinyForm,
   FormItem as TinyFormItem,
   Row as TinyRow,
   Col as TinyCol,
-  Input as TinyInput, Modal,
+  Input as TinyInput,
+  Modal,
+  Layout as TinyLayout,
 } from '@opentiny/vue';
-import {IconChevronDown} from '@opentiny/vue-icon';
-import {useUserStore} from '@/stores/user';
-import {getAllPermission, updatePermission ,createPermission, deletePermission} from '@/api/permission';
+import { IconChevronDown } from '@opentiny/vue-icon';
+import { useUserStore } from '@/stores/user';
+import {
+  getAllPermission,
+  updatePermission,
+  createPermission,
+  deletePermission,
+} from '@/api/permission';
 import { useRouter } from '@/router';
-import {getSimpleDate} from "@/utils/time";
-import {updateUserInfo} from "@/api/user";
-import {t} from '@opentiny/vue-locale'
+import { getSimpleDate } from '@/utils/time';
+import { updateUserInfo } from '@/api/user';
+import { t } from '@opentiny/vue-locale';
 
 const router = useRouter();
 
@@ -213,7 +242,7 @@ const rulesType = {
 const rules = computed(() => {
   return {
     name: [rulesType],
-    desc: [rulesType]
+    desc: [rulesType],
   };
 });
 
@@ -224,11 +253,11 @@ onMounted(() => {
 
 // 请求数据接口方法
 async function fetchData() {
-  const {data} = await getAllPermission();
+  const { data } = await getAllPermission();
   state.tableData = data;
-};
+}
 
-async function handleDelete (id: string){
+async function handleDelete(id: number) {
   try {
     await deletePermission(id);
     TinyModal.message({
@@ -249,17 +278,23 @@ async function handleDelete (id: string){
   }
 }
 
-const handleUpdate = (id: string) => {
+const handleUpdate = (id: number) => {
   state.isPermissionUpdate = true;
-  state.permissionUpdData = state.tableData[id - 1];
-}
+  let tmpData = {} as any;
+  for (let i = 0; i < state.tableData.length; i += 1) {
+    if (state.tableData[i].id === id) {
+      tmpData = state.tableData[i];
+    }
+  }
+  state.permissionUpdData = tmpData;
+};
 
-const handlePermissionUpdateCancel =()=>{
+const handlePermissionUpdateCancel = () => {
   state.isPermissionUpdate = false;
   state.permissionUpdData = {} as any;
-}
+};
 
-async function handlePermissionUpdateSubmit(){
+async function handlePermissionUpdateSubmit() {
   let data = state.permissionUpdData;
   let newTemp = {
     id: data.id,
@@ -320,7 +355,6 @@ async function handlePermissionAddCancel() {
   state.isPermissionAdd = false;
   state.permissionAddData = {} as any;
 }
-
 </script>
 
 <style scoped lang="less">
@@ -330,7 +364,7 @@ async function handlePermissionAddCancel() {
   overflow: hidden;
 }
 
-.permission-add-btn{
+.permission-add-btn {
   padding: 10px 0 10px 10px;
 }
 
@@ -340,7 +374,6 @@ async function handlePermissionAddCancel() {
 }
 
 .operation {
-
   &-delete {
     padding-right: 5px;
     color: red;
@@ -355,6 +388,4 @@ async function handlePermissionAddCancel() {
     color: orange;
   }
 }
-
-
 </style>

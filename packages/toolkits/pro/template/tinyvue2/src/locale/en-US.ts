@@ -32,7 +32,7 @@ import localeContracts from '@/views/cloud/contracts/locale/en-US';
 
 import localePermission from '@/views/permission/info/locale/en-US';
 
-// import localeRole from '@/views/role/info/locale/en-US';
+import localeRole from '@/views/role/info/locale/en-US';
 
 import localeMenu from '@/views/menu/info/locale/en-US';
 
@@ -72,6 +72,7 @@ export default {
   'messageBox.logout': 'Logout',
   'messageBox.updatePwd': 'Update Password',
   'menu.cloud': 'Cloud service capability',
+  'menu.btn.confirm': 'Submit',
   ...localeTheme,
   ...localeSettings,
   ...localeLogin,
@@ -94,6 +95,6 @@ export default {
   // ...localeUserManagerSetting,
   // ...localeUserManagerUserAdd,
   ...localePermission,
-  // ...localeRole,
+  ...localeRole,
   ...localeMenu,
 };

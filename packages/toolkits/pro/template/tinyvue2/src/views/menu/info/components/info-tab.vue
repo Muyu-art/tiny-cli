@@ -13,9 +13,8 @@
         <div class="table">
           <tiny-tree
             :data="state.tableData"
-            :size="medium"
             :indent="18"
-            :show-line="showLine === 'show'"
+            :show-line="true"
             default-expand-all
           >
             <template #operation="{ node }">
@@ -134,7 +133,9 @@
           </tiny-layout>
         </template>
         <template #footer>
-          <tiny-button @click="handleMenuInfoCancel">取消</tiny-button>
+          <tiny-button @click="handleMenuInfoCancel">{{
+            $t('menu.btn.cancel')
+          }}</tiny-button>
         </template>
       </tiny-modal>
     </div>
@@ -261,10 +262,12 @@
           </tiny-layout>
         </template>
         <template #footer>
-          <tiny-button type="primary" @click="handleMenuUpdateSubmit"
-            >确定</tiny-button
-          >
-          <tiny-button @click="handleMenuUpdateCancel">取消</tiny-button>
+          <tiny-button type="primary" @click="handleMenuUpdateSubmit">{{
+            $t('menu.btn.confirm')
+          }}</tiny-button>
+          <tiny-button @click="handleMenuUpdateCancel">{{
+            $t('menu.btn.cancel')
+          }}</tiny-button>
         </template>
       </tiny-modal>
     </div>
@@ -384,10 +387,12 @@
           </tiny-layout>
         </template>
         <template #footer>
-          <tiny-button type="primary" @click="handleMenuAddSubmit"
-            >确定</tiny-button
-          >
-          <tiny-button @click="handleMenuAddCancel">取消</tiny-button>
+          <tiny-button type="primary" @click="handleMenuAddSubmit">{{
+            $t('menu.btn.confirm')
+          }}</tiny-button>
+          <tiny-button @click="handleMenuAddCancel">{{
+            $t('menu.btn.cancel')
+          }}</tiny-button>
         </template>
       </tiny-modal>
     </div>
