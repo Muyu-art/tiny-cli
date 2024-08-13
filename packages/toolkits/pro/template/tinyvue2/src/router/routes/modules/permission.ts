@@ -9,7 +9,7 @@ export default {
   meta: {
     locale: 'menu.permission',
     requiresAuth: true,
-    order: 9,
+    order: 10,
     roles: [RoleType.admin],
   },
   children: [

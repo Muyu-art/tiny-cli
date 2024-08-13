@@ -20,7 +20,7 @@ export default {
       component: () => import('@/views/board/home/index.vue'),
       meta: {
         id: 'Home',
-        locale: 'menu.board.home',
+        locale: 'menu.home',
         requiresAuth: true,
         roles: [RoleType.admin],
       },
@@ -32,7 +32,7 @@ export default {
       component: () => import('@/views/board/work/index.vue'),
       meta: {
         id: 'Work',
-        locale: 'menu.board.work',
+        locale: 'menu.work',
         requiresAuth: true,
         roles: [RoleType.admin],
       },
