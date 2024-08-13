@@ -6,12 +6,14 @@
   "scripts": {
     "init": "npm i && npx lerna bootstrap",
     "dev": "lerna run watch --stream --parallel",
+    "dev:local": "esno ./packages/cli/core/src/index.ts",
     "build": "lerna run build",
     "link": "lerna run link",
     "lint": "eslint . --ext .js,.ts --fix",
     "format": "prettier --write **/*{.vue,.js,.ts,.html,.json}",
     "publish": "lerna run build && lerna exec npm publish",
     "clean": "lerna clean && rm -rf node_modules && lerna run clean",
+    "clean:dist": "lerna run clean",
     "commit": "git-cz",
     "prepare": "husky install"
   },
@@ -30,6 +32,7 @@
     "eslint": "^8.28.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "esno": "^4.7.0",
     "husky": "^7.0.4",
     "lerna": "^5.4.2",
     "lint-staged": "^13.0.3",

@@ -1,12 +1,23 @@
 import * as path from 'path';
+import * as dotenv from 'dotenv';
+import { copySync } from 'fs-extra';
 import chalk from 'chalk';
 import spawn from 'cross-spawn';
-import * as dotenv from 'dotenv';
-import mysql from 'mysql2/promise';
 import inquirer, { QuestionCollection } from 'inquirer';
 import { cliConfig, logs, fs } from '@opentiny/cli-devkit';
-import { ProjectInfo, ServerFrameworks } from './interfaces';
+import {
+  buildCommand,
+  buildConfigs,
+  BuildTool,
+  devCommand,
+  devDependencies,
+  ProjectInfo,
+  removedCommand,
+  removeDependencies,
+  ServerFrameworks,
+} from './interfaces';
 import utils from './utils';
+import { existsSync, rmSync, writeFileSync } from 'fs';
 
 const log = logs('tiny-toolkit-pro');
 const VUE_TEMPLATE_PATH = 'tinyvue';
@@ -50,13 +61,26 @@ const getProjectInfo = (): Promise<ProjectInfo> => {
       name: 'serverFramework',
       message: '请选择您希望使用的服务端技术栈：',
       choices: [
-        { name: 'Egg.js', value: ServerFrameworks.EggJs },
-        { name: 'Spring Cloud', value: ServerFrameworks.SpringCloud },
+        // { name: 'Egg.js', value: ServerFrameworks.EggJs },
+        // { name: 'Spring Cloud', value: ServerFrameworks.SpringCloud },
+        { name: 'Nest.js', value: ServerFrameworks.NestJs },
         { name: '暂不配置', value: ServerFrameworks.Skip },
       ],
-      default: ServerFrameworks.Skip,
+      default: ServerFrameworks.NestJs,
       prefix: '*',
       when: (answers) => answers.framework === VUE_TEMPLATE_PATH,
+    },
+    {
+      type: 'list',
+      name: 'buildTool',
+      message: '请选择你想要的构建工具: ',
+      choices: [
+        { name: 'Vite', value: BuildTool.Vite },
+        { name: 'Webpack', value: BuildTool.Webpack },
+        { name: 'Rspack', value: BuildTool.Rspack },
+      ],
+      default: BuildTool.Vite,
+      prefix: '*',
     },
     {
       type: 'list',
@@ -77,7 +101,7 @@ const getProjectInfo = (): Promise<ProjectInfo> => {
       name: 'dialect',
       message: '请选择数据库类型：',
       choices: [
-        { name: 'mySQL', value: 'mysql' },
+        { name: 'MySql', value: 'mysql' },
         { name: '暂不配置', value: '' },
       ],
       default: 'mysql',
@@ -128,103 +152,128 @@ const getProjectInfo = (): Promise<ProjectInfo> => {
 };
 
 /**
- * 创建数据库、表、并插入一条用户(admin)数据
- * @answers 询问客户端问题的选择值
- */
-const createDatabase = async (answers: ProjectInfo) => {
-  const {
-    name,
-    dialect,
-    host,
-    port,
-    database,
-    username,
-    password,
-    serverFramework,
-  } = answers;
-  if (!dialect) return;
-
-  log.info('开始连接数据库服务...');
-  const connection = await mysql.createConnection({
-    host,
-    port,
-    password,
-    user: username,
-    multipleStatements: true,
-  });
-
-  // 连接数据库服务
-  await connection.connect();
-  log.info(`连接成功，准备创建数据库（${database}）和用户数据表...`);
-
-  // 新建数据库
-  await connection.query(`CREATE DATABASE IF NOT EXISTS ${database}`);
-  await connection.query(` USE ${database}`);
-
-  // 读取sql文件、新建表
-  const serverPath = utils.getDistPath(`${name}/${serverFramework}`);
-  let databaseSqlDir = '';
-  switch (serverFramework) {
-    case ServerFrameworks.EggJs:
-      databaseSqlDir = path.join(serverPath, 'app/database');
-      break;
-    case ServerFrameworks.SpringCloud:
-      databaseSqlDir = path.join(
-        serverPath,
-        'server/src/main/resources/database'
-      );
-      break;
-    default:
-      break;
-  }
-
-  const tableSqlDirPath = path.join(databaseSqlDir, 'table');
-  const files = fs.readdirSync(tableSqlDirPath);
-  for (const file of files) {
-    if (/\.sql$/.test(file)) {
-      const sqlFilePath = path.join(tableSqlDirPath, file);
-      const createTableSql = fs.readFileSync(sqlFilePath).toString();
-      await connection.query(createTableSql);
-    }
-  }
-  log.info(
-    '创建成功，开始写入初始用户数据（账号：admin@example.com  密码：admin）...'
-  );
-
-  // 插入初始用户数据
-  const createUserSqlPath = path.join(databaseSqlDir, 'createuser.sql');
-  const createUserSql = fs.readFileSync(createUserSqlPath).toString();
-  await connection.query(createUserSql);
-  log.success('数据库初始化成功！');
-
-  // 断开连接
-  await connection.end();
-};
-
-/**
  * 同步创建服务端项目文件目录、文件
  * @answers 询问客户端问题的选择值
  * @dbAnswers  询问服务端配置的选择值
  */
 const createServerSync = (answers: ProjectInfo) => {
-  const { name, serverFramework, dialect } = answers;
+  const { name, serverFramework } = answers;
   // 复制服务端相关目录
   const serverFrom = utils.getTemplatePath(`server/${serverFramework}`);
   const serverTo = utils.getDistPath(`${name}/${serverFramework}`);
-  const defaultConfig = {
-    // 在未配置数据库信息时，使用默认值替换ejs模板
-    dialect: 'mysql',
-    host: 'localhost',
-    port: 3306,
-    username: 'root',
-    password: '123456',
-    database: 'tiny_pro_server',
+  const config = {
+    DATABASE_HOST: answers.host ?? 'localhost',
+    DATABASE_PORT: 3306,
+    DATABASE_USERNAME: answers.username ?? 'root',
+    DATABASE_PASSWORD: answers.password ?? 'root',
+    DATABASE_NAME: answers.database,
+    DATABASE_SYNCHRONIZE: false,
+    DATABASE_AUTOLOADENTITIES: true,
+    AUTH_SECRET: 'secret',
+    REDIS_SECONDS: 7200,
+    REDIS_HOST: 'localhost',
+    REDIS_PORT: 6379,
+    EXPIRES_IN: '2h',
+    PAGINATION_PAGE: 1,
+    PAGINATION_LIMIT: 10,
   };
-
-  fs.copyTpl(serverFrom, serverTo, dialect ? answers : defaultConfig, {
-    overwrite: true,
-    notTextFile: ['.jar'],
+  const envStr = objToEnv(config);
+  copySync(serverFrom, serverTo, {
+    filter: (src) => {
+      return !src.includes('node_modules');
+    },
   });
+  writeFileSync(path.join(serverTo, '.env'), envStr);
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const objToEnv = (obj: Record<string, any>) => {
+  return Object.entries(obj)
+    .map(([key, value]) => {
+      const v = typeof value === 'string' ? `'${value}'` : value;
+      return [key, '=', v].join(' ');
+    })
+    .join('\n');
+};
+
+const packageJsonProcess = (
+  buildTool: BuildTool,
+  packages: Record<string, string | Record<string, string | boolean>>,
+  currentPath: string
+) => {
+  const match = (pattern: RegExp, items: Array<string>) => {
+    return items.filter((item) => pattern.test(item));
+  };
+  const removeDeps = () => {
+    const devDeps = devDependencies[buildTool];
+    devDeps.forEach((devDep) => {
+      if (typeof devDep === 'string') {
+        packages.devDependencies[devDep] = undefined;
+      }
+      if (devDep instanceof RegExp) {
+        const deps = match(devDep, Object.keys(packages.devDependencies));
+        if (!deps.length) {
+          return;
+        }
+        deps.forEach((dep) => {
+          packages.devDependencies[dep] = undefined;
+        });
+      }
+    });
+    const dependencies = removeDependencies[buildTool];
+    dependencies.forEach((dep: string | RegExp) => {
+      if (typeof dep === 'string') {
+        packages.dependencies[dep] = undefined;
+        return;
+      }
+      if (dep instanceof RegExp) {
+        const keys = match(dep, Object.keys(packages.devDependencies));
+        keys.forEach((key) => {
+          packages.dependencies[key] = undefined;
+        });
+      }
+    });
+  };
+  const replaceScript = (name: string, command: string | undefined) => {
+    packages.scripts[name] = command;
+  };
+  const removeScripts = () => {
+    const scripts = removedCommand;
+    scripts.forEach((script) => {
+      replaceScript(script, undefined);
+    });
+  };
+  const replaceBuildCommand = () => {
+    const command = buildCommand[buildTool];
+    replaceScript('build', command);
+  };
+  const replaceDevCommand = () => {
+    const command = devCommand[buildTool];
+    replaceScript('start', command);
+  };
+  const remove = () => {
+    const removedPaths = buildConfigs[buildTool];
+    const paths = removedPaths
+      .filter((removedPath) => existsSync(path.join(currentPath, removedPath)))
+      .map((p) => path.join(currentPath, p));
+    if (!paths.length) {
+      return;
+    }
+    let willRemovePath = '';
+    try {
+      paths.forEach((removePath) => {
+        willRemovePath = removePath;
+        rmSync(removePath, { recursive: true, force: true });
+      });
+    } catch {
+      log.error(`删除${willRemovePath}错误`);
+    }
+  };
+  removeDeps();
+  removeScripts();
+  replaceBuildCommand();
+  replaceDevCommand();
+  return remove;
 };
 
 /**
@@ -233,15 +282,13 @@ const createServerSync = (answers: ProjectInfo) => {
  * @dbAnswers  询问服务端配置的选择值
  */
 const createProjectSync = (answers: ProjectInfo) => {
-  const { framework, description, name, serverConfirm } = answers;
+  const { framework, description, name, serverConfirm, buildTool } = answers;
   const templatePath =
     framework === VUE_TEMPLATE_PATH ? VUE_TEMPLATE_PATH : NG_TEMPLATE_PATH;
-
   // 模板来源目录
   const from = utils.getTemplatePath(templatePath);
   // 复制模板的目标目录
   const to = utils.getDistPath(serverConfirm ? `${name}/web` : name);
-
   fs.copyTpl(from, to);
   // 将项目名称、描述写入 package.json中
   try {
@@ -250,11 +297,13 @@ const createProjectSync = (answers: ProjectInfo) => {
       fs.readFileSync(packageJsonPath, { encoding: 'utf8' })
     );
     packageJson = { ...packageJson, name, description };
+    const remove = packageJsonProcess(buildTool, packageJson, to);
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2), {
       encoding: 'utf8',
     });
+    remove();
   } catch (e) {
-    log.error('配置项目信息创失败');
+    log.error('配置项目信息创建失败');
   }
 
   // ng模板不开启mock以及服务
@@ -295,9 +344,9 @@ export const installDependencies = (answers: ProjectInfo) => {
       cwd: `${name}/${serverFramework}/`,
       stdio: 'inherit',
     });
-    if(installServiceResult.status === 0) {
+    if (installServiceResult.status === 0) {
       log.success('服务端 npm 依赖安装成功');
-    }else {
+    } else {
       throw new Error(installServiceResult.error);
     }
   }
@@ -307,9 +356,9 @@ export const installDependencies = (answers: ProjectInfo) => {
     cwd: serverConfirm ? `${name}/web` : `${name}/`,
     stdio: 'inherit',
   });
-  if(installClientResult.status === 0) {
+  if (installClientResult.status === 0) {
     log.success('客户端 npm 依赖安装成功');
-  }else {
+  } else {
     throw new Error(installClientResult.error);
   }
 
@@ -380,17 +429,11 @@ export default async () => {
   }
 
   // 初始化数据库
-  try {
-    await createDatabase(projectInfo);
-  } catch (e) {
-    log.error(
-      `数据库初始化失败，请确认数据库配置信息正确并手动初始化数据库${e}`
-    );
-  }
+  // 初始化不应该在cli做，而是在后端
 
   // 安装依赖
   try {
-    installDependencies(projectInfo);
+    // installDependencies(projectInfo);
   } catch (e) {
     log.error('npm 依赖安装失败');
     log.info('请手动执行 tiny i 或 npm i');

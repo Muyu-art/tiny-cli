@@ -16,6 +16,64 @@ export enum ServerFrameworks {
   Skip = '',
 }
 
+export enum BuildTool {
+  Vite = 'vite',
+  Webpack = 'webpack',
+  Rspack = 'rspack',
+}
+
+export const buildConfigs = {
+  vite: ['webpack.config.js', 'rspack.config.js'],
+  webpack: ['config', 'rspack.config.js'],
+  rspack: ['config', 'webpack.config.js'],
+};
+
+export const buildCommand = {
+  vite: 'vite build --config ./config/vite.config.prod.ts',
+  webpack: 'webpack --config webpack.config.js',
+  rspack: 'rspack build',
+};
+
+export const devCommand = {
+  vite: 'vite --config ./config/vite.config.dev.ts --port 3031',
+  webpack: 'webpack-dev-server --progress --config webpack.config.js',
+  rspack: 'rspack serve',
+};
+
+export const removedCommand = ['dev:wp', 'dev:rp', 'build:wp', 'build:rp'];
+
+/**
+ * 需要删除的包
+ */
+export const removeDependencies = {
+  vite: [
+    '@gaonengwww/mock-server',
+    'style-resources-loader',
+    'vue-style-loader',
+  ],
+  webpack: [],
+  rspack: [],
+};
+
+/**
+ * 需要删除的包
+ */
+export const devDependencies = {
+  vite: [
+    '@babel/preset-env',
+    '@babel/preset-typescript',
+    /@rspack\/.*/,
+    /webpack/,
+    'vue-loader',
+    'import-meta-loader',
+    'css-loader',
+    'core-js',
+    'babel-loader',
+  ],
+  rspack: [/@vitejs\/.*/, /vite-.*/, 'vite'],
+  webpack: [/@vitejs\/.*/, /vite-.*/, 'vite'],
+};
+
 /**
  * 初始化问题的选项 -> 选择的值
  */
@@ -31,4 +89,5 @@ export interface ProjectInfo {
   database?: string;
   username?: string;
   password?: string;
+  buildTool: BuildTool;
 }
