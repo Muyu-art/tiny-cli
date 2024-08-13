@@ -33,8 +33,8 @@ import localeContracts from '@/views/cloud/contracts/locale/en-US';
 import localePermission from '@/views/permission/info/locale/en-US';
 
 // import localeRole from '@/views/role/info/locale/en-US';
-//
-// import localeMenu from '@/views/menu/info/locale/en-US';
+
+import localeMenu from '@/views/menu/info/locale/en-US';
 
 import localeSettings from './en-US/settings';
 
@@ -56,12 +56,12 @@ export default {
   'menu.userManager.info': 'All User Info',
   'menu.userManager.setting': 'All User Setting',
   'menu.userManager.useradd': 'Add User',
-  'menu.permission':'Permission Manager',
-  'menu.permission.info':'All Permission Info',
-  'menu.permission.setting':'Permission Setting',
-  'menu.permission.permissionAdd':'Add Permission',
+  'menu.permission': 'Permission Manager',
+  'menu.permission.info': 'All Permission Info',
+  'menu.permission.setting': 'Permission Setting',
+  'menu.permission.permissionAdd': 'Add Permission',
   'menu.role': 'Role Manager',
-  'menu.role.info':'All Role Info',
+  'menu.role.info': 'All Role Info',
   'menu.menu': 'Menu Manager',
   'menu.menu.info': 'All Menu Info',
   'navbar.docs': 'Docs',
@@ -95,5 +95,5 @@ export default {
   // ...localeUserManagerUserAdd,
   ...localePermission,
   // ...localeRole,
-  // ...localeMenu,
+  ...localeMenu,
 };
