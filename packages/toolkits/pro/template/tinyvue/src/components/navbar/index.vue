@@ -92,9 +92,7 @@
           >
             <tiny-row :flex="true" justify="left">
               <tiny-col :span="10" label-width="100px">
-                <tiny-form-item
-                  :label="$t('userInfo.table.email')"
-                >
+                <tiny-form-item :label="$t('userInfo.table.email')">
                   <label>{{ userStore.userInfo.email }}</label>
                 </tiny-form-item>
               </tiny-col>
@@ -106,7 +104,11 @@
                   :label="$t('userInfo.modal.input.oldPassword')"
                   prop="newPassword"
                 >
-                  <tiny-input v-model="state.pwdData.oldPassword" type="password" show-password></tiny-input>
+                  <tiny-input
+                    v-model="state.pwdData.oldPassword"
+                    type="password"
+                    show-password
+                  ></tiny-input>
                 </tiny-form-item>
               </tiny-col>
             </tiny-row>
@@ -117,7 +119,11 @@
                   :label="$t('userInfo.modal.input.newPassword')"
                   prop="newPassword"
                 >
-                  <tiny-input v-model="state.pwdData.newPassword" type="password" show-password></tiny-input>
+                  <tiny-input
+                    v-model="state.pwdData.newPassword"
+                    type="password"
+                    show-password
+                  ></tiny-input>
                 </tiny-form-item>
               </tiny-col>
             </tiny-row>
@@ -128,7 +134,11 @@
                   :label="$t('userInfo.modal.input.confirmNewPassword')"
                   prop="confirmNewPassword"
                 >
-                  <tiny-input v-model="state.pwdData.confirmNewPassword" type="password" show-password></tiny-input>
+                  <tiny-input
+                    v-model="state.pwdData.confirmNewPassword"
+                    type="password"
+                    show-password
+                  ></tiny-input>
                 </tiny-form-item>
               </tiny-col>
             </tiny-row>
@@ -136,17 +146,22 @@
         </tiny-layout>
       </template>
       <template #footer>
-        <tiny-button type="primary" @click="handlePwdUpdateSubmit">确定</tiny-button>
-        <tiny-button @click="handlePwdUpdateCancel">取消</tiny-button>
+        <tiny-button type="primary" @click="handlePwdUpdateSubmit">{{
+          $t('menu.btn.confirm')
+        }}</tiny-button>
+        <tiny-button @click="handlePwdUpdateCancel">{{
+          $t('menu.btn.cancel')
+        }}</tiny-button>
       </template>
     </tiny-modal>
   </div>
 </template>
 
 <script lang="ts" setup>
-import {reactive, ref} from 'vue';
+  import { reactive, ref } from 'vue';
   import { useI18n } from 'vue-i18n';
-  import { UserHead as TinyUserHead,
+  import {
+    UserHead as TinyUserHead,
     Modal as TinyModal,
     Button as TinyButton,
     Form as TinyForm,
@@ -167,11 +182,11 @@ import {reactive, ref} from 'vue';
   import { LOCALE_OPTIONS } from '@/locale';
   import useLocale from '@/hooks/locale';
   import useUser from '@/hooks/user';
-import {getToken} from '@/utils/auth';
-import {updatePwdUser} from "@/api/user";
+  import { getToken } from '@/utils/auth';
+  import { updatePwdUser } from '@/api/user';
 
   const i18 = useI18n();
-  const {t} = useI18n();
+  const { t } = useI18n();
   const iconReplace = IconReplace();
   const iconUser = IconUser();
   const iconCheckOut = IconCheckOut();
@@ -185,14 +200,14 @@ import {updatePwdUser} from "@/api/user";
   const { changeLocale } = useLocale();
   const locales = [...LOCALE_OPTIONS];
 
-// 加载效果
-const state = reactive<{
-  isPwdUpdate: boolean;
-  pwdData: any;
-}>({
-  isPwdUpdate: false,
-  pwdData: {} as any,
-});
+  // 加载效果
+  const state = reactive<{
+    isPwdUpdate: boolean;
+    pwdData: any;
+  }>({
+    isPwdUpdate: false,
+    pwdData: {} as any,
+  });
 
   // 切换语言
   const changeLan = () => {
@@ -213,7 +228,7 @@ const state = reactive<{
     { label: 'messageBox.switchRoles', value: 1 },
     { label: 'messageBox.userCenter', value: 2 },
     { label: 'messageBox.userSettings', value: 3 },
-    { label: 'messageBox.updatePwd',value: 4 },
+    { label: 'messageBox.updatePwd', value: 4 },
     { label: 'messageBox.logout', value: 5 },
   ];
 
@@ -253,51 +268,50 @@ const state = reactive<{
     window.location.href = `${window.location.protocol}//${window.location.host}`;
   };
 
-const handlePwdUpdate = () => {
-  state.isPwdUpdate = true;
-}
+  const handlePwdUpdate = () => {
+    state.isPwdUpdate = true;
+  };
 
-const handlePwdUpdateCancel =()=>{
-  state.isPwdUpdate = false;
-  state.pwdData = {} as any;
-}
+  const handlePwdUpdateCancel = () => {
+    state.isPwdUpdate = false;
+    state.pwdData = {} as any;
+  };
 
-async function handlePwdUpdateSubmit(){
-  let data = state.pwdData;
-  let newTemp = {
-    email: userStore.userInfo.email,
-    token: getToken(),
-    newPassword: data.newPassword,
-    confirmNewPassword: data.confirmNewPassword,
-    oldPassword: data.oldPassword,
-  }
-  if(newTemp.newPassword !== newTemp.confirmNewPassword){
-    TinyModal.message({
-      message: t('userInfo.modal.message.error'),
-      status: 'error',
-    });
-  }else{
-    try {
-      await updatePwdUser(newTemp);
+  async function handlePwdUpdateSubmit() {
+    let data = state.pwdData;
+    let newTemp = {
+      email: userStore.userInfo.email,
+      token: getToken(),
+      newPassword: data.newPassword,
+      confirmNewPassword: data.confirmNewPassword,
+      oldPassword: data.oldPassword,
+    };
+    if (newTemp.newPassword !== newTemp.confirmNewPassword) {
       TinyModal.message({
-        message: t('baseForm.form.submit.success'),
-        status: 'success',
+        message: t('userInfo.modal.message.error'),
+        status: 'error',
       });
-      state.pwdData = {} as any;
-      state.isPwdUpdate = false;
-      logout()
-    } catch (error) {
-      if (error.response && error.response.data) {
-        const errorMessage = error.response.data.message || '未知错误';
+    } else {
+      try {
+        await updatePwdUser(newTemp);
         TinyModal.message({
-          message: errorMessage,
-          status: 'error',
+          message: t('baseForm.form.submit.success'),
+          status: 'success',
         });
+        state.pwdData = {} as any;
+        state.isPwdUpdate = false;
+        logout();
+      } catch (error) {
+        if (error.response && error.response.data) {
+          const errorMessage = error.response.data.message || '未知错误';
+          TinyModal.message({
+            message: errorMessage,
+            status: 'error',
+          });
+        }
       }
     }
   }
-}
-
 </script>
 
 <style scoped lang="less">
