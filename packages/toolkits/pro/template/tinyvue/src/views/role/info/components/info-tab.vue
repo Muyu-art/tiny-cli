@@ -399,6 +399,7 @@
       });
       state.isRoleUpdate = false;
       state.roleUpdData = {} as any;
+      await fetchRoleData();
     } catch (error) {
       if (error.response && error.response.data) {
         const errorMessage = error.response.data.message || '未知错误';
