@@ -15,6 +15,14 @@ let _i18n: VueI18n;
 
 export const useI18n = () => _i18n;
 
+export const i18n = new VueI18n({
+  locale: 'zhCN', // 设置初始语言
+  messages: {
+    enUS: en,
+    zhCN: cn,
+  },
+});
+
 export default (i18n: any) => {
   return locale.initI18n({
     i18n,
@@ -23,5 +31,5 @@ export default (i18n: any) => {
       enUS: en,
       zhCN: cn,
     },
-  } as any)
-}
+  } as any);
+};
