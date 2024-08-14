@@ -202,6 +202,7 @@
     Col as TinyCol,
     Input as TinyInput,
     Modal,
+    Layout as TinyLayout,
   } from '@opentiny/vue';
   import { IconChevronDown } from '@opentiny/vue-icon';
   import { useUserStore } from '@/store';
@@ -283,7 +284,13 @@
 
   const handleUpdate = (id: string) => {
     state.isPermissionUpdate = true;
-    state.permissionUpdData = state.tableData[id - 1];
+    let tmpData = {} as any;
+    for (let i = 0; i < state.tableData.length; i += 1) {
+      if (state.tableData[i].id === id) {
+        tmpData = state.tableData[i];
+      }
+    }
+    state.permissionUpdData = tmpData;
   };
 
   const handlePermissionUpdateCancel = () => {
