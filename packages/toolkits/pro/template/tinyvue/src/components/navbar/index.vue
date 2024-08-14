@@ -158,7 +158,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { reactive, ref } from 'vue';
+  import { reactive, ref, computed } from 'vue';
   import { useI18n } from 'vue-i18n';
   import {
     UserHead as TinyUserHead,
@@ -231,6 +231,19 @@
     { label: 'messageBox.updatePwd', value: 4 },
     { label: 'messageBox.logout', value: 5 },
   ];
+
+  // 校验规则
+  const rulesType = {
+    required: true,
+    trigger: 'blur',
+  };
+  const rules = computed(() => {
+    return {
+      password: [rulesType],
+      newPassword: [rulesType],
+      confirmNewPassword: [rulesType],
+    };
+  });
 
   const switchRoles = async () => {
     const res = await userStore.switchRoles();
