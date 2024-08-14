@@ -75,7 +75,7 @@
         :lock-scroll="true"
         show-header
         show-footer
-        mask-closable="true"
+        :mask-closable="true"
         height="auto"
         width="600"
         :title="$t('userInfo.modal.title.pwdUpdate')"
@@ -90,7 +90,7 @@
               label-position="left"
               size="small"
             >
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item :label="$t('userInfo.table.email')">
                     <label>{{ userStore.userInfo.email }}</label>
@@ -98,7 +98,7 @@
                 </tiny-col>
               </tiny-row>
 
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item
                     :label="$t('userInfo.modal.input.oldPassword')"
@@ -113,7 +113,7 @@
                 </tiny-col>
               </tiny-row>
 
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item
                     :label="$t('userInfo.modal.input.newPassword')"
@@ -128,7 +128,7 @@
                 </tiny-col>
               </tiny-row>
 
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item
                     :label="$t('userInfo.modal.input.confirmNewPassword')"
@@ -146,10 +146,12 @@
           </tiny-layout>
         </template>
         <template #footer>
-          <tiny-button type="primary" @click="handlePwdUpdateSubmit"
-            >确定</tiny-button
-          >
-          <tiny-button @click="handlePwdUpdateCancel">取消</tiny-button>
+          <tiny-button type="primary" @click="handlePwdUpdateSubmit">{{
+            $t('menu.btn.confirm')
+          }}</tiny-button>
+          <tiny-button @click="handlePwdUpdateCancel">{{
+            $t('menu.btn.cancel')
+          }}</tiny-button>
         </template>
       </tiny-modal>
     </div>
@@ -157,7 +159,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import { t } from '@opentiny/vue-locale';
 import {
   UserHead as TinyUserHead,
@@ -168,6 +170,7 @@ import {
   Row as TinyRow,
   Col as TinyCol,
   Input as TinyInput,
+  Layout as TinyLayout,
 } from '@opentiny/vue';
 import {
   IconReplace,
@@ -183,7 +186,7 @@ import useLocale from '@/hooks/locale';
 import useUser from '@/hooks/user';
 import { getToken } from '@/utils/auth';
 import { updatePwdUser } from '@/api/user';
-import { i18n } from '@/locale';
+import i18n from '@/locale';
 
 const iconReplace = IconReplace();
 const iconUser = IconUser();
@@ -229,6 +232,19 @@ const userlist = [
   { label: 'messageBox.updatePwd', value: 4 },
   { label: 'messageBox.logout', value: 5 },
 ];
+
+// 校验规则
+const rulesType = {
+  required: true,
+  trigger: 'blur',
+};
+const rules = computed(() => {
+  return {
+    password: [rulesType],
+    newPassword: [rulesType],
+    confirmNewPassword: [rulesType],
+  };
+});
 
 const switchRoles = async () => {
   const res = await userStore.switchRoles();
