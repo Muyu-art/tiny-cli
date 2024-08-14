@@ -3,19 +3,18 @@
 </template>
 
 <script lang="ts" setup>
-import { useRouter } from '@/router';
+import { useRouter, useQuery } from '@/router';
 
 const router = useRouter();
 const route = router.currentRoute.value;
-if (route.query.path){
+if (useQuery('path')) {
   router.push({
-    path:route.query.path.toString(),
+    path: useQuery('path').toString(),
     query: {
-      final: '1'
-    }
+      final: '1',
+    },
   });
 } else {
-
-  router.push({name: route.query.to?.toString() ?? 'Home'});
+  router.push({ name: useQuery('to')?.toString() ?? 'Home' });
 }
 </script>

@@ -24,11 +24,11 @@ import localeHello from '@/views/cloud/hello/locale/en-US';
 
 import localeContracts from '@/views/cloud/contracts/locale/en-US';
 
-// import localeUserManager from '@/views/userManager/info/locale/en-US';
-//
-// import localeUserManagerSetting from '@/views/userManager/setting/locale/en-US';
-//
-// import localeUserManagerUserAdd from '@/views/userManager/useradd/locale/en-US';
+import localeUserManager from '@/views/userManager/info/locale/en-US';
+
+import localeUserManagerSetting from '@/views/userManager/setting/locale/en-US';
+
+import localeUserManagerUserAdd from '@/views/userManager/useradd/locale/en-US';
 
 import localePermission from '@/views/permission/info/locale/en-US';
 
@@ -91,9 +91,9 @@ export default {
   ...localeHello,
   ...localeContracts,
   ...localeHttpError,
-  // ...localeUserManager,
-  // ...localeUserManagerSetting,
-  // ...localeUserManagerUserAdd,
+  ...localeUserManager,
+  ...localeUserManagerSetting,
+  ...localeUserManagerUserAdd,
   ...localePermission,
   ...localeRole,
   ...localeMenu,

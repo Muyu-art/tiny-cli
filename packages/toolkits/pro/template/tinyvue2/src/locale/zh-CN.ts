@@ -24,11 +24,11 @@ import localeHello from '@/views/cloud/hello/locale/zh-CN';
 
 import localeContracts from '@/views/cloud/contracts/locale/zh-CN';
 
-// import localeUserManager from '@/views/userManager/info/locale/zh-CN';
-//
-// import localeUserManagerSetting from '@/views/userManager/setting/locale/zh-CN';
-//
-// import localeUserManagerUserAdd from '@/views/userManager/useradd/locale/zh-CN';
+import localeUserManager from '@/views/userManager/info/locale/zh-CN';
+
+import localeUserManagerSetting from '@/views/userManager/setting/locale/zh-CN';
+
+import localeUserManagerUserAdd from '@/views/userManager/useradd/locale/zh-CN';
 
 import localePermission from '@/views/permission/info/locale/zh-CN';
 
@@ -91,9 +91,9 @@ export default {
   ...localeHello,
   ...localeContracts,
   ...localeHttpError,
-  // ...localeUserManager,
-  // ...localeUserManagerSetting,
-  // ...localeUserManagerUserAdd,
+  ...localeUserManager,
+  ...localeUserManagerSetting,
+  ...localeUserManagerUserAdd,
   ...localePermission,
   ...localeRole,
   ...localeMenu,

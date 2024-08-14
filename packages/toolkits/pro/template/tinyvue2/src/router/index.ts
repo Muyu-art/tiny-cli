@@ -1,15 +1,15 @@
-import { pinia } from "@/stores/pinia";
-import { useUserStore } from "@/stores/user";
-import Vue from "vue";
-import VueRouter from "vue-router";
-import defaultLayout from "../layout/default-layout.vue";
-import appRoutes from "./routes";
-import {getToken} from "@/utils/auth";
+import { pinia } from '@/stores/pinia';
+import { useUserStore } from '@/stores/user';
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import defaultLayout from '../layout/default-layout.vue';
+import appRoutes from './routes';
+import { getToken } from '@/utils/auth';
 
 Vue.use(VueRouter);
 
 const router = new VueRouter({
-  mode: "history",
+  mode: 'history',
   routes: [
     // 本地地址
     {
@@ -46,16 +46,16 @@ const router = new VueRouter({
       component: () => import('@/views/Preview/index.vue'),
     },
     {
-      name:'redirect',
+      name: 'redirect',
       path: import.meta.env.VITE_CONTEXT + 'redirect',
-      component: ()=>import('@/views/redirect.vue')
-    }
+      component: () => import('@/views/redirect.vue'),
+    },
   ],
 });
 
-
-
-export const useRouter = () => router
+export const useRouter = () => router;
 export const useRoute = () => appRoutes;
+export const useQuery = (key: string) =>
+  new URL(window.location.href).searchParams.get(key);
 
 export default router;
