@@ -40,7 +40,6 @@ import localeSettings from './zh-CN/settings';
 
 import localeHttpError from './zh-CN/httpError';
 
-
 export default {
   'menu.board': '看板',
   'menu.home': '监控页',
@@ -57,12 +56,12 @@ export default {
   'menu.userManager.info': '所有用户',
   'menu.userManager.setting': '修改信息',
   'menu.userManager.useradd': '添加用户',
-  'menu.permission':'权限管理',
-  'menu.permission.info':'查看权限',
-  'menu.permission.setting':'修改权限',
-  'menu.permission.permissionAdd':'添加权限',
+  'menu.permission': '权限管理',
+  'menu.permission.info': '查看权限',
+  'menu.permission.setting': '修改权限',
+  'menu.permission.permissionAdd': '添加权限',
   'menu.role': '角色管理',
-  'menu.role.info':'查看角色',
+  'menu.role.info': '查看角色',
   'menu.menu': '菜单管理',
   'menu.menu.info': '查看菜单',
   'navbar.docs': '文档中心',
@@ -73,6 +72,7 @@ export default {
   'messageBox.logout': '退出登录',
   'messageBox.updatePwd': '修改密码',
   'menu.cloud': '云服务能力展示',
+  'menu.btn.confirm': '确认',
   ...localeTheme,
   ...localeSettings,
   ...localeLogin,

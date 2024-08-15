@@ -2,10 +2,11 @@
   <div class="tiny-fullscreen-scroll">
     <div class="tiny-fullscreen-wrapper">
       <div class="table">
-        <tiny-grid ref="expandGrid"
-                   :fetch-data="fetchDataOption"
-                   :pager="pagerConfig"
-                   :auto-resize="true"
+        <tiny-grid
+          ref="expandGrid"
+          :fetch-data="fetchDataOption"
+          :pager="pagerConfig"
+          :auto-resize="true"
         >
           <tiny-grid-column type="index" width="60"></tiny-grid-column>
           <tiny-grid-column type="expand" width="60">
@@ -49,33 +50,27 @@
                 </li>
                 <li>
                   <span>{{ $t('userInfo.table.protocolStart') }}：</span>
-                  <span>{{ $t(`${data.row.protocolStart}`) }}</span>
-                </li><li>
-                <span>{{ $t('userInfo.table.protocolEnd') }}：</span>
-                <span>{{ $t(`${data.row.protocolEnd}`) }}</span>
-              </li><li>
-                <span>{{ $t('userInfo.table.address') }}：</span>
-                <span>{{ $t(`${data.row.address}`) }}</span>
-              </li><li>
-                <span>{{ $t('userInfo.table.status') }}：</span>
-                <span v-if="data.row.status == 1">已启用</span>
-                <span v-if="data.row.status !== 1">已禁用</span>
-              </li>
+                  <span>{{ $t(`${data.row.protocolStart}`) }}</span> </li
+                ><li>
+                  <span>{{ $t('userInfo.table.protocolEnd') }}：</span>
+                  <span>{{ $t(`${data.row.protocolEnd}`) }}</span> </li
+                ><li>
+                  <span>{{ $t('userInfo.table.address') }}：</span>
+                  <span>{{ $t(`${data.row.address}`) }}</span> </li
+                ><li>
+                  <span>{{ $t('userInfo.table.status') }}：</span>
+                  <span v-if="data.row.status == 1">已启用</span>
+                  <span v-if="data.row.status !== 1">已禁用</span>
+                </li>
               </ul>
             </template>
           </tiny-grid-column>
-          <tiny-grid-column
-            field="name"
-            :title="$t('userInfo.table.id')"
-          >
+          <tiny-grid-column field="name" :title="$t('userInfo.table.id')">
             <template #default="data">
               <span>{{ $t(`${data.row.id}`) }}</span>
             </template>
           </tiny-grid-column>
-          <tiny-grid-column
-            field="time"
-            :title="$t('userInfo.table.name')"
-          >
+          <tiny-grid-column field="time" :title="$t('userInfo.table.name')">
             <template #default="data">
               <span>{{ $t(`${data.row.name}`) }}</span>
             </template>
@@ -85,14 +80,24 @@
               <span>{{ $t(`${data.row.email}`) }}</span>
             </template>
           </tiny-grid-column>
-          <tiny-grid-column field="type" :title="$t('userInfo.table.department')">
+          <tiny-grid-column
+            field="type"
+            :title="$t('userInfo.table.department')"
+          >
             <template #default="data">
-              <span v-if="data.row.department !== null">{{ $t(`${data.row.department}`) }}</span>
+              <span v-if="data.row.department !== null">{{
+                $t(`${data.row.department}`)
+              }}</span>
             </template>
           </tiny-grid-column>
-          <tiny-grid-column field="type" :title="$t('userInfo.table.employeeType')">
+          <tiny-grid-column
+            field="type"
+            :title="$t('userInfo.table.employeeType')"
+          >
             <template #default="data">
-              <span v-if="data.row.employeeType !== null">{{ $t(`${data.row.employeeType}`) }}</span>
+              <span v-if="data.row.employeeType !== null">{{
+                $t(`${data.row.employeeType}`)
+              }}</span>
             </template>
           </tiny-grid-column>
           <tiny-grid-column field="type" :title="$t('userInfo.table.job')">
@@ -100,43 +105,79 @@
               <span>{{ $t(`${data.row.role[0].name}`) }}</span>
             </template>
           </tiny-grid-column>
-          <tiny-grid-column field="type" :title="$t('userInfo.table.probationStart')">
+          <tiny-grid-column
+            field="type"
+            :title="$t('userInfo.table.probationStart')"
+          >
             <template #default="data">
-              <span v-if="data.row.probationStart !== null">{{ $t(`${data.row.probationStart}`) }}</span>
+              <span v-if="data.row.probationStart !== null">{{
+                $t(`${data.row.probationStart}`)
+              }}</span>
             </template>
           </tiny-grid-column>
-          <tiny-grid-column field="type" :title="$t('userInfo.table.probationEnd')">
+          <tiny-grid-column
+            field="type"
+            :title="$t('userInfo.table.probationEnd')"
+          >
             <template #default="data">
-              <span v-if="data.row.probationEnd !== null">{{ $t(`${data.row.probationEnd}`) }}</span>
+              <span v-if="data.row.probationEnd !== null">{{
+                $t(`${data.row.probationEnd}`)
+              }}</span>
             </template>
           </tiny-grid-column>
-          <tiny-grid-column field="type" :title="$t('userInfo.table.probationDuration')">
+          <tiny-grid-column
+            field="type"
+            :title="$t('userInfo.table.probationDuration')"
+          >
             <template #default="data">
-              <span v-if="data.row.probationDuration !== null">{{ $t(`${data.row.probationDuration}`) }}{{$t('userInfo.day')}}</span>
+              <span v-if="data.row.probationDuration !== null"
+                >{{ $t(`${data.row.probationDuration}`)
+                }}{{ $t('userInfo.day') }}</span
+              >
             </template>
           </tiny-grid-column>
-          <tiny-grid-column field="type" :title="$t('userInfo.table.protocolStart')">
+          <tiny-grid-column
+            field="type"
+            :title="$t('userInfo.table.protocolStart')"
+          >
             <template #default="data">
-              <span v-if="data.row.protocolStart !== null">{{ $t(`${data.row.protocolStart}`) }}</span>
+              <span v-if="data.row.protocolStart !== null">{{
+                $t(`${data.row.protocolStart}`)
+              }}</span>
             </template>
           </tiny-grid-column>
-          <tiny-grid-column field="type" :title="$t('userInfo.table.protocolEnd')">
+          <tiny-grid-column
+            field="type"
+            :title="$t('userInfo.table.protocolEnd')"
+          >
             <template #default="data">
-              <span v-if="data.row.protocolEnd !== null">{{ $t(`${data.row.protocolEnd}`) }}</span>
+              <span v-if="data.row.protocolEnd !== null">{{
+                $t(`${data.row.protocolEnd}`)
+              }}</span>
             </template>
           </tiny-grid-column>
           <tiny-grid-column field="type" :title="$t('userInfo.table.address')">
             <template #default="data">
-              <span v-if="data.row.address !== null">{{ $t(`${data.row.address}`) }}</span>
+              <span v-if="data.row.address !== null">{{
+                $t(`${data.row.address}`)
+              }}</span>
             </template>
           </tiny-grid-column>
           <tiny-grid-column field="type" :title="$t('userInfo.table.status')">
             <template #default="data">
               <div v-if="data.row.status == 1">
-                <img style="width: 20px" src="@/assets/images/success.png" alt="success" />
+                <img
+                  style="width: 20px"
+                  src="@/assets/images/success.png"
+                  alt="success"
+                />
               </div>
               <div v-if="data.row.status !== 1">
-                <img style="width: 20px" src="@/assets/images/error.png" alt="error" />
+                <img
+                  style="width: 20px"
+                  src="@/assets/images/error.png"
+                  alt="error"
+                />
               </div>
             </template>
           </tiny-grid-column>
@@ -144,14 +185,26 @@
             :title="$t('userInfo.table.operations')"
             align="center"
           >
-            <template v-slot="data">
-              <a class="operation-update" v-permission="'user::update'" @click="handleUpdate(data.row.email)">
+            <template #default="data">
+              <a
+                v-permission="'user::update'"
+                class="operation-update"
+                @click="handleUpdate(data.row.email)"
+              >
                 {{ $t('userInfo.table.operations.update') }}
               </a>
-              <a class="operation-delete" v-permission="'user::remove'" @click="handleDelete(data.row.email)">
+              <a
+                v-permission="'user::remove'"
+                class="operation-delete"
+                @click="handleDelete(data.row.email)"
+              >
                 {{ $t('userInfo.table.operations.delete') }}
               </a>
-              <a class="operation-pwd-update" v-permission="'user::update'" @click="handlePwdUpdate(data.row.email)">
+              <a
+                v-permission="'user::update'"
+                class="operation-pwd-update"
+                @click="handlePwdUpdate(data.row.email)"
+              >
                 {{ $t('userInfo.table.operations.pwdUpdate') }}
               </a>
             </template>
@@ -183,9 +236,7 @@
           >
             <tiny-row :flex="true" justify="left">
               <tiny-col :span="10" label-width="100px">
-                <tiny-form-item
-                  :label="$t('userInfo.table.email')"
-                >
+                <tiny-form-item :label="$t('userInfo.table.email')">
                   <label>{{ state.pwdData.email }}</label>
                 </tiny-form-item>
               </tiny-col>
@@ -196,7 +247,11 @@
                   :label="$t('userInfo.modal.input.newPassword')"
                   prop="newPassword"
                 >
-                  <tiny-input v-model="state.pwdData.newPassword" type="password" show-password></tiny-input>
+                  <tiny-input
+                    v-model="state.pwdData.newPassword"
+                    type="password"
+                    show-password
+                  ></tiny-input>
                 </tiny-form-item>
               </tiny-col>
             </tiny-row>
@@ -207,7 +262,11 @@
                   :label="$t('userInfo.modal.input.confirmNewPassword')"
                   prop="confirmNewPassword"
                 >
-                  <tiny-input v-model="state.pwdData.confirmNewPassword" type="password" show-password></tiny-input>
+                  <tiny-input
+                    v-model="state.pwdData.confirmNewPassword"
+                    type="password"
+                    show-password
+                  ></tiny-input>
                 </tiny-form-item>
               </tiny-col>
             </tiny-row>
@@ -215,211 +274,214 @@
         </tiny-layout>
       </template>
       <template #footer>
-        <tiny-button type="primary" @click="handlePwdUpdateSubmit">确定</tiny-button>
-        <tiny-button @click="handlePwdUpdateCancel">取消</tiny-button>
+        <tiny-button type="primary" @click="handlePwdUpdateSubmit">{{
+          $t('menu.btn.confirm')
+        }}</tiny-button>
+        <tiny-button @click="handlePwdUpdateCancel">{{
+          $t('menu.btn.cancel')
+        }}</tiny-button>
       </template>
     </tiny-modal>
   </div>
 </template>
 
 <script lang="ts" setup>
-import {ref, reactive, onMounted, watch, computed} from 'vue';
-import {useI18n} from 'vue-i18n';
-import {
-  Tabs as TinyTabs,
-  TabItem as TinyTabItem,
-  Loading,
-  GridColumn as TinyGridColumn,
-  Grid as TinyGrid, Pager as TinyPager, Modal as TinyModal,
-  Button as TinyButton,
-  Form as TinyForm,
-  FormItem as TinyFormItem,
-  Row as TinyRow,
-  Col as TinyCol,
-  Input as TinyInput,
-} from '@opentiny/vue';
-import {IconChevronDown} from '@opentiny/vue-icon';
-import {useUserStore} from '@/store';
-import {getAllUser, deleteUser, updatePwdAdmin, registerUser, updatePwdUser} from '@/api/user';
-import { useRouter } from 'vue-router';
+  import { ref, reactive, onMounted, watch, computed } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import {
+    Tabs as TinyTabs,
+    TabItem as TinyTabItem,
+    Loading,
+    GridColumn as TinyGridColumn,
+    Grid as TinyGrid,
+    Pager as TinyPager,
+    Modal as TinyModal,
+    Button as TinyButton,
+    Form as TinyForm,
+    FormItem as TinyFormItem,
+    Row as TinyRow,
+    Col as TinyCol,
+    Input as TinyInput,
+  } from '@opentiny/vue';
+  import { IconChevronDown } from '@opentiny/vue-icon';
+  import { useUserStore } from '@/store';
+  import {
+    getAllUser,
+    deleteUser,
+    updatePwdAdmin,
+    registerUser,
+    updatePwdUser,
+  } from '@/api/user';
+  import { useRouter } from 'vue-router';
 
-const router = useRouter();
+  const router = useRouter();
 
-const {t} = useI18n();
+  const { t } = useI18n();
 
-// 加载效果
-const state = reactive<{
-  loading: any;
-  tableData: any;
-  pageData: any;
-  isPwdUpdate: boolean;
-  pwdData: any;
-}>({
-  loading: null,
-  tableData: [] as any,
-  pageData: [] as any,
-  isPwdUpdate: false,
-  pwdData: {} as any,
-});
-
-// 变量设置
-const userStore = useUserStore();
-const ChevronDown = IconChevronDown();
-const activeName = ref('1');
-const Filter = ref(false);
-const Sort = ref(false);
-
-const filterInfo = ref();
-
-const pagerConfig = reactive({
-  component: TinyPager,
-  attrs: {
-    currentPage: 1,
-    pageSize: 10,
-    pageSizes: [5, 10, 15, 20],
-    total: 10,
-    layout: 'total, prev, pager, next, jumper, sizes',
-  },
-});
-
-// 校验规则
-const rulesType = {
-  required: true,
-  trigger: 'blur',
-};
-const rules = computed(() => {
-  return {
-    newPassword: [rulesType],
-    confirmNewPassword: [rulesType]
-  };
-});
-
-// 请求数据接口方法
-const fetchData = async (
-  params: {
-    pageIndex: 1,
-    pageSize: 10,
-  }
-) => {
-  userStore.setInfo({reset: false, submit: false});
-  state.loading = Loading.service({
-    text: 'loading...',
-    target: document.getElementById('contain'),
-    background: 'rgba(0, 0, 0, 0.7)',
+  // 加载效果
+  const state = reactive<{
+    loading: any;
+    tableData: any;
+    pageData: any;
+    isPwdUpdate: boolean;
+    pwdData: any;
+  }>({
+    loading: null,
+    tableData: [] as any,
+    pageData: [] as any,
+    isPwdUpdate: false,
+    pwdData: {} as any,
   });
-  try {
-    const {data} = await getAllUser(params.pageIndex, params.pageSize);
-    const total = data.meta.totalItems;
-    return {
-      result: data.items,
-      page: {total},
-    }
-  } finally {
-    state.loading.close();
-  }
-};
 
-const fetchDataOption = reactive({
-  api: ({page}: any) => {
-    const {currentPage, pageSize} = page;
-    return fetchData({
-      pageIndex: currentPage,
-      pageSize,
-    });
-  },
-});
+  // 变量设置
+  const userStore = useUserStore();
+  const ChevronDown = IconChevronDown();
+  const activeName = ref('1');
+  const Filter = ref(false);
+  const Sort = ref(false);
 
-const handleDelete = (email: string) => {
-  deleteUser(email).then((res) => {
-    TinyModal.message({
-      message: '已删除',
-      status: 'success',
-    });
-  })
-}
+  const filterInfo = ref();
 
-const handleUpdate = (email: string) => {
-  router.push({
-    name: 'AllSetting',
-    query: {
-      email,
+  const pagerConfig = reactive({
+    component: TinyPager,
+    attrs: {
+      currentPage: 1,
+      pageSize: 10,
+      pageSizes: [5, 10, 15, 20],
+      total: 10,
+      layout: 'total, prev, pager, next, jumper, sizes',
     },
   });
-}
 
-const handlePwdUpdate = (email: string) => {
-  state.isPwdUpdate = true;
-  state.pwdData.email = email;
-}
+  // 校验规则
+  const rulesType = {
+    required: true,
+    trigger: 'blur',
+  };
+  const rules = computed(() => {
+    return {
+      newPassword: [rulesType],
+      confirmNewPassword: [rulesType],
+    };
+  });
 
-const handlePwdUpdateCancel =()=>{
-  state.isPwdUpdate = false;
-  state.pwdData = {} as any;
-}
-
-async function handlePwdUpdateSubmit(){
-  let data = state.pwdData;
-  let newTemp = {
-    email: data.email,
-    newPassword: data.newPassword,
-    confirmNewPassword: data.confirmNewPassword,
-  }
-  if(newTemp.newPassword !== newTemp.confirmNewPassword){
-    TinyModal.message({
-      message: t('userInfo.modal.message.error'),
-      status: 'error',
+  // 请求数据接口方法
+  const fetchData = async (params: { pageIndex: 1; pageSize: 10 }) => {
+    userStore.setInfo({ reset: false, submit: false });
+    state.loading = Loading.service({
+      text: 'loading...',
+      target: document.getElementById('contain'),
+      background: 'rgba(0, 0, 0, 0.7)',
     });
-  }else{
     try {
-      await updatePwdAdmin(newTemp);
+      const { data } = await getAllUser(params.pageIndex, params.pageSize);
+      const total = data.meta.totalItems;
+      return {
+        result: data.items,
+        page: { total },
+      };
+    } finally {
+      state.loading.close();
+    }
+  };
+
+  const fetchDataOption = reactive({
+    api: ({ page }: any) => {
+      const { currentPage, pageSize } = page;
+      return fetchData({
+        pageIndex: currentPage,
+        pageSize,
+      });
+    },
+  });
+
+  const handleDelete = (email: string) => {
+    deleteUser(email).then((res) => {
       TinyModal.message({
-        message: t('baseForm.form.submit.success'),
+        message: '已删除',
         status: 'success',
       });
-      state.pwdData = {} as any;
-      state.isPwdUpdate = false;
-    } catch (error) {
-      if (error.response && error.response.data) {
-        const errorMessage = error.response.data.message || '未知错误';
+    });
+  };
+
+  const handleUpdate = (email: string) => {
+    router.push({
+      name: 'AllSetting',
+      query: {
+        email,
+      },
+    });
+  };
+
+  const handlePwdUpdate = (email: string) => {
+    state.isPwdUpdate = true;
+    state.pwdData.email = email;
+  };
+
+  const handlePwdUpdateCancel = () => {
+    state.isPwdUpdate = false;
+    state.pwdData = {} as any;
+  };
+
+  async function handlePwdUpdateSubmit() {
+    let data = state.pwdData;
+    let newTemp = {
+      email: data.email,
+      newPassword: data.newPassword,
+      confirmNewPassword: data.confirmNewPassword,
+    };
+    if (newTemp.newPassword !== newTemp.confirmNewPassword) {
+      TinyModal.message({
+        message: t('userInfo.modal.message.error'),
+        status: 'error',
+      });
+    } else {
+      try {
+        await updatePwdAdmin(newTemp);
         TinyModal.message({
-          message: errorMessage,
-          status: 'error',
+          message: t('baseForm.form.submit.success'),
+          status: 'success',
         });
+        state.pwdData = {} as any;
+        state.isPwdUpdate = false;
+      } catch (error) {
+        if (error.response && error.response.data) {
+          const errorMessage = error.response.data.message || '未知错误';
+          TinyModal.message({
+            message: errorMessage,
+            status: 'error',
+          });
+        }
       }
     }
   }
-}
-
 </script>
 
 <style scoped lang="less">
-#contain {
-  height: 100%;
-  padding: 15px;
-  overflow: hidden;
-}
-
-.table {
-  padding-bottom: 20px;
-  background-color: #fff;
-}
-
-.operation {
-
-  &-delete {
-    padding-right: 5px;
-    color: red;
+  #contain {
+    height: 100%;
+    padding: 15px;
+    overflow: hidden;
   }
 
-  &-update {
-    padding-right: 5px;
-    color: #1890ff;
+  .table {
+    padding-bottom: 20px;
+    background-color: #fff;
   }
 
-  &-pwd-update {
-    color: orange;
+  .operation {
+    &-delete {
+      padding-right: 5px;
+      color: red;
+    }
+
+    &-update {
+      padding-right: 5px;
+      color: #1890ff;
+    }
+
+    &-pwd-update {
+      color: orange;
+    }
   }
-}
-
-
 </style>
