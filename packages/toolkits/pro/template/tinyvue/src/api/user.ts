@@ -10,7 +10,7 @@ export interface LogoutData {
   token: string | null;
 }
 
-export interface  RegisterData {
+export interface RegisterData {
   username: string;
   email: string;
   password: string;
@@ -55,8 +55,8 @@ export function getAllUser(page?: number, limit?: number) {
 }
 
 // 获取单个用户
-export function getUserInfo(email: string) {
-  return axios.get<UserInfo>(`/api/user/info/${email}`);
+export function getUserInfo(email?: string) {
+  return axios.get<UserInfo>(`/api/user/info/${email ?? ''}`);
 }
 
 export function deleteUser(email: string) {
@@ -68,7 +68,10 @@ export function updateUserInfo(data: any) {
 }
 
 export function getUserData(data?: UserData) {
-  return axios.post<UserRes>(`${import.meta.env.VITE_MOCK_SERVER_HOST}/api/user/data`, data);
+  return axios.post<UserRes>(
+    `${import.meta.env.VITE_MOCK_SERVER_HOST}/api/user/data`,
+    data,
+  );
 }
 
 export function registerUser(data: any) {
@@ -82,4 +85,3 @@ export function updatePwdAdmin(data: any) {
 export function updatePwdUser(data: any) {
   return axios.patch('/api/user/updatePwd', data);
 }
-

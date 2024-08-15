@@ -1,10 +1,13 @@
 import type { Router } from 'vue-router';
 import { setRouteEmitter } from '@/utils/route-listener';
 import setupPermissionGuard from './permission';
-import {setupMenuGuard} from './menu';
+import { setupMenuGuard } from './menu';
 import { setupTabsGuard } from './tabs';
+import setupInfoGuard from './info';
 
 function setupPageGuard(router: Router) {
+  setupPermissionGuard(router);
+  setupInfoGuard(router);
   setupMenuGuard(router);
   setupTabsGuard(router);
 }
