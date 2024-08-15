@@ -394,7 +394,13 @@
   } from '@opentiny/vue';
   import { IconChevronDown } from '@opentiny/vue-icon';
   import { useUserStore } from '@/store';
-  import { getAllMenu, updateMenu, createMenu, deleteMenu } from '@/api/menu';
+  import {
+    getAllMenu,
+    updateMenu,
+    createMenu,
+    deleteMenu,
+    ITreeNodeData,
+  } from '@/api/menu';
   import { getAllPermission } from '@/api/permission';
   import { useRouter } from 'vue-router';
   import { getSimpleDate } from '@/utils/time';
@@ -458,6 +464,21 @@
   });
 
   // 请求数据接口方法
+
+  const i18nMenu = (menus: ITreeNodeData[]) => {
+    const updateLabel = (menu: ITreeNodeData) => {
+      menu.label = t(menu.locale);
+      for (let i = 0; i < menu.children.length; i += 1) {
+        updateLabel(menu.children[i]);
+      }
+    };
+    const data = [...menus];
+    for (let i = 0; i < data.length; i += 1) {
+      updateLabel(data[i]);
+    }
+    return data;
+  };
+
   async function fetchMenuData() {
     const { data } = await getAllMenu();
     state.tableData = data;
