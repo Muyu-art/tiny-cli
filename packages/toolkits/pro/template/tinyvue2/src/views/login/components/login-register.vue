@@ -75,7 +75,6 @@ import {
 } from '@opentiny/vue';
 import { useI18n } from 'vue-i18n-composable';
 import useLoading from '@/hooks/loading';
-// import { registerUser } from '@/api/user';
 
 const { t } = useI18n();
 // 注册
@@ -169,7 +168,6 @@ function handleSubmit() {
         username: createData.username,
         password: createData.password,
       });
-      // await registerUser(data);
       Modal.message({
         message: t('login.form.registerPass'),
         status: 'success',

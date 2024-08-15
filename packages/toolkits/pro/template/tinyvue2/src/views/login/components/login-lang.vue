@@ -30,10 +30,6 @@ const changeLangDrop = () => {
 };
 const { locale, t } = useI18n();
 
-watch(locale, () => {
-  console.log(t('menu.board'));
-});
-
 const changeLocale = (lang: string) => (locale.value = lang);
 </script>
 

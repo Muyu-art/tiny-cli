@@ -198,9 +198,14 @@ export default defineComponent({
     TinyCol,
     TinyInput,
     TinyLayout,
+    IconReplace,
+    IconUser,
+    IconCheckOut,
+    IconWriting,
+    IconEdit,
   },
   setup() {
-    const { t } = useI18n();
+    const { locale, t } = useI18n();
     const iconReplace = IconReplace();
     const iconUser = IconUser();
     const iconCheckOut = IconCheckOut();
@@ -212,7 +217,6 @@ export default defineComponent({
     const userStore = useUserStore();
     const { logout } = useUser();
     const locales = [...LOCALE_OPTIONS];
-    const { locale } = useI18n();
 
     // 加载效果
     const state = reactive<{
@@ -366,8 +370,8 @@ export default defineComponent({
   },
   methods: {
     changeLocale: function (lang: string) {
-      const { changeLocale } = useLocale(this);
-      changeLocale(lang);
+      const { locale } = useI18n();
+      locale.value = lang;
     },
   },
 });

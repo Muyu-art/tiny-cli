@@ -26,7 +26,6 @@ const reset = () => {
 
 const handleBlur = () => {
   const start = new Date().getTime();
-  // JSON.parse(JSON.stringify(userStore.startTime))
   const end = new Date(JSON.parse(JSON.stringify(endTime.value))).getTime();
   if (end < start) {
     endTime.value = '';

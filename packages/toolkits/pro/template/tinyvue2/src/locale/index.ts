@@ -1,5 +1,4 @@
 import VueI18n from 'vue-i18n';
-// import locale from '@opentiny/vue-locale'; // tiny-vue的国际化
 import en from './en-US';
 import cn from './zh-CN';
 import Vue from 'vue';
