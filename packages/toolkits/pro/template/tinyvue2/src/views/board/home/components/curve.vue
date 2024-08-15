@@ -8,7 +8,9 @@
 
 <script lang="ts" setup>
 import { onMounted, watch, inject, ref, nextTick } from 'vue';
-import {t} from '@opentiny/vue-locale';
+import { useI18n } from 'vue-i18n-composable';
+
+const { t } = useI18n();
 const currentLocale = localStorage.getItem('tiny-local');
 const echarts = inject<any>('echarts');
 const echartsDom = ref();
@@ -44,7 +46,7 @@ const option = {
         type: 'shadow',
       },
       axisLabel: {
-          // eslint-disable-line
+        // eslint-disable-line
         formatter(value: any, index: any) {
           if (index % 2 !== 0) {
             return value;
@@ -90,8 +92,8 @@ const option = {
       },
       data: [
         22, 4.9, 7.0, 23.2, 25.6, 16.7, 15.6, 22.2, 12.6, 22.0, 6.4, 33.3, 22,
-        4.9, 7.0, 23.2, 25.6, 16.7, 15.6, 22.2, 12.6, 22.0, 6.4, 33.3, 22,
-        4.9, 7.0, 23.2, 25.6, 16.7, 15.6, 22.2, 12.6, 22.0, 6.4, 33.3,
+        4.9, 7.0, 23.2, 25.6, 16.7, 15.6, 22.2, 12.6, 22.0, 6.4, 33.3, 22, 4.9,
+        7.0, 23.2, 25.6, 16.7, 15.6, 22.2, 12.6, 22.0, 6.4, 33.3,
       ],
     },
     {
@@ -190,64 +192,67 @@ onMounted(() => {
     myChart.resize();
   });
   nextTick(() => {
-    myChart.resize()
+    myChart.resize();
   });
 });
 
-watch(()=>currentLocale, (newValue, oldValue) => {
-  const chartDom = echartsDom.value;
-  const myChart = echarts.init(chartDom as any);
-  if (newValue === 'zhCN') {
-    option.legend.data = ['采样PV', '首屏可见', '页面Onload'];
-    option.series[0].name = '采样PV';
-    option.series[1].name = '首屏可见';
-    option.series[2].name = '页面Onload';
-  } else {
-    option.legend.data = [
-      'Sampling PV',
-      'Visible on the first screen',
-      'Page Onload',
-    ];
-    option.series[0].name = 'Sampling PV';
-    option.series[1].name = 'Visible on the first screen';
-    option.series[2].name = 'Page Onload';
+watch(
+  () => currentLocale,
+  (newValue, oldValue) => {
+    const chartDom = echartsDom.value;
+    const myChart = echarts.init(chartDom as any);
+    if (newValue === 'zhCN') {
+      option.legend.data = ['采样PV', '首屏可见', '页面Onload'];
+      option.series[0].name = '采样PV';
+      option.series[1].name = '首屏可见';
+      option.series[2].name = '页面Onload';
+    } else {
+      option.legend.data = [
+        'Sampling PV',
+        'Visible on the first screen',
+        'Page Onload',
+      ];
+      option.series[0].name = 'Sampling PV';
+      option.series[1].name = 'Visible on the first screen';
+      option.series[2].name = 'Page Onload';
+    }
+    myChart.setOption(option);
   }
-  myChart.setOption(option);
-});
+);
 </script>
 
 <style scoped lang="less">
-  .curve {
-    width: 100%;
-    height: 491px;
-    margin-top: 2%;
-    background: #fff;
-    border-radius: 6px;
-    box-shadow: 0 3px 10px 0 rgb(64 98 225 / 20%);
-  }
+.curve {
+  width: 100%;
+  height: 491px;
+  margin-top: 2%;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 3px 10px 0 rgb(64 98 225 / 20%);
+}
 
-  #line {
-    width: 100%;
-    height: inherit;
-  }
+#line {
+  width: 100%;
+  height: inherit;
+}
 
-  .image {
-    float: left;
-    width: 25px;
-    margin-top: 0.5%;
-    margin-left: 0.5%;
-    background-color: #a125ff;
-    border-radius: 4px;
-    opacity: 0.6;
-  }
+.image {
+  float: left;
+  width: 25px;
+  margin-top: 0.5%;
+  margin-left: 0.5%;
+  background-color: #a125ff;
+  border-radius: 4px;
+  opacity: 0.6;
+}
 
-  h3 {
-    float: left;
-    width: 200px;
-    margin-top: 0.4%;
-    margin-left: 0.5%;
-    color: #524343;
-    font-weight: 700;
-    font-size: 18px;
-  }
+h3 {
+  float: left;
+  width: 200px;
+  margin-top: 0.4%;
+  margin-left: 0.5%;
+  color: #524343;
+  font-weight: 700;
+  font-size: 18px;
+}
 </style>

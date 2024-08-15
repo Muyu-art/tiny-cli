@@ -4,10 +4,11 @@
     <div class="container-form">
       <div class="base-card">
         <tiny-collapse v-model="activeNames" @change="change">
-          <tiny-collapse-item :title="$t('baseForm.form.project')" name="project">
-            <homefrom
-              :project-data="(projectData.Project)"
-            ></homefrom>
+          <tiny-collapse-item
+            :title="$t('baseForm.form.project')"
+            name="project"
+          >
+            <homefrom :project-data="projectData.Project"></homefrom>
           </tiny-collapse-item>
 
           <tiny-collapse-item
@@ -27,7 +28,10 @@
           >
             <objectivefrom ref="objectiveRef"></objectivefrom>
           </tiny-collapse-item>
-          <tiny-collapse-item :title="$t('baseForm.form.label.plan')" name="plan">
+          <tiny-collapse-item
+            :title="$t('baseForm.form.label.plan')"
+            name="plan"
+          >
             <planfrom
               ref="planFromRef"
               :project-data="projectData"
@@ -45,7 +49,9 @@
             name="mentortitle"
           >
             <mentorfrom ref="mentorRef"></mentorfrom>
-            <div class="card-tip">{{ $t('baseForm.form.label.mentortip') }}</div>
+            <div class="card-tip">
+              {{ $t('baseForm.form.label.mentortip') }}
+            </div>
           </tiny-collapse-item>
           <tiny-collapse-item
             :title="$t('baseForm.form.label.remindertitle')"
@@ -72,7 +78,7 @@
 
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from 'vue';
-import {t} from '@opentiny/vue-locale';
+import { useI18n } from 'vue-i18n-composable';
 import {
   Collapse as TinyCollapse,
   CollapseItem as TinyCollapseItem,
@@ -91,12 +97,13 @@ import mentorfrom from './components/mentor-from.vue';
 import reminderfrom from './components/reminder-from.vue';
 import homefrom from './components/home-from.vue';
 
+const { t } = useI18n();
 // 加载效果
 const state = reactive<{
-    loading: any;
-  }>({
-    loading: null,
-  });
+  loading: any;
+}>({
+  loading: null,
+});
 
 const peopleFormRef = ref();
 const planFromRef = ref();
@@ -182,62 +189,62 @@ const change = (val: any) => {
 </script>
 
 <style scoped lang="less">
-  .container {
-    height: 100%;
-  }
-  .container-form {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: calc(100% - 60px);
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
+.container {
+  height: 100%;
+}
+.container-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: calc(100% - 60px);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
 
-  .base-card {
-    flex: 1 1 auto;
-    margin: 8px 10px;
-    padding: 22px 20px 60px;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 0 8px 8px rgba(169, 174, 184, 0.05);
+.base-card {
+  flex: 1 1 auto;
+  margin: 8px 10px;
+  padding: 22px 20px 60px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 8px 8px rgba(169, 174, 184, 0.05);
 
-    .card-tip {
-      padding-left: 40px;
-      font-size: 12px;
-      font-weight: normal;
-      text-align: left;
-      color: #e37d29;
-      line-height: 18px;
+  .card-tip {
+    padding-left: 40px;
+    font-size: 12px;
+    font-weight: normal;
+    text-align: left;
+    color: #e37d29;
+    line-height: 18px;
 
-      :deep(.tiny-scroll-text) {
-        width: 100%;
-        background: #e6f7ff;
-      }
-    }
-
-    :deep(.tiny-collapse-item) {
-      margin-bottom: 20px;
-    }
-
-    .frequency {
-      width: 200px;
+    :deep(.tiny-scroll-text) {
+      width: 100%;
+      background: #e6f7ff;
     }
   }
 
-  .base-foot {
-    padding-top: 10px;
+  :deep(.tiny-collapse-item) {
+    margin-bottom: 20px;
   }
 
-  :deep(.tiny-button) {
-    width: 100px;
-    height: 36px;
-    border-radius: 4px;
+  .frequency {
+    width: 200px;
   }
-  :deep(.tiny-collapse-item__arrow.is-active, .tiny-collapse-item__arrow:hover){
-    fill: var(--ti-common-color-text-highlight);
-  }
-  :deep(.tiny-collapse-item__header svg){
-    fill: var(--ti-common-color-text-highlight);
-  }
+}
+
+.base-foot {
+  padding-top: 10px;
+}
+
+:deep(.tiny-button) {
+  width: 100px;
+  height: 36px;
+  border-radius: 4px;
+}
+:deep(.tiny-collapse-item__arrow.is-active, .tiny-collapse-item__arrow:hover) {
+  fill: var(--ti-common-color-text-highlight);
+}
+:deep(.tiny-collapse-item__header svg) {
+  fill: var(--ti-common-color-text-highlight);
+}
 </style>

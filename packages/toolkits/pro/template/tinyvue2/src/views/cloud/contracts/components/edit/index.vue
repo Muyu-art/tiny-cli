@@ -67,7 +67,7 @@ import {
   defineExpose,
   defineProps,
 } from 'vue';
-import { t } from '@opentiny/vue-locale';
+import { useI18n } from 'vue-i18n-composable';
 import {
   Form as TinyForm,
   FormItem as TinyFormItem,
@@ -78,6 +78,7 @@ import {
   Modal,
 } from '@opentiny/vue';
 
+const { t } = useI18n();
 const ruleForm = ref();
 const props = defineProps({
   // eslint-disable-next-line vue/require-prop-types
@@ -92,7 +93,7 @@ const validatePass = (
 ) => {
   // eslint-disable-next-line no-useless-escape
   const nameRe =
-      /^([a-zA-Z0-9]|[\u4e00-\u9fa5])([a-zA-Z0-9._:()（）、：\/-]|[\u4e00-\u9fa5]){2,254}$/; // eslint-disable-line
+    /^([a-zA-Z0-9]|[\u4e00-\u9fa5])([a-zA-Z0-9._:()（）、：\/-]|[\u4e00-\u9fa5]){2,254}$/; // eslint-disable-line
   if (!nameRe.test(value)) {
     callback(new Error(t('menu.cloud.tip')));
   } else {
@@ -174,41 +175,41 @@ defineExpose({
 </script>
 
 <style scoped lang="less">
-  .container-edit {
-    h3 {
-      height: 25px;
-      color: #202e54;
-      font-weight: bolder;
-      font-size: 18px;
-      line-height: 25px;
-      text-align: left;
+.container-edit {
+  h3 {
+    height: 25px;
+    color: #202e54;
+    font-weight: bolder;
+    font-size: 18px;
+    line-height: 25px;
+    text-align: left;
+  }
+}
+
+.contain {
+  width: 90%;
+  margin-top: 10%;
+  color: var(--ti-common-color-text-secondary);
+  font-size: var(--ti-default-font-size);
+  line-height: var(--ti-formfield-item-required-label-line-height);
+
+  .tip {
+    color: #999;
+    font-size: var(--ti-common-font-size-base);
+  }
+
+  .btn {
+    margin-top: 6%;
+
+    :deep(.tiny-button) {
+      width: 100px;
+      height: 36px;
+      border-radius: 4px;
     }
   }
 
-  .contain {
-    width: 90%;
-    margin-top: 10%;
-    color: var(--ti-common-color-text-secondary);
-    font-size: var(--ti-default-font-size);
-    line-height: var(--ti-formfield-item-required-label-line-height);
-
-    .tip {
-      color: #999;
-      font-size: var(--ti-common-font-size-base);
-    }
-
-    .btn {
-      margin-top: 6%;
-
-      :deep(.tiny-button) {
-        width: 100px;
-        height: 36px;
-        border-radius: 4px;
-      }
-    }
-
-    :deep(.row-flex) {
-      padding-bottom: 20px;
-    }
+  :deep(.row-flex) {
+    padding-bottom: 20px;
   }
+}
 </style>

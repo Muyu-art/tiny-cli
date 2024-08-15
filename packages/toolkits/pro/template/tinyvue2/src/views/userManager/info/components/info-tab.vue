@@ -293,7 +293,7 @@
 
 <script lang="ts" setup>
 import { ref, reactive, onMounted, watch, computed } from 'vue';
-import { t } from '@opentiny/vue-locale';
+import { useI18n } from 'vue-i18n-composable';
 import { useRouter } from '@/router';
 import {
   Tabs as TinyTabs,
@@ -321,7 +321,7 @@ import {
 } from '@/api/user';
 
 const router = useRouter();
-
+const { t } = useI18n();
 // 加载效果
 const state = reactive<{
   loading: any;
@@ -402,7 +402,7 @@ const fetchDataOption = reactive({
 const handleDelete = (email: string) => {
   deleteUser(email).then((res) => {
     TinyModal.message({
-      message: '已删除',
+      message: t('message.delete.success'),
       status: 'success',
     });
   });

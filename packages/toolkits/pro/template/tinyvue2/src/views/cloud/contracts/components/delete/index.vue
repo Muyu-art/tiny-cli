@@ -9,9 +9,9 @@
           <b>{{ $t('menu.cloud.askContracts') }}</b
           >？
         </div>
-        <div class="title"
-          >{{ $t('menu.contracts.name') }}&nbsp;{{ props.init.name }}</div
-        >
+        <div class="title">
+          {{ $t('menu.contracts.name') }}&nbsp;{{ props.init.name }}
+        </div>
         <div>
           {{ $t('menu.cloud.askInput') }}
           <span class="del">DELETE</span>
@@ -33,13 +33,10 @@
 
 <script lang="ts" setup>
 import { ref, defineEmits, defineProps } from 'vue';
-import { t } from '@opentiny/vue-locale';
-import {
-  Input as TinyInput,
-  Button as TinyButton,
-  Modal,
-} from '@opentiny/vue';
+import { useI18n } from 'vue-i18n-composable';
+import { Input as TinyInput, Button as TinyButton, Modal } from '@opentiny/vue';
 
+const { t } = useI18n();
 const value = ref('');
 const props = defineProps({
   init: Object as any,
@@ -70,47 +67,47 @@ const handleSubmit = () => {
 </script>
 
 <style scoped lang="less">
-  .container-del {
-    h3 {
-      height: 25px;
-      color: #202e54;
-      font-weight: bolder;
-      font-size: 18px;
-      line-height: 25px;
-      text-align: left;
+.container-del {
+  h3 {
+    height: 25px;
+    color: #202e54;
+    font-weight: bolder;
+    font-size: 18px;
+    line-height: 25px;
+    text-align: left;
+  }
+}
+
+.contain {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10%;
+
+  img {
+    width: 38px;
+    height: 33px;
+  }
+
+  .contain-main {
+    width: 430px;
+  }
+
+  .btn {
+    margin-top: 6%;
+
+    :deep(.tiny-button) {
+      width: 100px;
+      height: 36px;
+      border-radius: 4px;
     }
   }
 
-  .contain {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 10%;
-
-    img {
-      width: 38px;
-      height: 33px;
-    }
-
-    .contain-main {
-      width: 430px;
-    }
-
-    .btn {
-      margin-top: 6%;
-
-      :deep(.tiny-button) {
-        width: 100px;
-        height: 36px;
-        border-radius: 4px;
-      }
-    }
-
-    .del {
-      color: red;
-    }
-
-    div {
-      margin-bottom: 3%;
-    }
+  .del {
+    color: red;
   }
+
+  div {
+    margin-bottom: 3%;
+  }
+}
 </style>

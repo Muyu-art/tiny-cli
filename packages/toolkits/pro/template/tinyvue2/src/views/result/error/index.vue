@@ -44,13 +44,14 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { t } from '@opentiny/vue-locale';
+import { useI18n } from 'vue-i18n-composable';
 import {
   Button as TinyButton,
   TimeLine as TinyTimeLine,
   Modal,
 } from '@opentiny/vue';
 
+const { t } = useI18n();
 const active = ref(4);
 
 function handleSubmit() {
@@ -77,83 +78,83 @@ function handleFormReset() {
 </script>
 
 <style scoped lang="less">
-  .container {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 98%;
-    height: inherit;
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 98%;
+  height: inherit;
+  margin: 0 auto;
+  overflow: hidden;
+
+  :deep(.tiny-steps) {
+    margin-top: 10px;
+  }
+}
+
+.content {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: 100%;
+  overflow: auto;
+  background: #fff;
+  border-radius: 10px;
+}
+
+.content-main {
+  padding: 75px 0;
+}
+
+.result-alert {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  color: black;
+  text-align: center;
+
+  img {
+    width: 68px;
+    height: 68px;
     margin: 0 auto;
-    overflow: hidden;
-
-    :deep(.tiny-steps) {
-      margin-top: 10px;
-    }
   }
 
-  .content {
-    display: flex;
-    flex: 1 1 auto;
-    flex-direction: column;
-    justify-content: flex-start;
-    height: 100%;
-    overflow: auto;
-    background: #fff;
-    border-radius: 10px;
+  div:first-child {
+    padding-top: 50px;
+    font-weight: 900;
+    font-size: 20px;
   }
 
-  .content-main {
-    padding: 75px 0;
+  div:last-child {
+    padding-top: 20px;
+    font-size: 14px;
   }
+}
 
-  .result-alert {
-    display: flex;
-    flex-direction: column;
-    align-content: center;
-    justify-content: center;
-    color: black;
-    text-align: center;
+.result-line {
+  width: 75%;
+  height: 200px;
+  margin: 0 auto;
+  margin-top: 50px;
+  color: black;
+  background-color: #f5f6f7;
 
-    img {
-      width: 68px;
-      height: 68px;
-      margin: 0 auto;
-    }
-
-    div:first-child {
-      padding-top: 50px;
-      font-weight: 900;
-      font-size: 20px;
-    }
-
-    div:last-child {
-      padding-top: 20px;
-      font-size: 14px;
-    }
+  div:first-child {
+    padding: 20px;
   }
+}
 
-  .result-line {
-    width: 75%;
-    height: 200px;
-    margin: 0 auto;
-    margin-top: 50px;
-    color: black;
-    background-color: #f5f6f7;
+.result-btn {
+  display: flex;
+  justify-content: center;
+  padding: 50px 0;
 
-    div:first-child {
-      padding: 20px;
-    }
+  button {
+    width: 120px;
+    height: 36px;
+    border-radius: 4px;
   }
-
-  .result-btn {
-    display: flex;
-    justify-content: center;
-    padding: 50px 0;
-
-    button {
-      width: 120px;
-      height: 36px;
-      border-radius: 4px;
-    }
-  }
+}
 </style>

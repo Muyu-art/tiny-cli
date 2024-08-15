@@ -31,7 +31,7 @@
               multiple
             >
               <tiny-option
-                v-for="item in (projectData?.position)"
+                v-for="item in projectData?.position"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -51,7 +51,7 @@
               multiple
             >
               <tiny-option
-                v-for="item in (projectData?.HR)"
+                v-for="item in projectData?.HR"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -68,7 +68,7 @@
               multiple
             >
               <tiny-option
-                v-for="item in (projectData?.mentor)"
+                v-for="item in projectData?.mentor"
                 :key="item"
                 :label="item"
                 :value="item"
@@ -115,7 +115,7 @@ import {
   defineExpose,
   toRefs,
 } from 'vue';
-import {t} from '@opentiny/vue-locale';
+import { useI18n } from 'vue-i18n-composable';
 import {
   Select as TinySelect,
   Option as TinyOption,
@@ -129,15 +129,16 @@ import {
   Modal,
 } from '@opentiny/vue';
 
-  interface FilterOptions {
-    sector: string;
-    position: Array<object>;
-    hr: string;
-    teacher: Array<object>;
-    startTime: string;
-    endTime: string;
-  }
+interface FilterOptions {
+  sector: string;
+  position: Array<object>;
+  hr: string;
+  teacher: Array<object>;
+  startTime: string;
+  endTime: string;
+}
 
+const { t } = useI18n();
 // 父组件传值
 const props = defineProps({
   projectData: Object,
@@ -148,10 +149,10 @@ const { coachPlay } = toRefs(props);
 
 // 加载效果
 const state = reactive<{
-    filterOptions: FilterOptions;
-  }>({
-    filterOptions: {} as FilterOptions,
-  });
+  filterOptions: FilterOptions;
+}>({
+  filterOptions: {} as FilterOptions,
+});
 const coachFormRef = ref();
 const disabled = ref(false);
 
@@ -217,7 +218,7 @@ defineExpose({
 </script>
 
 <style scoped lang="less">
-  :deep(.tiny-row) {
-    margin-bottom: 15px;
-  }
+:deep(.tiny-row) {
+  margin-bottom: 15px;
+}
 </style>

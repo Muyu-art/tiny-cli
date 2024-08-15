@@ -22,7 +22,7 @@
               multiple
             >
               <tiny-option
-                v-for="item in (projectData?.director)"
+                v-for="item in projectData?.director"
                 :key="item"
                 :label="$t(item)"
                 :value="item"
@@ -75,7 +75,7 @@ import {
   defineExpose,
   toRefs,
 } from 'vue';
-import {t} from '@opentiny/vue-locale';
+import { useI18n } from 'vue-i18n-composable';
 import {
   Select as TinySelect,
   Option as TinyOption,
@@ -89,13 +89,14 @@ import {
   Modal,
 } from '@opentiny/vue';
 
-  interface FilterOptions {
-    director: Array<object>;
-    remark: string;
-    startTime: string;
-    endTime: string;
-  }
+interface FilterOptions {
+  director: Array<object>;
+  remark: string;
+  startTime: string;
+  endTime: string;
+}
 
+const { t } = useI18n();
 // 父组件传值
 const props = defineProps({
   projectData: Object,
@@ -106,10 +107,10 @@ const { directorPlay } = toRefs(props);
 
 // 加载效果
 const state = reactive<{
-    filterOptions: FilterOptions;
-  }>({
-    filterOptions: {} as FilterOptions,
-  });
+  filterOptions: FilterOptions;
+}>({
+  filterOptions: {} as FilterOptions,
+});
 
 const directorFormRef = ref();
 const disabled = ref(false);

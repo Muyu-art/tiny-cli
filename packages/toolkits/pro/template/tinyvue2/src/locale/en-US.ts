@@ -73,6 +73,7 @@ export default {
   'messageBox.updatePwd': 'Update Password',
   'menu.cloud': 'Cloud service capability',
   'menu.btn.confirm': 'Submit',
+  'message.delete.success': 'Delete Success',
   ...localeTheme,
   ...localeSettings,
   ...localeLogin,

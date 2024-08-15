@@ -212,8 +212,9 @@ import {
 import { useRouter } from '@/router';
 import { getSimpleDate } from '@/utils/time';
 import { updateUserInfo } from '@/api/user';
-import { t } from '@opentiny/vue-locale';
+import { useI18n } from 'vue-i18n-composable';
 
+const { t } = useI18n();
 const router = useRouter();
 
 // 加载效果
@@ -261,7 +262,7 @@ async function handleDelete(id: number) {
   try {
     await deletePermission(id);
     TinyModal.message({
-      message: '已删除',
+      message: t('message.delete.success'),
       status: 'success',
     });
     state.isPermissionUpdate = false;

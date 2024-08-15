@@ -22,5 +22,5 @@ new Vue({
   router,
   pinia,
   render: (h) => h(App),
-  i18n,
+  i18n: i18n({ locale: 'zhCN' }),
 }).$mount('#app');
