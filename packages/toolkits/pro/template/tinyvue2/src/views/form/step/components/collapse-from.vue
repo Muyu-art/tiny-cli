@@ -33,7 +33,7 @@
 
 <script lang="ts" setup>
 import { ref, reactive, onMounted, watch, defineExpose } from 'vue';
-import {t} from '@opentiny/vue-locale';
+import { useI18n } from 'vue-i18n-composable';
 import { Modal, Loading } from '@opentiny/vue';
 import { useAppStore } from '@/stores';
 import { getStepData } from '@/api/form';
@@ -42,12 +42,13 @@ import directorfrom from './director-from.vue';
 import targetfrom from './target-from.vue';
 import summationfrom from './summation-from.vue';
 
+const { t } = useI18n();
 // 加载效果
 const state = reactive<{
-    loading: any;
-  }>({
-    loading: null,
-  });
+  loading: any;
+}>({
+  loading: null,
+});
 
 // 初始化请求数据
 const appStore = useAppStore();
@@ -129,9 +130,9 @@ const packaged = (vaild: boolean, index: number, key: string) => {
   } else {
     Modal.message({
       message:
-          index !== 3
-            ? t('baseForm.form.submit.error')
-            : t('stepForm.error.target'),
+        index !== 3
+          ? t('baseForm.form.submit.error')
+          : t('stepForm.error.target'),
       status: 'error',
     });
   }
@@ -172,22 +173,22 @@ defineExpose({
 </script>
 
 <style scoped lang="less">
-  #container {
-    padding: 10px 50px;
+#container {
+  padding: 10px 50px;
 
-    div {
-      padding-top: 20px;
-    }
-
-    .targetStyle {
-      margin-bottom: 10px;
-    }
+  div {
+    padding-top: 20px;
   }
 
-  h3 {
-    color: #252b3a;
-    font-weight: 700;
-    font-size: 15px;
-    text-align: left;
+  .targetStyle {
+    margin-bottom: 10px;
   }
+}
+
+h3 {
+  color: #252b3a;
+  font-weight: 700;
+  font-size: 15px;
+  text-align: left;
+}
 </style>

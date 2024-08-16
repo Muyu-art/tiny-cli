@@ -13,8 +13,10 @@
 
 <script lang="ts" setup>
 import { onMounted, watch, inject, ref, nextTick } from 'vue';
-import { t } from '@opentiny/vue-locale';
+import { useI18n } from 'vue-i18n-composable';
 import RoundTable from './roundtable.vue';
+
+const { t } = useI18n();
 const currentLocale = localStorage.getItem('tiny-locale');
 const echarts = inject<any>('echarts');
 const echartsDom = ref();
@@ -72,55 +74,58 @@ onMounted(() => {
     myChart.resize();
   });
   nextTick(() => {
-    myChart.resize()
+    myChart.resize();
   });
 });
 
-watch(()=>currentLocale, (newValue, oldValue) => {
-  const chartDom = echartsDom.value;
-  const myChart = echarts.init(chartDom as any);
-  myChart.setOption(option);
-});
+watch(
+  () => currentLocale,
+  (newValue, oldValue) => {
+    const chartDom = echartsDom.value;
+    const myChart = echarts.init(chartDom as any);
+    myChart.setOption(option);
+  }
+);
 </script>
 
 <style scoped lang="less">
-  .round {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 2%;
-    background: #fff;
-    border-radius: 6px;
-    box-shadow: 0 3px 10px 0 rgb(64 98 225 / 20%);
-  }
+.round {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2%;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 3px 10px 0 rgb(64 98 225 / 20%);
+}
 
-  #circled {
-    width: 32vw !important;
-    height: 350px;
-    margin-left: 2.3%;
-  }
+#circled {
+  width: 32vw !important;
+  height: 350px;
+  margin-left: 2.3%;
+}
 
-  .image {
-    float: left;
-    width: 25px;
-    margin-top: 1.5%;
-    margin-left: 1.5%;
-    border-radius: 4px;
-    opacity: 0.6;
-  }
+.image {
+  float: left;
+  width: 25px;
+  margin-top: 1.5%;
+  margin-left: 1.5%;
+  border-radius: 4px;
+  opacity: 0.6;
+}
 
-  .round-from {
-    width: 46vw;
-    margin-top: 2%;
-    margin-left: 5%;
-  }
+.round-from {
+  width: 46vw;
+  margin-top: 2%;
+  margin-left: 5%;
+}
 
-  h3 {
-    float: left;
-    width: 300px;
-    margin-top: 1.4%;
-    margin-left: 1.5%;
-    color: #524343;
-    font-weight: 700;
-    font-size: 18px;
-  }
+h3 {
+  float: left;
+  width: 300px;
+  margin-top: 1.4%;
+  margin-left: 1.5%;
+  color: #524343;
+  font-weight: 700;
+  font-size: 18px;
+}
 </style>

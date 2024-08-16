@@ -78,7 +78,7 @@
 
 <script lang="ts" setup>
 import { reactive } from 'vue';
-import { t } from '@opentiny/vue-locale'
+import { useI18n } from 'vue-i18n-composable';
 import {
   Pager,
   Grid as TinyGrid,
@@ -88,6 +88,7 @@ import {
   Col as TinyCol,
 } from '@opentiny/vue';
 
+const { t } = useI18n();
 const tableData = [
   {
     id: '1',
@@ -153,110 +154,110 @@ const fetchDataOption = reactive({
 </script>
 
 <style scoped lang="less">
-  .preview-main {
+.preview-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 471px;
+  padding: 0;
+
+  .preview-table {
+    margin-top: 1%;
+  }
+
+  :deep(.tiny-grid .tiny-pager, .tiny-grid + .tiny-pager) {
+    padding-left: 14px;
+  }
+
+  .col {
+    display: flex;
+    justify-content: space-around;
+    width: 350px;
+    height: 150px;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 3px 20px 0 rgb(64 98 225 / 20%);
+  }
+
+  .col:hover {
+    box-shadow: 0 3px 20px 0 rgb(64 98 225 / 55%);
+  }
+
+  .img {
+    display: flex;
+    align-items: center;
+  }
+
+  .num {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 471px;
-    padding: 0;
+    justify-content: space-around;
 
-    .preview-table {
-      margin-top: 1%;
+    #up {
+      span {
+        color: #f7961e;
+      }
     }
 
-    :deep(.tiny-grid .tiny-pager, .tiny-grid + .tiny-pager) {
-      padding-left: 14px;
+    #down {
+      span {
+        color: #3eb21f;
+      }
     }
 
-    .col {
-      display: flex;
-      justify-content: space-around;
-      width: 350px;
-      height: 150px;
-      background: #fff;
-      border-radius: 6px;
-      box-shadow: 0 3px 20px 0 rgb(64 98 225 / 20%);
-    }
-
-    .col:hover {
-      box-shadow: 0 3px 20px 0 rgb(64 98 225 / 55%);
-    }
-
-    .img {
-      display: flex;
-      align-items: center;
-    }
-
-    .num {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-
-      #up {
-        span {
-          color: #f7961e;
-        }
+    .up {
+      .left {
+        margin-left: -15%;
+        color: #35383e;
+        font-weight: 400;
+        font-size: 18px;
+        letter-spacing: 0.45px;
+        text-align: left;
       }
 
-      #down {
-        span {
-          color: #3eb21f;
-        }
+      .right {
+        margin-left: 15%;
+        color: #777;
+        font-size: 16px;
+        letter-spacing: 0.4px;
+        text-align: left;
+      }
+    }
+
+    .down {
+      .left {
+        width: 99px;
+        height: 36px;
+        color: #242424;
+        font-weight: 700;
+        font-size: 36px;
+        letter-spacing: 1.2px;
+        text-align: left;
       }
 
-      .up {
-        .left {
-          margin-left: -15%;
-          color: #35383e;
-          font-weight: 400;
-          font-size: 18px;
-          letter-spacing: 0.45px;
-          text-align: left;
-        }
-
-        .right {
-          margin-left: 15%;
-          color: #777;
-          font-size: 16px;
-          letter-spacing: 0.4px;
-          text-align: left;
-        }
-      }
-
-      .down {
-        .left {
-          width: 99px;
-          height: 36px;
-          color: #242424;
-          font-weight: 700;
-          font-size: 36px;
-          letter-spacing: 1.2px;
-          text-align: left;
-        }
-
-        .right {
-          width: 8px;
-          height: 14px;
-          color: #777;
-          font-weight: 400;
-          font-size: 16px;
-          letter-spacing: 0.4px;
-          text-align: left;
-        }
+      .right {
+        width: 8px;
+        height: 14px;
+        color: #777;
+        font-weight: 400;
+        font-size: 16px;
+        letter-spacing: 0.4px;
+        text-align: left;
       }
     }
   }
+}
 </style>
 
 <style lang="less" scoped>
-  @media (max-width: @screen-xs) {
-    .main {
-      overflow-x: auto;
-    }
-
-    .col {
-      width: 300px;
-    }
+@media (max-width: @screen-xs) {
+  .main {
+    overflow-x: auto;
   }
+
+  .col {
+    width: 300px;
+  }
+}
 </style>

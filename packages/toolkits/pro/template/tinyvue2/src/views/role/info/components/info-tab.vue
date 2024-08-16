@@ -317,10 +317,10 @@ import { getAllMenu } from '@/api/menu';
 import { useRouter } from '@/router';
 import { getSimpleDate } from '@/utils/time';
 import { updateUserInfo } from '@/api/user';
-import { t } from '@opentiny/vue-locale';
+import { useI18n } from 'vue-i18n-composable';
 
 const router = useRouter();
-
+const { t } = useI18n();
 // 加载效果
 const state = reactive<{
   tableData: any;
@@ -393,7 +393,7 @@ async function handleDelete(id: string) {
   try {
     await deleteRole(id);
     TinyModal.message({
-      message: '已删除',
+      message: t('message.delete.success'),
       status: 'success',
     });
     state.isRoleUpdate = false;

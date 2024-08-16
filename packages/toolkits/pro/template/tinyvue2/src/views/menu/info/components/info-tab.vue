@@ -422,8 +422,9 @@ import { getAllPermission } from '@/api/permission';
 import { useRouter } from '@/router';
 import { getSimpleDate } from '@/utils/time';
 import { updateUserInfo } from '@/api/user';
-import { t } from '@opentiny/vue-locale';
+import { useI18n } from 'vue-i18n-composable';
 
+const { t } = useI18n();
 const router = useRouter();
 
 const treeRef = ref();
@@ -492,7 +493,7 @@ async function handleDelete(node: any) {
   try {
     await deleteMenu(node.data.id, node.data.parentId);
     TinyModal.message({
-      message: '已删除',
+      message: t('message.delete.success'),
       status: 'success',
     });
     await fetchMenuData();

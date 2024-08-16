@@ -169,7 +169,7 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, reactive } from 'vue';
-import { t } from '@opentiny/vue-locale';
+import { useI18n } from 'vue-i18n-composable';
 import {
   Select as TinySelect,
   Option as TinyOption,
@@ -190,6 +190,7 @@ import { getAllRole } from '@/api/role';
 
 import headtop from './components/head.vue';
 
+const { t } = useI18n();
 const router = useRouter();
 
 // 初始化请求数据

@@ -173,7 +173,7 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, reactive } from 'vue';
-import { t } from '@opentiny/vue-locale';
+import { useI18n } from 'vue-i18n-composable';
 import {
   Select as TinySelect,
   Option as TinyOption,
@@ -194,7 +194,7 @@ import { getAllRole } from '@/api/role';
 
 const route = useRoute();
 const router = useRouter();
-
+const { t } = useI18n();
 // 初始化请求数据
 onMounted(() => {
   fetchRole();

@@ -8,9 +8,10 @@
 
 <script lang="ts" setup>
 import { onMounted, watch, inject, ref, nextTick } from 'vue';
-import { t } from '@opentiny/vue-locale';
 import useLocale from '@/hooks/locale';
+import { useI18n } from 'vue-i18n-composable';
 
+const { t } = useI18n();
 const { currentLocale } = useLocale();
 const echarts = inject<any>('echarts');
 const echartsDom = ref();
@@ -99,7 +100,7 @@ const option = {
     axisLabel: {
       formatter(value: any, index: any) {
         return (
-        // eslint-disable-next-line prefer-template
+          // eslint-disable-next-line prefer-template
           list[index]?.label + '  ' + list[index]?.value + '  ' + value + 's'
         );
       },
@@ -173,7 +174,7 @@ onMounted(() => {
     myChart.resize();
   });
   nextTick(() => {
-    myChart.resize()
+    myChart.resize();
   });
 });
 
@@ -185,36 +186,36 @@ watch(currentLocale, (newValue, oldValue) => {
 </script>
 
 <style scoped lang="less">
-  .falls {
-    width: 100%;
-    height: 406px;
-    margin-top: 2%;
-    background: #fff;
-    border-radius: 6px;
-    box-shadow: 0 3px 10px 0 rgb(64 98 225 / 20%);
-  }
+.falls {
+  width: 100%;
+  height: 406px;
+  margin-top: 2%;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 3px 10px 0 rgb(64 98 225 / 20%);
+}
 
-  #flow {
-    width: 100%;
-    height: inherit;
-  }
+#flow {
+  width: 100%;
+  height: inherit;
+}
 
-  .image {
-    float: left;
-    width: 25px;
-    margin-top: 0.5%;
-    margin-left: 0.5%;
-    border-radius: 4px;
-    opacity: 0.6;
-  }
+.image {
+  float: left;
+  width: 25px;
+  margin-top: 0.5%;
+  margin-left: 0.5%;
+  border-radius: 4px;
+  opacity: 0.6;
+}
 
-  h3 {
-    float: left;
-    width: 200px;
-    margin-top: 0.5%;
-    margin-left: 0.5%;
-    color: #524343;
-    font-weight: 700;
-    font-size: 18px;
-  }
+h3 {
+  float: left;
+  width: 200px;
+  margin-top: 0.5%;
+  margin-left: 0.5%;
+  color: #524343;
+  font-weight: 700;
+  font-size: 18px;
+}
 </style>

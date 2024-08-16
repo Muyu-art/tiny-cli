@@ -13,8 +13,10 @@
 <script lang="ts" setup>
 import { watch, ref, defineExpose } from 'vue';
 import { CheckboxGroup as TinyCheckboxGroup } from '@opentiny/vue';
-import { t } from '@opentiny/vue-locale';
+import { useI18n } from 'vue-i18n-composable';
 import { useUserStore } from '@/stores/user';
+
+const { t } = useI18n();
 const userStore = useUserStore();
 const checkList = ref([]);
 const options = ref([
@@ -39,23 +41,23 @@ defineExpose({
 </script>
 
 <style scoped lang="less">
-  .option {
-    .required {
-      margin-top: 5px;
-      color: rgb(190, 24, 24);
-      font-size: 140%;
-    }
-
-    span {
-      width: 70px;
-      height: 18px;
-      font-size: 14px;
-    }
-
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: start;
-    padding: 10px 3px;
+.option {
+  .required {
+    margin-top: 5px;
+    color: rgb(190, 24, 24);
+    font-size: 140%;
   }
+
+  span {
+    width: 70px;
+    height: 18px;
+    font-size: 14px;
+  }
+
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: start;
+  padding: 10px 3px;
+}
 </style>

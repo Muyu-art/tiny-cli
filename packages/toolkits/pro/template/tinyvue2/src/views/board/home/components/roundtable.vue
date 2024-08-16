@@ -31,13 +31,14 @@
 
 <script lang="ts" setup>
 import { reactive } from 'vue';
-import { t } from '@opentiny/vue-locale';
+import { useI18n } from 'vue-i18n-composable';
 import {
   Pager,
   Grid as TinyGrid,
   GridColumn as TinyGridColumn,
 } from '@opentiny/vue';
 
+const { t } = useI18n();
 const pagerConfig = reactive({
   component: Pager,
   attrs: {
@@ -129,7 +130,7 @@ const tableData = [
 </script>
 
 <style scoped lang="less">
-  .container {
-    width: inherit;
-  }
+.container {
+  width: inherit;
+}
 </style>

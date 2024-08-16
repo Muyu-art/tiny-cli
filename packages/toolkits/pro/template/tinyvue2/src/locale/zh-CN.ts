@@ -73,6 +73,7 @@ export default {
   'messageBox.updatePwd': '修改密码',
   'menu.cloud': '云服务能力展示',
   'menu.btn.confirm': '确定',
+  'message.delete.success': '删除成功',
   ...localeTheme,
   ...localeSettings,
   ...localeLogin,

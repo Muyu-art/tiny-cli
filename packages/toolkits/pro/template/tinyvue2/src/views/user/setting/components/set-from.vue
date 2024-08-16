@@ -87,7 +87,7 @@
 
 <script lang="ts" setup>
 import { ref, reactive, defineProps, computed, defineExpose } from 'vue';
-import { t } from '@opentiny/vue-locale';
+import { useI18n } from 'vue-i18n-composable';
 import {
   Select as TinySelect,
   Option as TinyOption,
@@ -101,16 +101,16 @@ import {
   Modal,
 } from '@opentiny/vue';
 
-  interface FilterOptions {
-    department: string;
-    position: Array<object>;
-    type: Array<object>;
-    date: Array<object>;
-    during: Array<object>;
-    startTime: string;
-    endTime: string;
-  }
-
+interface FilterOptions {
+  department: string;
+  position: Array<object>;
+  type: Array<object>;
+  date: Array<object>;
+  during: Array<object>;
+  startTime: string;
+  endTime: string;
+}
+const { t } = useI18n();
 const projectData = [
   {
     value: '1',
@@ -128,24 +128,24 @@ const projectData = [
 
 // 加载效果
 const state = reactive<{
-    filterOptions: FilterOptions;
-    department: string;
-    position: Array<object>;
-    type: Array<object>;
-    date: Array<object>;
-    during: string;
-    startTime: string;
-    endTime: string;
-  }>({
-    filterOptions: {} as FilterOptions,
-    department: '',
-    position: [],
-    type: [],
-    date: [],
-    during: '',
-    startTime: '',
-    endTime: '',
-  });
+  filterOptions: FilterOptions;
+  department: string;
+  position: Array<object>;
+  type: Array<object>;
+  date: Array<object>;
+  during: string;
+  startTime: string;
+  endTime: string;
+}>({
+  filterOptions: {} as FilterOptions,
+  department: '',
+  position: [],
+  type: [],
+  date: [],
+  during: '',
+  startTime: '',
+  endTime: '',
+});
 
 // 初始化请求数据
 const setFormRef = ref();
@@ -210,7 +210,7 @@ defineExpose({
 </script>
 
 <style scoped lang="less">
-  :deep(.tiny-row) {
-    margin-bottom: 15px;
-  }
+:deep(.tiny-row) {
+  margin-bottom: 15px;
+}
 </style>

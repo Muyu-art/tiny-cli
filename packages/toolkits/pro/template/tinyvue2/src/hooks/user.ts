@@ -1,10 +1,10 @@
 import { useRouter } from '@/router';
-import { useI18n } from '@/locale';
 import { Modal } from '@opentiny/vue';
 import { useUserStore } from '@/stores/user';
-import {t} from '@opentiny/vue-locale';
+import { useI18n } from 'vue-i18n-composable';
 
 export default function useUser() {
+  const { t } = useI18n();
   const router = useRouter();
   const userStore = useUserStore();
   const logout = async (logoutTo?: string) => {

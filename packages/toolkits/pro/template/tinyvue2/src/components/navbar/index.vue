@@ -25,7 +25,7 @@
         <div class="divider"></div>
       </li>
       <li @click="changeLan">
-        <span v-if="i18n.locale === 'zhCN'">中文</span>
+        <span v-if="language === 'zhCN'">中文</span>
         <span v-else>English</span>
         <img src="@/assets/images/lan.png" alt="lan" class="navbar-lan" />
         <div v-if="lan" class="trigger-lan">
@@ -158,9 +158,8 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-import { computed, reactive, ref } from 'vue';
-import { t } from '@opentiny/vue-locale';
+<script lang="ts">
+import { computed, reactive, ref, defineComponent } from 'vue';
 import {
   UserHead as TinyUserHead,
   Modal as TinyModal,
@@ -182,150 +181,200 @@ import {
 import { useAppStore, useUserStore } from '@/stores';
 import router from '@/router';
 import { LOCALE_OPTIONS } from '@/locale';
-import useLocale from '@/hooks/locale';
+import useLocale, { useCurrentLocal } from '@/hooks/locale';
 import useUser from '@/hooks/user';
 import { getToken } from '@/utils/auth';
 import { updatePwdUser } from '@/api/user';
-import i18n from '@/locale';
+import { useI18n } from 'vue-i18n-composable';
 
-const iconReplace = IconReplace();
-const iconUser = IconUser();
-const iconCheckOut = IconCheckOut();
-const iconWriting = IconWriting();
-const iconEdit = IconEdit();
-const lan = ref(false);
+export default defineComponent({
+  components: {
+    TinyUserHead,
+    TinyModal,
+    TinyButton,
+    TinyForm,
+    TinyFormItem,
+    TinyRow,
+    TinyCol,
+    TinyInput,
+    TinyLayout,
+    IconReplace,
+    IconUser,
+    IconCheckOut,
+    IconWriting,
+    IconEdit,
+  },
+  setup() {
+    const { locale, t } = useI18n();
+    const iconReplace = IconReplace();
+    const iconUser = IconUser();
+    const iconCheckOut = IconCheckOut();
+    const iconWriting = IconWriting();
+    const iconEdit = IconEdit();
+    const lan = ref(false);
 
-const appStore = useAppStore();
-const userStore = useUserStore();
-const { logout } = useUser();
-const { changeLocale } = useLocale();
-const locales = [...LOCALE_OPTIONS];
+    const appStore = useAppStore();
+    const userStore = useUserStore();
+    const { logout } = useUser();
+    const locales = [...LOCALE_OPTIONS];
 
-// 加载效果
-const state = reactive<{
-  isPwdUpdate: boolean;
-  pwdData: any;
-}>({
-  isPwdUpdate: false,
-  pwdData: {} as any,
-});
-
-// 切换语言
-const changeLan = () => {
-  lan.value = !lan.value;
-};
-// 帮助中心
-const help = () => {
-  window.location.href = `${window.location.protocol}//${window.location.host}/vue-pro/docs/start`;
-};
-
-// 设置页面显示
-const setVisible = () => {
-  appStore.updateSettings({ Settings: true });
-};
-
-// 用户设置
-const userlist = [
-  { label: 'messageBox.switchRoles', value: 1 },
-  { label: 'messageBox.userCenter', value: 2 },
-  { label: 'messageBox.userSettings', value: 3 },
-  { label: 'messageBox.updatePwd', value: 4 },
-  { label: 'messageBox.logout', value: 5 },
-];
-
-// 校验规则
-const rulesType = {
-  required: true,
-  trigger: 'blur',
-};
-const rules = computed(() => {
-  return {
-    password: [rulesType],
-    newPassword: [rulesType],
-    confirmNewPassword: [rulesType],
-  };
-});
-
-const switchRoles = async () => {
-  const res = await userStore.switchRoles();
-
-  TinyModal.message({
-    message: res as string,
-    status: 'success',
-  });
-};
-
-const switchUser = (e: number) => {
-  switch (e) {
-    case 1:
-      switchRoles();
-      break;
-    case 2:
-      router.push({ name: 'Info' });
-      break;
-    case 3:
-      router.push({ name: 'Setting' });
-      break;
-    case 4:
-      handlePwdUpdate();
-      break;
-    case 5:
-      logout();
-      break;
-    default:
-    // eslint-disable-next-line no-console
-  }
-};
-
-// 点击图标跳转首页
-const jumpUrl = () => {
-  window.location.href = `${window.location.protocol}//${window.location.host}`;
-};
-
-const handlePwdUpdate = () => {
-  state.isPwdUpdate = true;
-};
-
-const handlePwdUpdateCancel = () => {
-  state.isPwdUpdate = false;
-  state.pwdData = {} as any;
-};
-
-async function handlePwdUpdateSubmit() {
-  let data = state.pwdData;
-  let newTemp = {
-    email: userStore.userInfo.email,
-    token: getToken(),
-    newPassword: data.newPassword,
-    confirmNewPassword: data.confirmNewPassword,
-    oldPassword: data.oldPassword,
-  };
-  if (newTemp.newPassword !== newTemp.confirmNewPassword) {
-    TinyModal.message({
-      message: t('userInfo.modal.message.error'),
-      status: 'error',
+    // 加载效果
+    const state = reactive<{
+      isPwdUpdate: boolean;
+      pwdData: any;
+    }>({
+      isPwdUpdate: false,
+      pwdData: {} as any,
     });
-  } else {
-    try {
-      await updatePwdUser(newTemp);
+
+    // 切换语言
+    const changeLan = () => {
+      lan.value = !lan.value;
+    };
+    // 帮助中心
+    const help = () => {
+      window.location.href = `${window.location.protocol}//${window.location.host}/vue-pro/docs/start`;
+    };
+
+    // 设置页面显示
+    const setVisible = () => {
+      appStore.updateSettings({ Settings: true });
+    };
+
+    // 用户设置
+    const userlist = [
+      { label: 'messageBox.switchRoles', value: 1 },
+      { label: 'messageBox.userCenter', value: 2 },
+      { label: 'messageBox.userSettings', value: 3 },
+      { label: 'messageBox.updatePwd', value: 4 },
+      { label: 'messageBox.logout', value: 5 },
+    ];
+
+    // 校验规则
+    const rulesType = {
+      required: true,
+      trigger: 'blur',
+    };
+    const rules = computed(() => {
+      return {
+        password: [rulesType],
+        newPassword: [rulesType],
+        confirmNewPassword: [rulesType],
+      };
+    });
+
+    const switchRoles = async () => {
+      const res = await userStore.switchRoles();
+
       TinyModal.message({
-        message: t('baseForm.form.submit.success'),
+        message: res as string,
         status: 'success',
       });
-      state.pwdData = {} as any;
+    };
+
+    const switchUser = (e: number) => {
+      switch (e) {
+        case 1:
+          switchRoles();
+          break;
+        case 2:
+          router.push({ name: 'Info' });
+          break;
+        case 3:
+          router.push({ name: 'Setting' });
+          break;
+        case 4:
+          handlePwdUpdate();
+          break;
+        case 5:
+          logout();
+          break;
+        default:
+        // eslint-disable-next-line no-console
+      }
+    };
+
+    // 点击图标跳转首页
+    const jumpUrl = () => {
+      window.location.href = `${window.location.protocol}//${window.location.host}`;
+    };
+
+    const handlePwdUpdate = () => {
+      state.isPwdUpdate = true;
+    };
+
+    const handlePwdUpdateCancel = () => {
       state.isPwdUpdate = false;
-      logout();
-    } catch (error) {
-      if (error.response && error.response.data) {
-        const errorMessage = error.response.data.message || '未知错误';
+      state.pwdData = {} as any;
+    };
+
+    async function handlePwdUpdateSubmit() {
+      const data = state.pwdData;
+      const newTemp = {
+        email: userStore.userInfo.email,
+        token: getToken(),
+        newPassword: data.newPassword,
+        confirmNewPassword: data.confirmNewPassword,
+        oldPassword: data.oldPassword,
+      };
+      if (newTemp.newPassword !== newTemp.confirmNewPassword) {
         TinyModal.message({
-          message: errorMessage,
+          message: t('userInfo.modal.message.error'),
           status: 'error',
         });
+      } else {
+        try {
+          await updatePwdUser(newTemp);
+          TinyModal.message({
+            message: t('baseForm.form.submit.success'),
+            status: 'success',
+          });
+          state.pwdData = {} as any;
+          state.isPwdUpdate = false;
+          logout();
+        } catch (error) {
+          if (error.response && error.response.data) {
+            const errorMessage = error.response.data.message || '未知错误';
+            TinyModal.message({
+              message: errorMessage,
+              status: 'error',
+            });
+          }
+        }
       }
     }
-  }
-}
+
+    return {
+      iconReplace,
+      iconUser,
+      iconCheckOut,
+      iconWriting,
+      iconEdit,
+      lan,
+      appStore,
+      userStore,
+      logout,
+      locales,
+      changeLan,
+      help,
+      setVisible,
+      userlist,
+      rules,
+      switchUser,
+      jumpUrl,
+      handlePwdUpdateCancel,
+      handlePwdUpdateSubmit,
+      language: locale,
+      state,
+    };
+  },
+  methods: {
+    changeLocale: function (lang: string) {
+      const { locale } = useI18n();
+      locale.value = lang;
+    },
+  },
+});
 </script>
 
 <style scoped lang="less">
