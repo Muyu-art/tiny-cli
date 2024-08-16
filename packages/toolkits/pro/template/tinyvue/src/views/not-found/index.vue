@@ -9,14 +9,17 @@
 
   const router = useRouter();
   const toPath = router.currentRoute.value.path;
-  console.log(router.currentRoute);
-  if(!router.currentRoute.value.query.final) {
+  if (!router.currentRoute.value.query.final) {
     router.push({
-      name:'redirect',
+      name: 'redirect',
       query: {
         path: toPath,
-      }
-    })
+      },
+    });
+  } else {
+    router.push({
+      name: 'Home',
+    });
   }
 
   const back = () => {

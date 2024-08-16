@@ -1,9 +1,30 @@
-import axios from "axios";
+import axios from 'axios';
 
-
+export interface ITreeNodeData {
+  // node-key='id' 设置节点的唯一标识
+  id: number | string;
+  // 节点显示文本
+  label: string;
+  // 子节点
+  children?: ITreeNodeData[];
+  // 链接
+  url: string;
+  // 组件
+  component: string;
+  // 图标
+  customIcon: string;
+  // 类型
+  menuType: string;
+  // 父节点
+  parentId: number;
+  // 排序
+  order: number;
+  // 国际化
+  locale: string;
+}
 
 export function getAllMenu() {
-  return axios.get('/api/menu');
+  return axios.get<ITreeNodeData[]>('/api/menu');
 }
 
 export function getRoleMenu(email: string) {

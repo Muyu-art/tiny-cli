@@ -3,19 +3,22 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   Patch,
   Post,
   Put,
   Query,
+  Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Permission } from '../public/permission.decorator';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationQueryDto } from './dto/pagination-query.dto';
-import {UpdatePwdAdminDto} from "./dto/update-pwd-admin.dto";
-import {UpdatePwdUserDto} from "./dto/update-pwd-user.dto";
+import { UpdatePwdAdminDto } from './dto/update-pwd-admin.dto';
+import { UpdatePwdUserDto } from './dto/update-pwd-user.dto';
 
 @Controller('user')
 export class UserController {
@@ -25,9 +28,16 @@ export class UserController {
   async register(@Body() body: CreateUserDto) {
     return this.userService.create(body, false);
   }
-  @Get('/info/:email')
-  async getUserInfo(@Param('email') email: string) {
-    return this.userService.getUserInfo(email, ['role', 'role.permission']);
+  @Get('/info/:email?')
+  async getUserInfo(
+    @Req() request: Request & RequestUser,
+    @Param('email') email?: string
+  ) {
+    const _email = email ? email : request.user.email;
+    if (!_email) {
+      throw new HttpException('未登录', HttpStatus.UNAUTHORIZED);
+    }
+    return this.userService.getUserInfo(_email, ['role', 'role.permission']);
   }
   @Delete('/:email')
   @Permission('user::remove')
@@ -41,9 +51,7 @@ export class UserController {
   }
   @Get()
   @Permission('user::query')
-  async getAllUser(
-    @Query() paginationQuery: PaginationQueryDto,
-  ) {
+  async getAllUser(@Query() paginationQuery: PaginationQueryDto) {
     return this.userService.getAllUser(paginationQuery);
   }
 
