@@ -1,10 +1,11 @@
-import {defineStore} from 'pinia';
+import { defineStore } from 'pinia';
 import {
   login as userLogin,
   logout as userLogout,
   getUserInfo,
 } from '@/api/user';
-import {clearToken, getToken, setToken} from '@/utils/auth';
+import { clearToken, getToken, setToken } from '@/utils/auth';
+import { getRoleInfo } from '@/api/role';
 
 interface LoginData {
   email: string;
@@ -13,24 +14,30 @@ interface LoginData {
 
 export type RoleType = '' | '*' | 'admin' | 'user';
 export interface User {
-  id: string;
-  name: string;
-  email: string;
-  department?: string;
-  employeeType?: string;
-  job?: string;
-  probationStart?: string;
-  probationEnd?: string;
-  probationDuration?: string;
-  protocolStart?: string;
-  protocolEnd?: string;
-  address?: string;
-  status?: string;
-  role: RoleType;
-  updateTime?: any;
-  createTime?: any;
+  id: '10000';
+  name: 'admin';
+  email: 'admin@no-reply.com';
+  department: 'Tiny-Vue-Pro';
+  employeeType: 'social recruitment';
+  job: 'Front end';
+  probationStart: '2021-04-19';
+  probationEnd: '2021-10-15';
+  probationDuration: '180';
+  protocolStart: '2021-04-19';
+  protocolEnd: '2024-04-19';
+  address: '';
+  status: '';
+  role: '';
+  sort: 1;
+  startTime: '';
+  endTime: '';
+  filterStatus: [];
+  filterType: [];
+  submit: false;
+  reset: false;
+  roleId: 0;
+  rolePermission: [];
 }
-
 
 export const useUserStore = defineStore('user', {
   state: (): User => ({
@@ -79,12 +86,12 @@ export const useUserStore = defineStore('user', {
         const res = await userLogin(loginForm);
         const { token } = res.data;
         setToken(token);
-        const userRes = await getUserInfo(loginForm.email)
-        const userInfo: User = {
+        const userRes = await getUserInfo(loginForm.email);
+        const userInfo = {
           id: userRes.data.id,
-          name:userRes.data.name,
-          email:userRes.data.email,
-          role:'',
+          name: userRes.data.name,
+          email: userRes.data.email,
+          role: '',
           department: userRes.data.department,
           employeeType: userRes.data.employeeType,
           job: '',
@@ -95,10 +102,18 @@ export const useUserStore = defineStore('user', {
           protocolEnd: userRes.data.protocolEnd,
           address: userRes.data.address,
           status: userRes.data.status,
-        }
-        if(userRes.data.role){
+          roleId: 0,
+          rolePermission: [],
+        };
+        if (userRes.data.role) {
           userInfo.role = userRes.data.role[0].name;
           userInfo.job = userRes.data.role[0].name;
+          userInfo.roleId = userRes.data.role[0].id;
+        }
+        const { data } = await getRoleInfo(userInfo.roleId);
+        const permissions = data.permission;
+        for (let i = 0; i < permissions.length; i += 1) {
+          userInfo.rolePermission.push(permissions[i].name);
         }
         this.setInfo(userInfo);
       } catch (err) {
@@ -106,12 +121,12 @@ export const useUserStore = defineStore('user', {
         throw err;
       }
     },
-    
+
     // Logout
     async logout() {
       const data = {
-        token:getToken()
-      }
+        token: getToken(),
+      };
       await userLogout(data);
       this.resetInfo();
       clearToken();

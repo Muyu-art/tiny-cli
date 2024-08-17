@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { PiniaVuePlugin } from 'pinia';
 import i18n from '@/locale';
-
+import directive from './directive';
 import App from './App.vue';
 import router from './router';
 import '@/api/interceptor';
@@ -23,6 +23,7 @@ registerMap('china', chinaMap as any);
 
 Vue.use(PiniaVuePlugin);
 Vue.component('Breadcrumb', Breadcrumb);
+Vue.use(directive);
 
 new Vue({
   router,
