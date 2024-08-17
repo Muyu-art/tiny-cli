@@ -18,5 +18,8 @@ export const useMenuStore = defineStore('menu', {
       this.menuList = data;
       return data;
     },
+    clearMenuList() {
+      this.menuList = [];
+    },
   },
 });

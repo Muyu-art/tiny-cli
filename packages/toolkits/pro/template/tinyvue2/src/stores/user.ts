@@ -92,7 +92,6 @@ export const useUserStore = defineStore('user', {
     // Login
     async login(loginForm: LoginData) {
       try {
-        debugger;
         const res = await userLogin(loginForm);
         const { token } = res.data;
         setToken(token);
