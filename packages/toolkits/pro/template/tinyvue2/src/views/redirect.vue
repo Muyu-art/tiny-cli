@@ -3,18 +3,20 @@
 </template>
 
 <script lang="ts" setup>
-import { useRouter, useQuery } from '@/router';
+import { useRouter } from '@/router';
 
 const router = useRouter();
 const route = router.currentRoute.value;
-if (useQuery('path')) {
+if (route.query.path) {
   router.push({
-    path: useQuery('path').toString(),
-    query: {
-      final: '1',
-    },
+    path: route.query.path.toString(),
+    query: route.query.path.toString().includes('redirect')
+      ? {
+          final: '1',
+        }
+      : {},
   });
 } else {
-  router.push({ name: useQuery('to')?.toString() ?? 'Home' });
+  router.push({ name: route.query.to?.toString() ?? 'Home' });
 }
 </script>

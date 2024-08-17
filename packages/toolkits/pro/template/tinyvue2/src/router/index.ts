@@ -5,6 +5,7 @@ import VueRouter from 'vue-router';
 import defaultLayout from '../layout/default-layout.vue';
 import appRoutes from './routes';
 import { getToken } from '@/utils/auth';
+import createRouteGuard from '@/router/guard';
 
 Vue.use(VueRouter);
 
@@ -32,8 +33,7 @@ const router = new VueRouter({
       name: 'root',
       path: import.meta.env.VITE_CONTEXT,
       component: defaultLayout,
-      // children: [],
-      children: appRoutes,
+      children: [],
     },
     {
       path: import.meta.env.VITE_CONTEXT + ':pathMatch(.*)*',
@@ -59,4 +59,5 @@ export const useRoute = () => appRoutes;
 export const useQuery = (key: string) =>
   new URL(window.location.href).searchParams.get(key);
 
+createRouteGuard(router);
 export default router;

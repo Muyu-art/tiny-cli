@@ -12,6 +12,12 @@ import chinaMap from './assets/chaina.json';
 // import * as echarts4 from 'echarts4';
 import { registerMap } from 'echarts';
 import Breadcrumb from '@/components/breadcrumb/index.vue';
+import * as icons from '@opentiny/vue-icon';
+
+// 全局注册所有图标组件
+Object.keys(icons).forEach((key) => {
+  Vue.component(key, icons[key]);
+});
 
 registerMap('china', chinaMap as any);
 
