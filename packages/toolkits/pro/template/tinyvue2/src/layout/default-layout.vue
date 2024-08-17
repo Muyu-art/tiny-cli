@@ -11,11 +11,24 @@
       <template #aside>
         <tiny-layout class="layout-sider">
           <div class="menu-wrapper">
-            <Menu />
+            <AsyncComponent />
           </div>
         </tiny-layout>
       </template>
       <tiny-layout class="layout-content">
+        <Tabs
+          v-model="currentTabName"
+          @click="onClick"
+          with-close
+          @close="onClose"
+        >
+          <tab-item
+            v-for="(history, idx) of tabsHistory"
+            :key="idx"
+            :title="$t(history.name)"
+            :name="history.link"
+          ></tab-item>
+        </Tabs>
         <PageLayout />
       </tiny-layout>
       <template #footer>
@@ -56,7 +69,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted, computed } from 'vue';
+import { useI18n } from 'vue-i18n-composable';
 import {
   Container as TinyContainer,
   Layout as TinyLayout,
@@ -68,12 +82,43 @@ import { useAppStore } from '@/stores';
 import Footer from '@/components/footer/index.vue';
 import NavBar from '@/components/navbar/index.vue';
 import Theme from '@/components/theme/index.vue';
-import Menu from '@/components/menu/index.vue';
 import { DefaultTheme } from '@/components/theme/type';
+import { Tabs, TabItem } from '@opentiny/vue';
+import { useTabStore } from '@/stores/modules/tabs';
+import { useRouter } from '@/router';
 import PageLayout from './page-layout.vue';
 // 动态切换
+const router = useRouter();
 const appStore = useAppStore();
 const changefooter = ref('#fff');
+const { t } = useI18n();
+
+//组件异步加载
+const AsyncComponent = () => ({
+  component: import('@/components/menu/index.vue'), // Menu组件异步
+  delay: 200, // 显示加载组件前的延迟时间
+  timeout: 3000, // 如果组件加载超过这个时间则显示错误组件
+});
+
+//页签
+const tabStore = useTabStore();
+
+const tabsHistory = computed(() => tabStore.data);
+const currentTabName = ref();
+watch(
+  () => tabStore.current,
+  () => {
+    currentTabName.value = tabStore.current?.link;
+  },
+  { deep: true, immediate: true }
+);
+
+const onClick = (tab: { name: string; link: string }) => {
+  router.replace(tab.name);
+};
+const onClose = (name: string) => {
+  tabStore.delByLink(name);
+};
 
 // 切换简约模式，图标按钮
 const top = ref('10px');
@@ -88,7 +133,7 @@ const myPattern = ref('legend');
 
 // 主题配置
 const disTheme = ref(false);
-const theme = new TinyThemeTool(DefaultTheme, '');
+const theme = new TinyThemeTool();
 const themeVisible = () => {
   disTheme.value = !disTheme.value;
 };
@@ -122,96 +167,102 @@ onMounted(() => {
 </script>
 
 <style scoped lang="less">
-  .layout {
-    width: 100%;
-    height: 100%;
-  }
+.layout {
+  width: 100%;
+  height: 100%;
+}
 
-  .layout-navbar {
-    position: fixed;
-    left: 0;
-    z-index: 999;
-    width: 100%;
-    height: 60px;
-    background-color: #fff;
-    box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.2);
-  }
+.layout-navbar {
+  position: fixed;
+  left: 0;
+  z-index: 999;
+  width: 100%;
+  height: 60px;
+  background-color: #fff;
+  box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.2);
+}
 
-  .menu-wrapper {
+.menu-wrapper {
+  width: inherit;
+  height: 92vh;
+  margin-top: v-bind(top);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.global-setting {
+  position: fixed;
+  top: 280px;
+  right: 0;
+  z-index: 99;
+  width: 30px;
+  height: 30px;
+}
+
+.layout :deep(.tiny-container .tiny-container__aside) {
+  z-index: 100;
+  background: #fff;
+  border-left: 1px solid #ccc;
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
+}
+
+.layout :deep(.tiny-container .tiny-container__main) {
+  color: #ccc;
+  background-color: #f5f6f7;
+}
+
+.layout :deep(.layout-content) {
+  height: 100%;
+  padding: 0 10px;
+  overflow: hidden;
+}
+
+.layout :deep(.tiny-container .tiny-container__footer) {
+  display: flex;
+  padding-top: 15px;
+  justify-content: center;
+  background-color: #f5f6f7;
+}
+
+// 组件无法固定非message的modal类型距离顶部距离
+:deep(.tiny-modal__box) {
+  top: 8px !important;
+}
+
+// 路由子菜单选中后的样式
+:deep(.tiny-tree-node__children .tiny-tree-node__content) {
+  .tree-node-name {
+    margin-left: 28px !important;
+    padding-left: 6px !important;
+  }
+}
+:deep(.tiny-tree-node__children > .tree-node-body) {
+  padding-left: 50px;
+}
+:deep(.tiny-tabs__content) {
+  display: none;
+}
+:deep(.tiny-tabs--top) {
+  padding: 0 16px;
+}
+.theme-box {
+  position: fixed;
+  top: 88%;
+  right: 30px;
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background-color: #fff;
+  border-radius: 100%;
+  cursor: pointer;
+
+  img {
+    display: block;
     width: inherit;
-    height: 92vh;
-    margin-top: v-bind(top);
-    overflow-x: hidden;
-    overflow-y: auto;
+    height: inherit;
   }
-
-  .global-setting {
-    position: fixed;
-    top: 280px;
-    right: 0;
-    z-index: 99;
-    width: 30px;
-    height: 30px;
-  }
-
-  .layout :deep(.tiny-container .tiny-container__aside) {
-    z-index: 100;
-    background: #fff;
-    border-left: 1px solid #ccc;
-    box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
-  }
-
-  .layout :deep(.tiny-container .tiny-container__main) {
-    color: #ccc;
-    background-color: #f5f6f7;
-  }
-
-  .layout :deep(.layout-content) {
-    height: 100%;
-    padding: 0 10px;
-    overflow: hidden;
-  }
-
-  .layout :deep(.tiny-container .tiny-container__footer) {
-    display: flex;
-    padding-top: 15px;
-    justify-content: center;
-    background-color: #f5f6f7;
-  }
-
-  // 组件无法固定非message的modal类型距离顶部距离
-  :deep(.tiny-modal__box) {
-    top: 8px !important;
-  }
-
-  // 路由子菜单选中后的样式
-  :deep(.tiny-tree-node__children .tiny-tree-node__content) {
-    .tree-node-name {
-      margin-left: 28px !important;
-      padding-left: 6px !important;
-    }
-  }
-   :deep(.tiny-tree-node__children > .tree-node-body) {
-    padding-left: 50px;
-   }
-  .theme-box {
-    position: fixed;
-    top: 88%;
-    right: 30px;
-    z-index: 99;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    background-color: #fff;
-    border-radius: 100%;
-    cursor: pointer;
-
-    img {
-      display: block;
-      width: inherit;
-      height: inherit;
-    }
-  }
+}
 </style>
