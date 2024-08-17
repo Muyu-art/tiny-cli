@@ -114,7 +114,7 @@ watch(
 );
 
 const onClick = (tab: { name: string; link: string }) => {
-  router.replace(tab.name);
+  router.replace({ path: tab.name });
 };
 const onClose = (name: string) => {
   tabStore.delByLink(name);

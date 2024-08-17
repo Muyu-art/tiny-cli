@@ -6,17 +6,17 @@
 import { useRouter } from '@/router';
 
 const router = useRouter();
-const route = router.currentRoute.value;
-if (route.query.path) {
-  router.push({
-    path: route.query.path.toString(),
-    query: route.query.path.toString().includes('redirect')
-      ? {
-          final: '1',
-        }
-      : {},
-  });
+const route = router.currentRoute;
+if (route.query.final) {
+  router.replace({ name: 'login' });
 } else {
-  router.push({ name: route.query.to?.toString() ?? 'Home' });
+  router.replace({
+    path:
+      route.query.path.toString() ??
+      [import.meta.env.VITE_CONTEXT, 'login'].join(''),
+    query: {
+      final: '1',
+    },
+  });
 }
 </script>

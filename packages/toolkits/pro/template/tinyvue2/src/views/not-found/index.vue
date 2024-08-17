@@ -8,6 +8,19 @@
 import { useRouter } from '@/router';
 
 const router = useRouter();
+if (router.currentRoute.query.final) {
+  router.replace({ name: 'login' });
+} else {
+  router.replace({
+    name: 'redirect',
+    path:
+      router.currentRoute.path ??
+      [import.meta.env.VITE_CONTEXT, 'login'].join(''),
+    query: {
+      final: '1',
+    },
+  });
+}
 const back = () => {
   // warning： Go to the node that has the permission
   router.push({ name: 'Workplace' });

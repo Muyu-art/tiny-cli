@@ -36,11 +36,6 @@ const router = new VueRouter({
       children: [],
     },
     {
-      path: import.meta.env.VITE_CONTEXT + ':pathMatch(.*)*',
-      name: 'notFound',
-      component: () => import('@/views/not-found/index.vue'),
-    },
-    {
       path: import.meta.env.VITE_CONTEXT + 'preview',
       name: 'preview',
       component: () => import('@/views/Preview/index.vue'),
@@ -49,6 +44,11 @@ const router = new VueRouter({
       name: 'redirect',
       path: import.meta.env.VITE_CONTEXT + 'redirect',
       component: () => import('@/views/redirect.vue'),
+    },
+    {
+      path: '*',
+      name: 'notFound',
+      component: () => import('@/views/not-found/index.vue'),
     },
   ],
 });
