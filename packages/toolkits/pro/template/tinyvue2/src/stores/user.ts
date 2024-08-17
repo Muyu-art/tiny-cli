@@ -55,6 +55,15 @@ export const useUserStore = defineStore('user', {
     address: '',
     status: '',
     role: '',
+    sort: 1,
+    startTime: '',
+    endTime: '',
+    filterStatus: [],
+    filterType: [],
+    submit: false,
+    reset: false,
+    roleId: 0,
+    rolePermission: [],
   }),
 
   getters: {
@@ -83,6 +92,7 @@ export const useUserStore = defineStore('user', {
     // Login
     async login(loginForm: LoginData) {
       try {
+        debugger;
         const res = await userLogin(loginForm);
         const { token } = res.data;
         setToken(token);

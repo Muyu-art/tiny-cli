@@ -6,7 +6,6 @@ async function checkPermission(el: HTMLElement, binding: { value: string }) {
   debugger;
   const userStore = useUserStore();
   const { rolePermission } = userStore;
-  console.log(rolePermission);
   const permissionList: string[] = rolePermission;
   const hasPermission =
     permissionList.includes(value) || permissionList.includes('*');
