@@ -3,6 +3,7 @@ import { useUserStore } from '@/stores/user';
 async function checkPermission(el: HTMLElement, binding: { value: string }) {
   const { value } = binding;
   // // 获取role的permission
+  debugger;
   const userStore = useUserStore();
   const { rolePermission } = userStore;
   console.log(rolePermission);
@@ -15,7 +16,7 @@ async function checkPermission(el: HTMLElement, binding: { value: string }) {
 }
 
 export default {
-  mounted(el: HTMLElement, binding: any) {
+  inserted(el: HTMLElement, binding: any) {
     checkPermission(el, binding);
   },
   updated(el: HTMLElement, binding: any) {
