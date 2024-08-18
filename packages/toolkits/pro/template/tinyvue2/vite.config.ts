@@ -1,9 +1,9 @@
-import { fileURLToPath, URL } from "node:url";
+import { fileURLToPath, URL } from 'node:url';
 
-import { defineConfig } from "vite";
-import legacy from "@vitejs/plugin-legacy";
-import vue2 from "@vitejs/plugin-vue2";
-import { resolve } from "node:path";
+import { defineConfig } from 'vite';
+import legacy from '@vitejs/plugin-legacy';
+import vue2 from '@vitejs/plugin-vue2';
+import { resolve } from 'node:path';
 import { viteMockServe } from 'vite-plugin-mock';
 
 // https://vitejs.dev/config/
@@ -11,21 +11,22 @@ export default defineConfig({
   plugins: [
     vue2(),
     legacy({
-      targets: ["ie >= 11"],
-      additionalLegacyPolyfills: ["regenerator-runtime/runtime"],
+      targets: ['ie >= 11'],
+      additionalLegacyPolyfills: ['regenerator-runtime/runtime'],
     }),
     viteMockServe({
       mockPath: './src/mock',
-      enable: true
-    }) as any
+      enable: true,
+    }) as any,
   ],
   resolve: {
     alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url)),
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
   define: {
-    "process.env": { ...process.env },
+    'process.env': { ...process.env },
+    BUILD_TOOLS: "'VITE'",
   },
   css: {
     preprocessorOptions: {
@@ -39,18 +40,18 @@ export default defineConfig({
       },
     },
   },
-  server:{
-    proxy:{
+  server: {
+    proxy: {
       '/api': {
         target: 'http://127.0.0.1:3000',
         changeOrigin: true,
-        rewrite: path => path.replace(/^\/api/, '')
+        rewrite: (path) => path.replace(/^\/api/, ''),
       },
       '/mock': {
         target: 'http://127.0.0.1:8848',
         changeOrigin: true,
-        rewrite: path => path.replace(/^\/mock/, '')
-      }
-    }
-  }
+        rewrite: (path) => path.replace(/^\/mock/, ''),
+      },
+    },
+  },
 });

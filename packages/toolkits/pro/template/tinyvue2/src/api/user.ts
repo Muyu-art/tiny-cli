@@ -55,8 +55,8 @@ export function getAllUser(page?: number, limit?: number) {
 }
 
 // 获取单个用户
-export function getUserInfo(email: string) {
-  return axios.get<User>(`/api/user/info/${email}`);
+export function getUserInfo(email?: string) {
+  return axios.get<User>(`/api/user/info/${email ?? ''}`);
 }
 
 export function deleteUser(email: string) {

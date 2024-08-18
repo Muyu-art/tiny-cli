@@ -3,18 +3,20 @@
 </template>
 
 <script lang="ts" setup>
-import { useRouter, useQuery } from '@/router';
+import { useRouter } from '@/router';
 
 const router = useRouter();
-const route = router.currentRoute.value;
-if (useQuery('path')) {
-  router.push({
-    path: useQuery('path').toString(),
+const route = router.currentRoute;
+if (route.query.final) {
+  router.replace({ name: 'login' });
+} else {
+  router.replace({
+    path:
+      route.query.path.toString() ??
+      [import.meta.env.VITE_CONTEXT, 'login'].join(''),
     query: {
       final: '1',
     },
   });
-} else {
-  router.push({ name: useQuery('to')?.toString() ?? 'Home' });
 }
 </script>

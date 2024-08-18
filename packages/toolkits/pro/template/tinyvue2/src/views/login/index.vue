@@ -11,7 +11,7 @@
             />
             <span class="login-logo-text">TinyPro of Vue</span>
           </div>
-          <div class="login-desc">{{ $t("login.main.text") }}</div>
+          <div class="login-desc">{{ $t('login.main.text') }}</div>
         </div>
         <LoginForm />
       </div>
@@ -23,8 +23,22 @@
 </template>
 
 <script lang="ts" setup>
-import Footer from "@/components/footer/index.vue";
-import LoginForm from "./components/login-form.vue";
+import Footer from '@/components/footer/index.vue';
+import LoginForm from './components/login-form.vue';
+import { onMounted } from 'vue';
+import { useMenuStore } from '@/stores/modules/router';
+import { useTabStore } from '@/stores/modules/tabs';
+import { useRouter } from '@/router';
+import { clearToken } from '@/utils/auth';
+const router = useRouter();
+onMounted(() => {
+  const menuStore = useMenuStore();
+  const tab = useTabStore();
+  clearToken();
+  if (menuStore.menuList.length || tab.data.length) {
+    router.go(0);
+  }
+});
 </script>
 
 <style lang="less" scoped>
@@ -33,7 +47,7 @@ import LoginForm from "./components/login-form.vue";
   flex-direction: column;
   width: 100vw;
   height: 100vh;
-  background-image: url("@/assets/images/img_log.png");
+  background-image: url('@/assets/images/img_log.png');
   background-size: 100% 100%;
 }
 

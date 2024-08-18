@@ -54,7 +54,7 @@
 </template>
 
 <script lang="ts" setup>
-import { inject, ref, reactive } from 'vue';
+import { inject, ref, reactive, onMounted } from 'vue';
 import { useRouter } from '@/router';
 import {
   Form as TinyForm,
@@ -68,9 +68,11 @@ import {
 } from '@opentiny/vue';
 import { useI18n } from 'vue-i18n-composable';
 import { useUserStore } from '@/stores/user';
+import { useMenuStore } from '@/stores/modules/router';
 import useLoading from '@/hooks/loading';
 
 const userStore = useUserStore();
+const userMenu = useMenuStore();
 const { t } = useI18n();
 const router = useRouter();
 const { loading, setLoading } = useLoading();
@@ -142,6 +144,10 @@ function handleSubmit() {
     }
   });
 }
+
+onMounted(() => {
+  userMenu.clearMenuList();
+});
 </script>
 
 <style lang="less" scoped>

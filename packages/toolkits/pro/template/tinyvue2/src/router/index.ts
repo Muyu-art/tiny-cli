@@ -5,6 +5,8 @@ import VueRouter from 'vue-router';
 import defaultLayout from '../layout/default-layout.vue';
 import appRoutes from './routes';
 import { getToken } from '@/utils/auth';
+import createRouteGuard from '@/router/guard';
+import { notFound } from './not-found';
 
 Vue.use(VueRouter);
 
@@ -32,24 +34,23 @@ const router = new VueRouter({
       name: 'root',
       path: import.meta.env.VITE_CONTEXT,
       component: defaultLayout,
-      // children: [],
-      children: appRoutes,
-    },
-    {
-      path: import.meta.env.VITE_CONTEXT + ':pathMatch(.*)*',
-      name: 'notFound',
-      component: () => import('@/views/not-found/index.vue'),
+      children: [],
     },
     {
       path: import.meta.env.VITE_CONTEXT + 'preview',
       name: 'preview',
       component: () => import('@/views/Preview/index.vue'),
     },
-    {
-      name: 'redirect',
-      path: import.meta.env.VITE_CONTEXT + 'redirect',
-      component: () => import('@/views/redirect.vue'),
-    },
+    // {
+    //   name: 'redirect',
+    //   path: import.meta.env.VITE_CONTEXT + 'redirect',
+    //   component: () => import('@/views/redirect.vue'),
+    // },
+    // {
+    //   path:  import.meta.env.VITE_CONTEXT + '*',
+    //   name: 'notFound',
+    //   component: () => import('@/views/not-found/index.vue'),
+    // },
   ],
 });
 
@@ -59,4 +60,5 @@ export const useRoute = () => appRoutes;
 export const useQuery = (key: string) =>
   new URL(window.location.href).searchParams.get(key);
 
+createRouteGuard(router);
 export default router;

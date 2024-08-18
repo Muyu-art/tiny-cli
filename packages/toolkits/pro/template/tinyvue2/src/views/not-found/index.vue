@@ -8,6 +8,9 @@
 import { useRouter } from '@/router';
 
 const router = useRouter();
+if (router.currentRoute.query.final) {
+  router.replace({ name: 'Home' });
+}
 const back = () => {
   // warning： Go to the node that has the permission
   router.push({ name: 'Workplace' });
