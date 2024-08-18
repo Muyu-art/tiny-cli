@@ -14,44 +14,44 @@ interface LoginData {
 
 export type RoleType = '' | '*' | 'admin' | 'user';
 export interface User {
-  id: '10000';
-  name: 'admin';
-  email: 'admin@no-reply.com';
-  department: 'Tiny-Vue-Pro';
-  employeeType: 'social recruitment';
-  job: 'Front end';
-  probationStart: '2021-04-19';
-  probationEnd: '2021-10-15';
-  probationDuration: '180';
-  protocolStart: '2021-04-19';
-  protocolEnd: '2024-04-19';
-  address: '';
-  status: '';
-  role: '';
+  id: string;
+  name: string;
+  email: string;
+  department: string;
+  employeeType: string;
+  job: string;
+  probationStart: string;
+  probationEnd: string;
+  probationDuration: string;
+  protocolStart: string;
+  protocolEnd: string;
+  address: string;
+  status: string;
+  role: string;
   sort: 1;
-  startTime: '';
-  endTime: '';
-  filterStatus: [];
-  filterType: [];
-  submit: false;
-  reset: false;
-  roleId: 0;
-  rolePermission: [];
+  startTime: string;
+  endTime: string;
+  filterStatus: any[];
+  filterType: any[];
+  submit: boolean;
+  reset: boolean;
+  roleId: number;
+  rolePermission: string[];
 }
 
 export const useUserStore = defineStore('user', {
   state: (): User => ({
-    id: '10000',
-    name: 'admin',
-    email: 'admin@no-reply.com',
-    department: 'Tiny-Vue-Pro',
-    employeeType: 'social recruitment',
-    job: 'Front end',
-    probationStart: '2021-04-19',
-    probationEnd: '2021-10-15',
-    probationDuration: '180',
-    protocolStart: '2021-04-19',
-    protocolEnd: '2024-04-19',
+    id: '',
+    name: '',
+    email: '',
+    department: '',
+    employeeType: '',
+    job: '',
+    probationStart: '',
+    probationEnd: '',
+    probationDuration: '',
+    protocolStart: '',
+    protocolEnd: '',
     address: '',
     status: '',
     role: '',

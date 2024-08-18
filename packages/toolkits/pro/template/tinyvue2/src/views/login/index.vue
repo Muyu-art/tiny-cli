@@ -27,11 +27,15 @@ import Footer from '@/components/footer/index.vue';
 import LoginForm from './components/login-form.vue';
 import { onMounted } from 'vue';
 import { useMenuStore } from '@/stores/modules/router';
+import { useTabStore } from '@/stores/modules/tabs';
 import { useRouter } from '@/router';
+import { clearToken } from '@/utils/auth';
 const router = useRouter();
 onMounted(() => {
   const menuStore = useMenuStore();
-  if (menuStore.menuList.length) {
+  const tab = useTabStore();
+  clearToken();
+  if (menuStore.menuList.length || tab.data.length) {
     router.go(0);
   }
 });

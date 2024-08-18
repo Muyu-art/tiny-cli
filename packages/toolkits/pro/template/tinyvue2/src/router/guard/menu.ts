@@ -1,5 +1,7 @@
 import { useMenuStore } from '@/stores/modules/router';
 import { nextTick } from 'vue';
+import type { RouteRecord } from 'vue-router';
+import { notFound } from '../not-found';
 // import { Router, RouteRecordRaw } from "vue-router";
 
 export interface ITreeNodeData {
@@ -59,14 +61,25 @@ const toRoutes = (menus: ITreeNodeData[]) => {
 };
 
 export const setupMenuGuard = (router: any) => {
+  let has404 = false;
   router.beforeEach(async (to, from, next) => {
+    await nextTick();
+    has404 = router
+      .getRoutes()
+      .some((route: RouteRecord) => route.name === 'notFound');
+    if (!has404) {
+      router.addRoute(notFound);
+    }
     if (to.name?.toString().toLowerCase() === 'login') {
       next();
       return;
     }
-    await nextTick();
     const menuStore = useMenuStore();
     if (menuStore.menuList.length) {
+      if (!to.matched.length) {
+        next({ name: 'login', replace: true });
+        return;
+      }
       next();
       return;
     }

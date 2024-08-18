@@ -6,6 +6,7 @@ import defaultLayout from '../layout/default-layout.vue';
 import appRoutes from './routes';
 import { getToken } from '@/utils/auth';
 import createRouteGuard from '@/router/guard';
+import { notFound } from './not-found';
 
 Vue.use(VueRouter);
 
@@ -40,16 +41,16 @@ const router = new VueRouter({
       name: 'preview',
       component: () => import('@/views/Preview/index.vue'),
     },
-    {
-      name: 'redirect',
-      path: import.meta.env.VITE_CONTEXT + 'redirect',
-      component: () => import('@/views/redirect.vue'),
-    },
-    {
-      path: '*',
-      name: 'notFound',
-      component: () => import('@/views/not-found/index.vue'),
-    },
+    // {
+    //   name: 'redirect',
+    //   path: import.meta.env.VITE_CONTEXT + 'redirect',
+    //   component: () => import('@/views/redirect.vue'),
+    // },
+    // {
+    //   path:  import.meta.env.VITE_CONTEXT + '*',
+    //   name: 'notFound',
+    //   component: () => import('@/views/not-found/index.vue'),
+    // },
   ],
 });
 
