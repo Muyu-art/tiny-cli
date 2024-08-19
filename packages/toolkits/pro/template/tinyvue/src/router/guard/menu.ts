@@ -1,7 +1,6 @@
-
-import { useMenuStore } from "@/store/modules/router";
-import { nextTick } from "vue";
-import { Router, RouteRecordRaw } from "vue-router";
+import { useMenuStore } from '@/store/modules/router';
+import { nextTick } from 'vue';
+import { Router, RouteRecordRaw } from 'vue-router';
 
 export interface ITreeNodeData {
   // node-key='id' 设置节点的唯一标识
@@ -27,50 +26,63 @@ export interface ITreeNodeData {
 }
 const reg = /\.vue$/gim;
 let views = {} as any;
-if(BUILD_TOOLS === 'VITE' || BUILD_TOOLS === 'WEBPACK'){
-  views = import.meta.glob('../../views/**/*.vue')
-}else if(BUILD_TOOLS === 'RSPACK'){
+if (BUILD_TOOLS === 'VITE' || BUILD_TOOLS === 'WEBPACK') {
+  views = import.meta.glob('../../views/**/*.vue');
+} else if (BUILD_TOOLS === 'RSPACK') {
   const components = require.context('../../views', true, reg, 'sync');
   components.keys().forEach((path) => {
-    if(path.endsWith('.vue')){
-      views[`../../views/${path.replace('./','')}`] = ()=>components(path);
+    if (path.endsWith('.vue')) {
+      views[`../../views/${path.replace('./', '')}`] = () => components(path);
     }
-  })
+  });
 }
 const toRoutes = (menus: ITreeNodeData[]) => {
   const router: RouteRecordRaw[] = [];
-  for (let i=0;i<menus.length;i+=1) {
+  for (let i = 0; i < menus.length; i += 1) {
     const menu = menus[i];
-    const path = `../../views/${menu.component}${menu.component.includes('.vue') ? '' : '.vue'}`
-    router.push({
-      name: menu.label,
-      path: menu.url,
-      component: ()=>views[path](),
-      children: [...toRoutes(menu.children ?? [])],
-      meta: {
-        locale: menu.locale,
-        requiresAuth: true,
-      }
-    })
+    const path = `../../views/${menu.component}${menu.component.includes('.vue') ? '' : '.vue'}`;
+    if (!views[path]) {
+      router.push({
+        name: menu.label,
+        path: menu.url,
+        component: () => import('@/views/menu/demo/index.vue'),
+        children: [...toRoutes(menu.children ?? [])],
+        meta: {
+          locale: menu.locale,
+          requiresAuth: true,
+        },
+      });
+    } else {
+      router.push({
+        name: menu.label,
+        path: menu.url,
+        component: () => views[path](),
+        children: [...toRoutes(menu.children ?? [])],
+        meta: {
+          locale: menu.locale,
+          requiresAuth: true,
+        },
+      });
+    }
   }
   return router;
-}
+};
 
 export const setupMenuGuard = (router: Router) => {
   router.beforeEach(async (to, from, next) => {
-    if (to.name?.toString().toLowerCase() === 'login'){
+    if (to.name?.toString().toLowerCase() === 'login') {
       next();
       return;
     }
     await nextTick();
     const menuStore = useMenuStore();
-    if (menuStore.menuList.length){
+    if (menuStore.menuList.length) {
       next();
       return;
     }
     const data = await menuStore.getMenuList();
     const routes = toRoutes(data);
-    routes.forEach(route => router.addRoute('root', route));
-    next({...to, replace: true});
-  })
-}
+    routes.forEach((route) => router.addRoute('root', route));
+    next({ ...to, replace: true });
+  });
+};

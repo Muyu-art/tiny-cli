@@ -36,6 +36,8 @@ import localeRole from '@/views/role/info/locale/zh-CN';
 
 import localeMenu from '@/views/menu/info/locale/zh-CN';
 
+import localeMenuDemo from '@/views/menu/demo/locale/zh-CN';
+
 import localeSettings from './zh-CN/settings';
 
 import localeHttpError from './zh-CN/httpError';
@@ -52,6 +54,9 @@ export default {
   'menu.profile.detail': '基础详情页',
   'menu.visualization': '数据可视化',
   'menu.user': '个人中心',
+  'menu.menuPage': '菜单页',
+  'menu.menuPage.second': '二级菜单',
+  'menu.menuPage.third': '菜单demo页',
   'menu.userManager': '用户管理',
   'menu.userManager.info': '所有用户',
   'menu.userManager.setting': '修改信息',
@@ -97,4 +102,5 @@ export default {
   ...localePermission,
   ...localeRole,
   ...localeMenu,
+  ...localeMenuDemo,
 };
