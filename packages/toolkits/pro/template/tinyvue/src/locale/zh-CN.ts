@@ -36,6 +36,8 @@ import localeRole from '@/views/role/info/locale/zh-CN';
 
 import localeMenu from '@/views/menu/info/locale/zh-CN';
 
+import localeMenuDemo from '@/views/menu/demo/locale/zh-CN';
+
 import localeSettings from './zh-CN/settings';
 
 import localeHttpError from './zh-CN/httpError';
@@ -97,4 +99,5 @@ export default {
   ...localePermission,
   ...localeRole,
   ...localeMenu,
+  ...localeMenuDemo,
 };
