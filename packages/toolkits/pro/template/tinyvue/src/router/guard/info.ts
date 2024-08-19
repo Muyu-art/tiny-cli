@@ -7,7 +7,6 @@ import { LocationQueryRaw, Router } from 'vue-router';
 
 export default function setupInfoGuard(router: Router) {
   router.beforeEach(async (to, from, next) => {
-    debugger;
     NProgress.start();
     if (to.name === 'login') {
       next();

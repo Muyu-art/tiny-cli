@@ -33,7 +33,7 @@
               :placeholder="$t('baseForm.form.label.placeholder')"
             >
               <tiny-option
-                v-for="item in (projectData as any)"
+                v-for="item in projectData as any"
                 :key="item.value"
                 :label="$t(item.label)"
                 :value="item.label"

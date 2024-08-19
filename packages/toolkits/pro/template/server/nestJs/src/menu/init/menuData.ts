@@ -190,16 +190,6 @@ export const menuData = [
     locale: 'menu.user.info',
   },
   {
-    name: 'Setting',
-    order: 2,
-    parentId: null,
-    menuType: 'normal',
-    icon: '',
-    component: 'user/setting/index',
-    path: 'setting',
-    locale: 'menu.user.setting',
-  },
-  {
     name: 'Cloud',
     order: 8,
     parentId: null,
@@ -329,4 +319,4 @@ export const menuData = [
     path: 'userAdd',
     locale: 'menu.userManager.useradd',
   },
-]
+];

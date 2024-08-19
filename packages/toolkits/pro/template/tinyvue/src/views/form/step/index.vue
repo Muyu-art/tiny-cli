@@ -75,15 +75,12 @@
 
 <style scoped lang="less">
   .container-step {
-    display: flex;
     flex-direction: column;
-    align-content: center;
     justify-content: center;
     width: 98%;
     height: inherit;
     margin: 0 auto;
     overflow: auto;
-    word-break: break-all;
 
     .general-card {
       display: flex;
