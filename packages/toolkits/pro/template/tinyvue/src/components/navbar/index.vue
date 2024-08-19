@@ -60,9 +60,8 @@
           >
             <iconReplace v-if="item.value === 1"></iconReplace>
             <iconUser v-if="item.value === 2"></iconUser>
-            <iconWriting v-if="item.value === 3"></iconWriting>
-            <iconCheckOut v-if="item.value === 4"></iconCheckOut>
-            <iconEdit v-if="item.value === 5"></iconEdit>
+            <iconCheckOut v-if="item.value === 3"></iconCheckOut>
+            <iconEdit v-if="item.value === 4"></iconEdit>
             {{ $t(item.label) }}
           </li>
         </div>
@@ -227,9 +226,8 @@
   const userlist = [
     { label: 'messageBox.switchRoles', value: 1 },
     { label: 'messageBox.userCenter', value: 2 },
-    { label: 'messageBox.userSettings', value: 3 },
-    { label: 'messageBox.updatePwd', value: 4 },
-    { label: 'messageBox.logout', value: 5 },
+    { label: 'messageBox.updatePwd', value: 3 },
+    { label: 'messageBox.logout', value: 4 },
   ];
 
   // 校验规则
@@ -263,12 +261,9 @@
         router.push({ name: 'Info' });
         break;
       case 3:
-        router.push({ name: 'Setting' });
-        break;
-      case 4:
         handlePwdUpdate();
         break;
-      case 5:
+      case 4:
         logout();
         break;
       default:

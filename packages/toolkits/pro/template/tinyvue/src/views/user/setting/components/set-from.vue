@@ -33,7 +33,7 @@
               :placeholder="$t('baseForm.form.label.placeholder')"
             >
               <tiny-option
-                v-for="item in (projectData as any)"
+                v-for="item in projectData as any"
                 :key="item.value"
                 :label="$t(item.label)"
                 :value="item.label"
@@ -100,6 +100,9 @@
     DatePicker as TinyDatePicker,
     Modal,
   } from '@opentiny/vue';
+  import { useUserStore } from '@/store';
+
+  const userStore = useUserStore();
 
   interface FilterOptions {
     department: string;
