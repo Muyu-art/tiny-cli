@@ -100,9 +100,6 @@
     DatePicker as TinyDatePicker,
     Modal,
   } from '@opentiny/vue';
-  import { useUserStore } from '@/store';
-
-  const userStore = useUserStore();
 
   interface FilterOptions {
     department: string;
