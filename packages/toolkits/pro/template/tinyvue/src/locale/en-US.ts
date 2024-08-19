@@ -36,7 +36,7 @@ import localeRole from '@/views/role/info/locale/en-US';
 
 import localeMenu from '@/views/menu/info/locale/en-US';
 
-import localeMenuDemo from '@/views/menu/demo/locale/zh-CN';
+import localeMenuDemo from '@/views/menu/demo/locale/en-US';
 
 import localeSettings from './en-US/settings';
 
@@ -54,6 +54,9 @@ export default {
   'menu.profile.detail': 'Basic details page',
   'menu.visualization': 'Data Visualization',
   'menu.user': 'User Center',
+  'menu.menuPage': 'Menu Page',
+  'menu.menuPage.second': 'Second Page',
+  'menu.menuPage.third': 'Menu Demo Page',
   'menu.userManager': 'User Manager',
   'menu.userManager.info': 'All User Info',
   'menu.userManager.setting': 'All User Setting',
