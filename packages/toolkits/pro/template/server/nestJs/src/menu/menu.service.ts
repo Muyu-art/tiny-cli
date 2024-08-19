@@ -1,4 +1,4 @@
-import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Menu, User } from '@app/models';
 import { Repository } from 'typeorm';
@@ -72,7 +72,7 @@ export class MenuService {
     @InjectRepository(User)
     private user: Repository<User>,
     @InjectRepository(Menu)
-    private menu: Repository<Menu>,
+    private menu: Repository<Menu>
   ) {}
   async findRoleMenu(email: string) {
     const userInfo = await this.user
@@ -92,23 +92,23 @@ export class MenuService {
     return convertToTree(menus);
   }
 
-  async findAllMenu(){
+  async findAllMenu() {
     const menu = this.menu.find();
-    return convertToTree(await menu)
+    return convertToTree(await menu);
   }
 
   async getMenuAllId() {
     const menu = await this.menu.find();
     for (const item of menu) {
-      this.menuId.push(item.id)
+      this.menuId.push(item.id);
     }
-    await this.handleMenuParentId(this.menuId)
+    await this.handleMenuParentId(this.menuId);
     return this.menuId;
   }
 
-  async handleMenuParentId (menuId: number[]){
+  async handleMenuParentId(menuId: number[]) {
     const menu = await this.menu.find();
-    if(menu){
+    if (menu) {
       menu[1].parentId = menuId[0];
       menu[2].parentId = menuId[0];
       menu[4].parentId = menuId[3];
@@ -121,18 +121,18 @@ export class MenuService {
       menu[15].parentId = menuId[13];
       menu[16].parentId = menuId[13];
       menu[18].parentId = menuId[17];
-      menu[19].parentId = menuId[17];
-      menu[21].parentId = menuId[20];
-      menu[22].parentId = menuId[20];
-      menu[24].parentId = menuId[23];
-      menu[26].parentId = menuId[25];
-      menu[28].parentId = menuId[27];
-      menu[30].parentId = menuId[29];
-      menu[31].parentId = menuId[29];
-      menu[32].parentId = menuId[29];
+      // menu[19].parentId = menuId[17];
+      menu[20].parentId = menuId[19];
+      menu[21].parentId = menuId[19];
+      menu[23].parentId = menuId[22];
+      menu[25].parentId = menuId[24];
+      menu[27].parentId = menuId[26];
+      menu[29].parentId = menuId[28];
+      menu[30].parentId = menuId[28];
+      menu[31].parentId = menuId[28];
     }
-    for(const item of menu){
-      await this.menu.update(item.id,{ parentId: item.parentId })
+    for (const item of menu) {
+      await this.menu.update(item.id, { parentId: item.parentId });
     }
   }
 
@@ -148,7 +148,7 @@ export class MenuService {
       locale,
     } = dto;
     const menuInfo = this.menu.findOne({
-      where: { name,order,menuType,parentId,path,icon,component,locale },
+      where: { name, order, menuType, parentId, path, icon, component, locale },
     });
     if (isInit == true && (await menuInfo)) {
       return menuInfo;
@@ -190,14 +190,14 @@ export class MenuService {
       },
     });
     const allMenu = await this.menu.find();
-    for (const tmp of allMenu){
-      if(Number(tmp.parentId) === Number(id)){
-        if(Number(parentId) === -1){
+    for (const tmp of allMenu) {
+      if (Number(tmp.parentId) === Number(id)) {
+        if (Number(parentId) === -1) {
           tmp.parentId = null;
-        }else {
+        } else {
           tmp.parentId = parentId;
         }
-        await this.updateMenu(tmp)
+        await this.updateMenu(tmp);
       }
     }
     return this.menu.remove(await menu);
