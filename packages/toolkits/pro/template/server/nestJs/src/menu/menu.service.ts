@@ -121,7 +121,6 @@ export class MenuService {
       menu[15].parentId = menuId[13];
       menu[16].parentId = menuId[13];
       menu[18].parentId = menuId[17];
-      // menu[19].parentId = menuId[17];
       menu[20].parentId = menuId[19];
       menu[21].parentId = menuId[19];
       menu[23].parentId = menuId[22];
