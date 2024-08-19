@@ -1,7 +1,6 @@
 import { useUserStore } from '@/store';
 
 async function checkPermission(el: HTMLElement, binding: { value: string }) {
-  debugger;
   const { value } = binding;
   // // 获取role的permission
   const userStore = useUserStore();
