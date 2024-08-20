@@ -6,6 +6,11 @@ export interface CliOption {
   clientOptions: any;
 }
 
+export enum VueVersion {
+  Vue2 = 'tinyvue2',
+  Vue3 = 'tinyvue',
+}
+
 /**
  * 服务端类型
  */
@@ -40,17 +45,19 @@ export const devCommand = {
   rspack: 'rspack serve',
 };
 
-export const removedCommand = ['dev:wp', 'dev:rp', 'build:wp', 'build:rp'];
+export const removedCommand = [
+  'dev:wp',
+  'dev:rp',
+  'build:wp',
+  'build:rp',
+  'dev',
+];
 
 /**
  * 需要删除的包
  */
 export const removeDependencies = {
-  vite: [
-    '@gaonengwww/mock-server',
-    'style-resources-loader',
-    'vue-style-loader',
-  ],
+  vite: ['style-resources-loader', 'vue-style-loader'],
   webpack: [],
   rspack: [],
 };
@@ -90,4 +97,5 @@ export interface ProjectInfo {
   username?: string;
   password?: string;
   buildTool: BuildTool;
+  vueVersion: VueVersion;
 }
