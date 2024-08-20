@@ -1,6 +1,5 @@
 import { useTabStore } from '@/stores/modules/tabs';
 import { nextTick } from 'vue';
-// import { Router } from "vue-router";
 
 export const setupTabsGuard = (router: any) => {
   router.beforeEach(async (to, from, next) => {

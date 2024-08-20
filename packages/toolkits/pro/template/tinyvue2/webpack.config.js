@@ -136,8 +136,6 @@ const config = {
     alias: {
       '@': resolve(__dirname, 'src'),
       assets: resolve(__dirname, 'src/assets'),
-      // 'vue-i18n$': 'vue-i18n/dist/vue-i18n.esm-bundler.js',
-      // 'vue$': 'vue/dist/vue.esm-bundler.js'
     },
     extensions: ['.ts', '.js', '.vue'],
   },
