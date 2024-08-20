@@ -15,6 +15,7 @@ import {
   removedCommand,
   removeDependencies,
   ServerFrameworks,
+  VueVersion,
 } from './interfaces';
 import utils from './utils';
 import { existsSync, rmSync, writeFileSync } from 'fs';
@@ -55,6 +56,18 @@ const getProjectInfo = (): Promise<ProjectInfo> => {
       ],
       default: VUE_TEMPLATE_PATH,
       prefix: '*',
+    },
+    {
+      type: 'list',
+      name: 'vueVersion',
+      message: '请选择你需要创建的Vue版本: ',
+      choices: [
+        { name: 'Vue 2', value: VueVersion.Vue2 },
+        { name: 'Vue 3', value: VueVersion.Vue3 },
+      ],
+      default: VueVersion.Vue3,
+      prefix: '*',
+      when: (answer) => answer.framework === VUE_TEMPLATE_PATH,
     },
     {
       type: 'list',
@@ -216,19 +229,26 @@ const packageJsonProcess = (
           return;
         }
         deps.forEach((dep) => {
-          packages.devDependencies[dep] = undefined;
+          if (packages.devDependencies[dep]) {
+            packages.devDependencies[dep] = undefined;
+          }
         });
       }
     });
     const dependencies = removeDependencies[buildTool];
     dependencies.forEach((dep: string | RegExp) => {
       if (typeof dep === 'string') {
+        if (!packages.dependencies[dep]) {
+          return;
+        }
         packages.dependencies[dep] = undefined;
-        return;
       }
       if (dep instanceof RegExp) {
         const keys = match(dep, Object.keys(packages.devDependencies));
         keys.forEach((key) => {
+          if (!packages.dependencies[key]) {
+            return;
+          }
           packages.dependencies[key] = undefined;
         });
       }
@@ -282,13 +302,15 @@ const packageJsonProcess = (
  * @dbAnswers  询问服务端配置的选择值
  */
 const createProjectSync = (answers: ProjectInfo) => {
-  const { framework, description, name, serverConfirm, buildTool } = answers;
+  const { framework, description, name, serverConfirm, buildTool, vueVersion } =
+    answers;
   const templatePath =
-    framework === VUE_TEMPLATE_PATH ? VUE_TEMPLATE_PATH : NG_TEMPLATE_PATH;
+    framework === VUE_TEMPLATE_PATH ? vueVersion : NG_TEMPLATE_PATH;
   // 模板来源目录
   const from = utils.getTemplatePath(templatePath);
   // 复制模板的目标目录
   const to = utils.getDistPath(serverConfirm ? `${name}/web` : name);
+  console.log(from, to);
   fs.copyTpl(from, to);
   // 将项目名称、描述写入 package.json中
   try {
