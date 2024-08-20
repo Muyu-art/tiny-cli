@@ -70,6 +70,7 @@ import { useI18n } from 'vue-i18n-composable';
 import { useUserStore } from '@/stores/user';
 import { useMenuStore } from '@/stores/modules/router';
 import useLoading from '@/hooks/loading';
+import { toRoutes } from '@/router/guard/menu';
 
 const userStore = useUserStore();
 const userMenu = useMenuStore();
@@ -124,12 +125,20 @@ function handleSubmit() {
         status: 'success',
       });
       const { redirect, ...othersQuery } = router.currentRoute.query;
-      router.push({
-        name: (redirect as string) || 'Home',
-        query: {
-          ...othersQuery,
-        },
-      });
+      const menuStore = useMenuStore();
+      if (!menuStore.menuList.length) {
+        const data = await menuStore.getMenuList();
+        const routes = toRoutes(data);
+        routes.forEach((route) => router.addRoute('root', route));
+      }
+      const redirectTo =
+        redirect && redirect.toString().toLowerCase() === 'login'
+          ? 'Home'
+          : redirect ?? 'Home';
+      const route = router
+        .getRoutes()
+        .filter((route) => route.name === redirectTo)[0];
+      router.replace({ path: route.path });
     } catch (err) {
       Notify({
         type: 'error',

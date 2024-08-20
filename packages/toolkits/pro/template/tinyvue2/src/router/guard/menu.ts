@@ -39,7 +39,7 @@ if (BUILD_TOOLS === 'VITE' || BUILD_TOOLS === 'WEBPACK') {
     }
   });
 }
-const toRoutes = (menus: ITreeNodeData[]) => {
+export const toRoutes = (menus: ITreeNodeData[]) => {
   const router: any[] = [];
   for (let i = 0; i < menus.length; i += 1) {
     const menu = menus[i];
