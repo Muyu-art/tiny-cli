@@ -15,4 +15,9 @@ export default {
   'roleInfo.modal.input.menu': '菜单',
   'roleInfo.modal.message.error': '错误',
   'roleInfo.modal.message.notNull': '不能为空',
+  'roleInfo.permissionTable.id': 'ID',
+  'roleInfo.permissionTable.name': '权限名称',
+  'roleInfo.permissionTable.desc': '权限介绍',
+  'roleInfo.menuUpdate.confirm': '确认修改',
+  'roleInfo.menuUpdate.cancel': '取消',
 };

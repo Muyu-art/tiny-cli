@@ -17,39 +17,9 @@
             :auto-resize="true"
           >
             <tiny-grid-column type="index" width="60"></tiny-grid-column>
-            <tiny-grid-column type="expand" width="60">
+            <tiny-grid-column type="expand">
               <template #default="data">
-                <ul>
-                  <li>
-                    <span>{{ $t('roleInfo.table.id') }}:</span>
-                    <span>{{ $t(`${data.row.id}`) }}</span>
-                  </li>
-                  <li>
-                    <span>{{ $t('roleInfo.table.name') }}:</span>
-                    <span>{{ $t(`${data.row.name}`) }}</span>
-                  </li>
-                  <li>
-                    <span>{{ $t('roleInfo.table.desc') }}:</span>
-                    <div v-for="item in data.row.permission" :key="item.id">
-                      <span
-                        >{{ $t('permissionInfo.table.id') }}:{{
-                          $t(`${item.id}`)
-                        }}&nbsp; {{ $t('permissionInfo.table.name') }}:{{
-                          $t(`${item.name}`)
-                        }}&nbsp; {{ $t('permissionInfo.table.desc') }}:{{
-                          $t(`${item.desc}`)
-                        }}</span
-                      >
-                    </div>
-                  </li>
-                  <li>
-                    <tiny-tree
-                      :data="data.row.menuTree"
-                      :indent="18"
-                      default-expand-all
-                    ></tiny-tree>
-                  </li>
-                </ul>
+                <permission-table :permission="data.row.permission" />
               </template>
             </tiny-grid-column>
             <tiny-grid-column field="name" :title="$t('roleInfo.table.id')">
@@ -71,7 +41,14 @@
             </tiny-grid-column>
             <tiny-grid-column field="type" :title="$t('roleInfo.table.menu')">
               <template #default="data">
-                <tiny-tree :data="data.row.menuTree" :indent="18"></tiny-tree>
+                <a
+                  v-permission="'menu::update'"
+                  @click="onMenuUpdate(data.row.menuTree, data.row.id)"
+                >
+                  绑定目录
+                </a>
+                <!-- {{ Object.keys(data.row.menuTree[0]).join(',') }} -->
+                <!-- <tiny-tree :data="data.row.menuTree" :indent="18"></tiny-tree> -->
               </template>
             </tiny-grid-column>
             <tiny-grid-column
@@ -99,6 +76,15 @@
         </div>
       </div>
     </div>
+    <menu-drawer
+      v-loading="loading"
+      :visible="open"
+      :menus="i18MenuDatas"
+      :selected-id="selectedId"
+      @close="onMenuDrawerClose"
+      @confirm="onConfirm"
+      v-if="open"
+    />
     <div v-if="state.isRoleUpdate">
       <tiny-modal
         v-model="state.isRoleUpdate"
@@ -156,26 +142,6 @@
                         :value="item.id"
                       ></tiny-option>
                     </tiny-base-select>
-                  </tiny-form-item>
-                </tiny-col>
-              </tiny-row>
-
-              <tiny-row :flex="true" justify="left">
-                <tiny-col :span="10" label-width="100px">
-                  <tiny-form-item
-                    :label="$t('roleInfo.modal.input.menu')"
-                    prop="menu"
-                  >
-                    <tiny-select
-                      v-model="state.roleUpdData.menus"
-                      :placeholder="$t('baseForm.form.label.placeholder')"
-                      multiple
-                      value-field="id"
-                      text-field="label"
-                      render-type="tree"
-                      :tree-op="state.menuOptionData"
-                    >
-                    </tiny-select>
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
@@ -282,7 +248,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, onMounted, watch, computed } from 'vue';
+import { ref, reactive, onMounted, computed, watch, onUnmounted } from 'vue';
 import {
   Tabs as TinyTabs,
   TabItem as TinyTabItem,
@@ -302,8 +268,8 @@ import {
   Select as TinySelect,
   Option as TinyOption,
   Tree as TinyTree,
+  TinyLoading,
 } from '@opentiny/vue';
-import { IconChevronDown } from '@opentiny/vue-icon';
 import { useUserStore } from '@/stores';
 import {
   getAllRoleDetail,
@@ -318,6 +284,13 @@ import { useRouter } from '@/router';
 import { getSimpleDate } from '@/utils/time';
 import { updateUserInfo } from '@/api/user';
 import { useI18n } from 'vue-i18n-composable';
+import permissionTable from './permission-table.vue';
+import menuDrawer from './menu-drawer.vue';
+import type { ITreeNodeData } from '@/router/guard/menu';
+import { useDisclosure } from '@/hooks/useDisclosure';
+import { useI18nMenu } from '@/hooks/useI18nMenu';
+import { useLoading } from '@/hooks';
+import { useMenuId } from '@/hooks/useMenuId';
 
 const router = useRouter();
 const { t } = useI18n();
@@ -342,9 +315,10 @@ const state = reactive<{
   isRoleUpdate: false,
 });
 
-// 变量设置
 const userStore = useUserStore();
-
+const menus = ref<ITreeNodeData[]>([]);
+const vLoading = TinyLoading.directive;
+const { loading, setLoading } = useLoading();
 // 校验规则
 const rulesType = {
   required: true,
@@ -362,6 +336,30 @@ const rules = computed(() => {
     menu: [rulesSelect],
   };
 });
+const { open, onClose, onOpen } = useDisclosure();
+const menuDatas = ref<ITreeNodeData[]>([]);
+const selectedId = ref<number[]>([]);
+const i18MenuDatas = computed(() => useI18nMenu(menus.value, t));
+const roleId = ref(-1);
+
+const stop = watch(
+  menuDatas,
+  () => {
+    selectedId.value = useMenuId(menuDatas.value);
+  },
+  {
+    immediate: true,
+  }
+);
+
+setLoading(true);
+getAllMenu()
+  .then((res) => {
+    menus.value = res.data;
+  })
+  .finally(() => {
+    setLoading(false);
+  });
 
 // 初始化请求数据
 onMounted(() => {
@@ -369,6 +367,29 @@ onMounted(() => {
   fetchPermissionData();
   fetchMenuData();
 });
+
+const onMenuDrawerClose = () => {
+  onClose();
+};
+
+const onMenuUpdate = (data: ITreeNodeData[], roldId: number) => {
+  menuDatas.value = data;
+  roleId.value = roldId;
+  onOpen();
+};
+
+const onConfirm = (ids: number[]) => {
+  updateRole({
+    id: roleId.value,
+    menuIds: ids,
+  })
+    .then(() => {
+      selectedId.value = ids;
+    })
+    .finally(() => {
+      open.value = false;
+    });
+};
 
 // 请求数据接口方法
 async function fetchRoleData() {
@@ -411,7 +432,7 @@ async function handleDelete(id: string) {
 }
 
 async function convertMenu(data: any) {
-  let menu = [] as any;
+  const menu = [] as any;
   for (let j = 0; j < data.menus.length; j += 1) {
     menu.push(data.menus[j].id);
     if (data.menus[j].children !== null) {
@@ -423,12 +444,12 @@ async function convertMenu(data: any) {
 
 const handleUpdate = (id: string) => {
   state.isRoleUpdate = true;
-  let data = state.tableData[id - 1];
-  let permission = [] as any;
+  const data = state.tableData[id - 1];
+  const permission = [] as any;
   for (let i = 0; i < data.permission.length; i += 1) {
     permission.push(data.permission[i].id);
   }
-  let menu = [] as any;
+  const menu = [] as any;
   for (let j = 0; j < data.menus.length; j += 1) {
     menu.push(data.menus[j].id);
   }
@@ -449,8 +470,8 @@ const handleRoleUpdateCancel = () => {
 };
 
 async function handleRoleUpdateSubmit() {
-  let data = state.roleUpdData;
-  let newTemp = {
+  const data = state.roleUpdData;
+  const newTemp = {
     id: data.id,
     name: data.name,
     permissionIds: data.desc,
@@ -490,8 +511,8 @@ function handleAddRole() {
 }
 
 async function handleRoleAddSubmit() {
-  let data = state.roleAddData;
-  let newTemp = {
+  const data = state.roleAddData;
+  const newTemp = {
     name: data.name,
     permissionIds: data.desc,
     menuIds: data.menus,
@@ -520,6 +541,10 @@ async function handleRoleAddCancel() {
   state.isRoleAdd = false;
   state.roleAddData = {} as any;
 }
+
+onUnmounted(() => {
+  stop();
+});
 </script>
 
 <style scoped lang="less">
