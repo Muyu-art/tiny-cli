@@ -1,6 +1,14 @@
 <template>
   <div class="tiny-fullscreen-scroll">
     <div class="tiny-fullscreen-wrapper">
+      <div class="user-add-btn">
+        <tiny-button
+          v-permission="'role::add'"
+          type="primary"
+          @click="handleAddUser"
+          >{{ $t('userInfo.modal.title.add') }}
+        </tiny-button>
+      </div>
       <div class="table">
         <tiny-grid
           ref="expandGrid"
@@ -50,14 +58,17 @@
                 </li>
                 <li>
                   <span>{{ $t('userInfo.table.protocolStart') }}：</span>
-                  <span>{{ $t(`${data.row.protocolStart}`) }}</span> </li
-                ><li>
+                  <span>{{ $t(`${data.row.protocolStart}`) }}</span></li
+                >
+                <li>
                   <span>{{ $t('userInfo.table.protocolEnd') }}：</span>
-                  <span>{{ $t(`${data.row.protocolEnd}`) }}</span> </li
-                ><li>
+                  <span>{{ $t(`${data.row.protocolEnd}`) }}</span></li
+                >
+                <li>
                   <span>{{ $t('userInfo.table.address') }}：</span>
-                  <span>{{ $t(`${data.row.address}`) }}</span> </li
-                ><li>
+                  <span>{{ $t(`${data.row.address}`) }}</span></li
+                >
+                <li>
                   <span>{{ $t('userInfo.table.status') }}：</span>
                   <span v-if="data.row.status == 1">已启用</span>
                   <span v-if="data.row.status !== 1">已禁用</span>
@@ -213,6 +224,30 @@
       </div>
     </div>
   </div>
+  <div v-if="state.isUserAdd">
+    <tiny-modal
+      v-model="state.isUserAdd"
+      :lock-scroll="true"
+      mask-closable="true"
+      height="auto"
+      width="800"
+      :title="$t('userInfo.modal.title.add')"
+    >
+      <UserAdd></UserAdd>
+    </tiny-modal>
+  </div>
+  <div v-if="state.isUserUpdate">
+    <tiny-modal
+      v-model="state.isUserUpdate"
+      :lock-scroll="true"
+      mask-closable="true"
+      height="auto"
+      width="800"
+      :title="$t('userInfo.modal.title.update')"
+    >
+      <UserSetting :email="state.email"></UserSetting>
+    </tiny-modal>
+  </div>
   <div v-if="state.isPwdUpdate">
     <tiny-modal
       v-model="state.isPwdUpdate"
@@ -274,12 +309,12 @@
         </tiny-layout>
       </template>
       <template #footer>
-        <tiny-button type="primary" @click="handlePwdUpdateSubmit">{{
-          $t('menu.btn.confirm')
-        }}</tiny-button>
-        <tiny-button @click="handlePwdUpdateCancel">{{
-          $t('menu.btn.cancel')
-        }}</tiny-button>
+        <tiny-button type="primary" @click="handlePwdUpdateSubmit"
+          >{{ $t('menu.btn.confirm') }}
+        </tiny-button>
+        <tiny-button @click="handlePwdUpdateCancel"
+          >{{ $t('menu.btn.cancel') }}
+        </tiny-button>
       </template>
     </tiny-modal>
   </div>
@@ -313,6 +348,8 @@
     updatePwdUser,
   } from '@/api/user';
   import { useRouter } from 'vue-router';
+  import UserAdd from '../../useradd/index.vue';
+  import UserSetting from '../../setting/index.vue';
 
   const router = useRouter();
 
@@ -324,13 +361,19 @@
     tableData: any;
     pageData: any;
     isPwdUpdate: boolean;
+    isUserAdd: boolean;
+    isUserUpdate: boolean;
     pwdData: any;
+    email: string;
   }>({
     loading: null,
     tableData: [] as any,
     pageData: [] as any,
     isPwdUpdate: false,
+    isUserAdd: false,
+    isUserUpdate: false,
     pwdData: {} as any,
+    email: '',
   });
 
   // 变量设置
@@ -405,12 +448,8 @@
   };
 
   const handleUpdate = (email: string) => {
-    router.push({
-      name: 'AllSetting',
-      query: {
-        email,
-      },
-    });
+    state.isUserUpdate = true;
+    state.email = email;
   };
 
   const handlePwdUpdate = (email: string) => {
@@ -421,6 +460,10 @@
   const handlePwdUpdateCancel = () => {
     state.isPwdUpdate = false;
     state.pwdData = {} as any;
+  };
+
+  const handleAddUser = () => {
+    state.isUserAdd = true;
   };
 
   async function handlePwdUpdateSubmit() {
@@ -458,6 +501,10 @@
 </script>
 
 <style scoped lang="less">
+  .user-add-btn {
+    padding: 10px 0 10px 10px;
+  }
+
   #contain {
     height: 100%;
     padding: 15px;

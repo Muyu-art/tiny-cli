@@ -1,6 +1,5 @@
 <template>
   <div class="container-set">
-    <Breadcrumb :items="['menu.userManager', 'menu.userManager.useradd']"/>
     <div class="general-card">
       <div class="general-contain">
         <tiny-layout>
@@ -8,35 +7,31 @@
             ref="setFormRef"
             :model="state.userData"
             :rules="rules"
-            label-width="150px"
+            label-width="80"
             :label-align="true"
             label-position="left"
             size="small"
           >
             <tiny-row :flex="true" justify="left">
               <tiny-col :span="5" label-width="100px">
-                <tiny-form-item
-                  :label="$t('userAdd.email')"
-                  prop="email"
-                >
+                <tiny-form-item :label="$t('userAdd.email')" prop="email">
                   <tiny-input v-model="state.userData.email"></tiny-input>
                 </tiny-form-item>
               </tiny-col>
               <tiny-col :span="5" label-width="100px">
                 <tiny-form-item :label="$t('userAdd.password')" prop="password">
-                  <tiny-input v-model="state.userData.password "
-                              type="password"
-                              show-password></tiny-input>
+                  <tiny-input
+                    v-model="state.userData.password"
+                    type="password"
+                    show-password
+                  ></tiny-input>
                 </tiny-form-item>
               </tiny-col>
             </tiny-row>
 
             <tiny-row :flex="true" justify="left">
               <tiny-col :span="5" label-width="100px">
-                <tiny-form-item
-                  :label="$t('userAdd.name')"
-                  prop="name"
-                >
+                <tiny-form-item :label="$t('userAdd.name')" prop="name">
                   <tiny-input v-model="state.userData.name"></tiny-input>
                 </tiny-form-item>
               </tiny-col>
@@ -63,7 +58,7 @@
                     :placeholder="$t('baseForm.form.label.placeholder')"
                   >
                     <tiny-option
-                      v-for="item in (state.roleData as any)"
+                      v-for="item in state.roleData as any"
                       :key="item.id"
                       :label="$t(item.name)"
                       :value="item.id"
@@ -81,7 +76,7 @@
                     :placeholder="$t('baseForm.form.label.placeholder')"
                   >
                     <tiny-option
-                      v-for="item in (projectData as any)"
+                      v-for="item in projectData as any"
                       :key="item.value"
                       :label="$t(item.label)"
                       :value="item.label"
@@ -90,7 +85,10 @@
                 </tiny-form-item>
               </tiny-col>
               <tiny-col :span="5" label-width="100px">
-                <tiny-form-item :label="$t('userAdd.date')" prop="probationDate">
+                <tiny-form-item
+                  :label="$t('userAdd.date')"
+                  prop="probationDate"
+                >
                   <tiny-date-picker
                     v-model="state.userData.probationDate"
                     unlink-panels
@@ -105,12 +103,20 @@
 
             <tiny-row :flex="true" justify="left">
               <tiny-col :span="5" label-width="100px">
-                <tiny-form-item :label="$t('userAdd.during')" prop="probationDuration">
-                  <tiny-input v-model="state.userData.probationDuration"></tiny-input>
+                <tiny-form-item
+                  :label="$t('userAdd.during')"
+                  prop="probationDuration"
+                >
+                  <tiny-input
+                    v-model="state.userData.probationDuration"
+                  ></tiny-input>
                 </tiny-form-item>
               </tiny-col>
               <tiny-col :span="5" label-width="100px">
-                <tiny-form-item :label="$t('userAdd.startTime')" prop="protocolStart">
+                <tiny-form-item
+                  :label="$t('userAdd.startTime')"
+                  prop="protocolStart"
+                >
                   <tiny-date-picker
                     v-model="state.userData.protocolStart"
                     @blur="handleBlur"
@@ -121,7 +127,10 @@
 
             <tiny-row :flex="true" justify="left">
               <tiny-col :span="5" label-width="100px">
-                <tiny-form-item :label="$t('userAdd.endTime')" prop="protocolEnd">
+                <tiny-form-item
+                  :label="$t('userAdd.endTime')"
+                  prop="protocolEnd"
+                >
                   <tiny-date-picker
                     v-model="state.userData.protocolEnd"
                     @blur="handleBlur"
@@ -135,7 +144,7 @@
                     :placeholder="$t('baseForm.form.label.placeholder')"
                   >
                     <tiny-option
-                      v-for="item in (statusData as any)"
+                      v-for="item in statusData as any"
                       :key="item.value"
                       :label="$t(item.label)"
                       :value="item.label"
@@ -153,9 +162,8 @@
             type="primary"
             native-type="submit"
             @click="handleSubmit"
-          >{{ $t('userAdd.save') }}
+            >{{ $t('userAdd.save') }}
           </tiny-button>
-
         </div>
       </div>
     </div>
@@ -163,218 +171,219 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, onMounted, reactive} from 'vue';
-import {useI18n} from 'vue-i18n';
-import {
-  Select as TinySelect,
-  Option as TinyOption,
-  Layout as TinyLayout,
-  Form as TinyForm,
-  FormItem as TinyFormItem,
-  Row as TinyRow,
-  Col as TinyCol,
-  Input as TinyInput,
-  DatePicker as TinyDatePicker,
-  Modal,
-  Button as TinyButton,
-} from '@opentiny/vue';
-import {getSimpleDate} from '@/utils/time';
-import {useRoute, useRouter} from 'vue-router';
-import {getUserInfo, registerUser, updateUserInfo} from '@/api/user'
-import {getAllRole} from '@/api/role'
+  import { computed, onMounted, reactive } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import {
+    Select as TinySelect,
+    Option as TinyOption,
+    Layout as TinyLayout,
+    Form as TinyForm,
+    FormItem as TinyFormItem,
+    Row as TinyRow,
+    Col as TinyCol,
+    Input as TinyInput,
+    DatePicker as TinyDatePicker,
+    Modal,
+    Button as TinyButton,
+  } from '@opentiny/vue';
+  import { getSimpleDate } from '@/utils/time';
+  import { useRoute, useRouter } from 'vue-router';
+  import { getUserInfo, registerUser, updateUserInfo } from '@/api/user';
+  import { getAllRole } from '@/api/role';
 
+  const route = useRoute();
+  const router = useRouter();
 
-const route = useRoute();
-const router = useRouter();
+  // 初始化请求数据
+  onMounted(() => {
+    fetchRole();
+  });
 
-// 初始化请求数据
-onMounted(() => {
-  fetchRole()
-});
+  const { t } = useI18n();
 
-const {t} = useI18n();
+  // 加载效果
+  const state = reactive<{
+    userData: any;
+    roleData: any;
+  }>({
+    userData: {} as any,
+    roleData: [] as any,
+  });
 
-// 加载效果
-const state = reactive<{
-  userData: any;
-  roleData: any;
-}>({
-  userData: {} as any,
-  roleData: [] as any,
-});
+  const projectData = [
+    {
+      value: '1',
+      label: 'Social Recruitment',
+    },
+    {
+      value: '2',
+      label: 'School Recruitment',
+    },
+    {
+      value: '3',
+      label: 'Job Transfer',
+    },
+  ];
 
-const projectData = [
-  {
-    value: '1',
-    label: 'Social Recruitment',
-  },
-  {
-    value: '2',
-    label: 'School Recruitment',
-  },
-  {
-    value: '3',
-    label: 'Job Transfer',
-  },
-];
+  const statusData = [
+    {
+      value: 1,
+      label: 'Active',
+    },
+    {
+      value: 2,
+      label: 'Disabled',
+    },
+  ];
 
-const statusData = [
-  {
-    value: 1,
-    label: 'Active',
-  },
-  {
-    value: 2,
-    label: 'Disabled',
-  },
-];
-
-// 校验规则
-const rulesType = {
-  required: true,
-  trigger: 'blur',
-};
-const rulesSelect = {
-  required: true,
-  message: '必选',
-  trigger: 'blur',
-};
-
-const rules = computed(() => {
-  return {
-    email: [rulesType],
-    password: [rulesType],
-    department: [rulesType],
-    roleIds: [rulesSelect],
-    employeeType: [rulesSelect],
-    probationDate: [rulesSelect],
-    probationDuration: [rulesType],
-    protocolStart: [rulesSelect],
-    protocolEnd: [rulesSelect],
-    name:[rulesType],
-    address: [rulesType],
-    status: [rulesSelect],
+  // 校验规则
+  const rulesType = {
+    required: true,
+    trigger: 'blur',
   };
-});
-
-async function handleSubmit() {
-  let data = state.userData;
-  if(data.status === 'Active'){data.status = 1}
-  else{ data.status = 2 }
-  let newTemp = {
-    email: data.email,
-    password: data.password,
-    name: data.name,
-    address: data.address,
-    department: data.department,
-    roleIds: [data.roleIds],
-    employeeType: data.employeeType,
-    probationStart: getSimpleDate(data.probationDate[0]),
-    probationEnd: getSimpleDate(data.probationDate[1]),
-    probationDuration: data.probationDuration,
-    protocolStart: getSimpleDate(data.protocolStart),
-    protocolEnd: getSimpleDate(data.protocolEnd),
-    status: data.status,
+  const rulesSelect = {
+    required: true,
+    message: '必选',
+    trigger: 'blur',
   };
 
-  try {
-    await registerUser(newTemp);
-    Modal.message({
-      message: t('baseForm.form.submit.success'),
-      status: 'success',
-    });
-    state.userData = {} as any;
-  } catch (error) {
-    if (error.response && error.response.data) {
-      const errorMessage = error.response.data.message || '未知错误';
+  const rules = computed(() => {
+    return {
+      email: [rulesType],
+      password: [rulesType],
+      department: [rulesType],
+      roleIds: [rulesSelect],
+      employeeType: [rulesSelect],
+      probationDate: [rulesSelect],
+      probationDuration: [rulesType],
+      protocolStart: [rulesSelect],
+      protocolEnd: [rulesSelect],
+      name: [rulesType],
+      address: [rulesType],
+      status: [rulesSelect],
+    };
+  });
+
+  // btn操作
+  function handleFormReset() {
+    router.go(0);
+  }
+
+  async function handleSubmit() {
+    let data = state.userData;
+    if (data.status === 'Active') {
+      data.status = 1;
+    } else {
+      data.status = 2;
+    }
+    let newTemp = {
+      email: data.email,
+      password: data.password,
+      name: data.name,
+      address: data.address,
+      department: data.department,
+      roleIds: [data.roleIds],
+      employeeType: data.employeeType,
+      probationStart: getSimpleDate(data.probationDate[0]),
+      probationEnd: getSimpleDate(data.probationDate[1]),
+      probationDuration: data.probationDuration,
+      protocolStart: getSimpleDate(data.protocolStart),
+      protocolEnd: getSimpleDate(data.protocolEnd),
+      status: data.status,
+    };
+
+    try {
+      await registerUser(newTemp);
       Modal.message({
-        message: errorMessage[0],
+        message: t('baseForm.form.submit.success'),
+        status: 'success',
+      });
+      state.userData = {} as any;
+      handleFormReset();
+    } catch (error) {
+      if (error.response && error.response.data) {
+        const errorMessage = error.response.data.message || '未知错误';
+        Modal.message({
+          message: errorMessage[0],
+          status: 'error',
+        });
+      }
+    }
+  }
+
+  async function fetchRole() {
+    const { data } = await getAllRole();
+    state.roleData = data;
+  }
+
+  // 结束时间校验
+  const handleBlur = () => {
+    const start = state.userData.protocolStart?.getTime();
+    const end = state.userData.protocolEnd?.getTime();
+    if (end < start) {
+      state.userData.protocolEnd = '';
+      Modal.message({
+        message: t('userInfo.time.message'),
         status: 'error',
       });
     }
-  }
-}
-
-async function fetchRole(){
-  const {data} = await getAllRole();
-  state.roleData = data;
-}
-
-// 结束时间校验
-const handleBlur = () => {
-  const start = state.userData.protocolStart?.getTime();
-  const end = state.userData.protocolEnd?.getTime();
-  if (end < start) {
-    state.userData.protocolEnd = '';
-    Modal.message({
-      message: t('userInfo.time.message'),
-      status: 'error',
-    });
-  }
-};
-
+  };
 </script>
 
 <style scoped lang="less">
-.container-set {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 98%;
-  height: inherit;
-  margin: 0 auto;
+  .container-set {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 98%;
+    height: inherit;
+    margin: 0 auto;
 
-  .general-card {
-    height: 100%;
-    padding: 10px;
-    overflow-x: hidden;
-    overflow-y: auto;
-    border-radius: 10px;
-
-    .general-top {
-      display: flex;
-      justify-content: space-around;
-      min-height: 202px;
-      margin: 0 -12px;
-      overflow: hidden;
-      background-image: url('@/assets/images/step-head.png');
-      background-size: 100% 100%;
-    }
-
-    .general-contain {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      min-height: 75%;
-      padding: 30px 0 10px 20px;
-      color: black;
-      background-color: #fff;
+    .general-card {
+      height: 100%;
+      padding: 10px;
+      overflow-x: hidden;
+      overflow-y: auto;
       border-radius: 10px;
 
-      .tiny-layout {
-        width: 80%;
+      .general-top {
+        display: flex;
+        justify-content: space-around;
+        min-height: 202px;
+        margin: 0 -12px;
+        overflow: hidden;
+        background-image: url('@/assets/images/step-head.png');
+        background-size: 100% 100%;
       }
-    }
 
-    .general-btn {
-      position: relative;
-      left: 160px;
+      .general-contain {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 75%;
+        padding: 30px 0 10px 0;
 
-      button {
-        width: 100px;
-        height: 36px;
-        border-radius: 4px;
+        .tiny-layout {
+          width: 100%;
+          margin-left: 8%;
+        }
       }
-    }
 
-    .margin-bottom {
-      margin: 15px 0;
-    }
+      .general-btn {
+        position: relative;
+        margin: 0 auto;
 
-    .col {
-      padding: 4px 0;
-      color: #fff;
+        button {
+          width: 100px;
+          height: 36px;
+          border-radius: 4px;
+        }
+      }
+
+      .col {
+        padding: 4px 0;
+        color: #fff;
+      }
     }
   }
-}
 </style>
