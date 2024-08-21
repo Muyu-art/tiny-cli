@@ -46,16 +46,29 @@ export const toRoutes = (menus: ITreeNodeData[]) => {
     const path = `../../views/${menu.component}${
       menu.component.includes('.vue') ? '' : '.vue'
     }`;
-    router.push({
-      name: menu.label,
-      path: menu.url,
-      component: () => views[path](),
-      children: [...toRoutes(menu.children ?? [])],
-      meta: {
-        locale: menu.locale,
-        requiresAuth: true,
-      },
-    });
+    if (!views[path]) {
+      router.push({
+        name: menu.label,
+        path: menu.url,
+        component: () => import('@/views/menu/demo/index.vue'),
+        children: [...toRoutes(menu.children ?? [])],
+        meta: {
+          locale: menu.locale,
+          requiresAuth: true,
+        },
+      });
+    } else {
+      router.push({
+        name: menu.label,
+        path: menu.url,
+        component: () => views[path](),
+        children: [...toRoutes(menu.children ?? [])],
+        meta: {
+          locale: menu.locale,
+          requiresAuth: true,
+        },
+      });
+    }
   }
   return router;
 };
