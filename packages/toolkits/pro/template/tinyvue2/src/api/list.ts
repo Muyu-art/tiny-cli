@@ -7,7 +7,7 @@ export interface QueryTaskParmas {
 }
 
 export function queryEmployeeList(params: QueryTaskParmas) {
-  return axios.post('/mock/employee/getEmployee', params);
+  return axios.post('/mock/api/employee/getEmployee', params);
 }
 export function deleteEmployee(id: string) {
   return axios.delete(`/mock/employee/delete?id=${id}`);

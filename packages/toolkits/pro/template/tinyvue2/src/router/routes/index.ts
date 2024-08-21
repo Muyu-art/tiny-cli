@@ -1,6 +1,9 @@
-import type { RouteConfig } from "vue-router";
+import type { RouteConfig } from 'vue-router';
 
-const modules:Record<string, any> = import.meta.glob('./modules/*.ts', { eager: true });
+const modules: Record<string, any> =
+  BUILD_TOOLS === 'RSPACK'
+    ? {}
+    : import.meta.glob('./modules/*.ts', { eager: true });
 const appRoutes: RouteConfig[] = [];
 
 Object.keys(modules).forEach((key) => {
