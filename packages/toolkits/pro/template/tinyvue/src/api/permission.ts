@@ -1,5 +1,11 @@
 import axios from 'axios';
 
+export type Permission = {
+  desc: string;
+  id: number;
+  name: string;
+};
+
 export function getAllPermission() {
   return axios.get(`/api/permission`);
 }

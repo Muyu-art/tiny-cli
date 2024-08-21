@@ -13,7 +13,5 @@ export function queryEmployeeList(params: QueryTaskParmas) {
   );
 }
 export function deleteEmployee(id: string) {
-  return axios.delete(
-    `${import.meta.env.VITE_MOCK_SERVER_HOST}/api/employee/delete?id=${id}`,
-  );
+  return axios.delete(`/mock/api/employee/delete?id=${id}`);
 }

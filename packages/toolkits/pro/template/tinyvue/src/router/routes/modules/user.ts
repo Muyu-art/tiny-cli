@@ -25,5 +25,17 @@ export default {
         roles: [RoleType.admin, RoleType.user],
       },
     },
+    {
+      path: 'setting',
+      name: 'Setting',
+      id: 'Setting',
+      label: 'Setting',
+      component: () => import('@/views/user/setting/index.vue'),
+      meta: {
+        locale: 'menu.user.setting',
+        requiresAuth: true,
+        roles: [RoleType.admin, RoleType.user],
+      },
+    },
   ],
 };

@@ -1,288 +1,254 @@
 <template>
-  <div class="tiny-fullscreen-scroll">
-    <div class="tiny-fullscreen-wrapper">
-      <div class="role-add-btn">
-        <tiny-button
-          v-permission="'role::add'"
-          type="primary"
-          @click="handleAddRole"
-          >{{ $t('roleInfo.modal.title.add') }}</tiny-button
-        >
-      </div>
-      <div class="table">
-        <tiny-grid ref="expandGrid" :data="state.tableData" :auto-resize="true">
-          <tiny-grid-column type="index" width="60"></tiny-grid-column>
-          <tiny-grid-column type="expand" width="60">
-            <template #default="data">
-              <ul>
-                <li>
-                  <span>{{ $t('roleInfo.table.id') }}:</span>
-                  <span>{{ $t(`${data.row.id}`) }}</span>
-                </li>
-                <li>
-                  <span>{{ $t('roleInfo.table.name') }}:</span>
-                  <span>{{ $t(`${data.row.name}`) }}</span>
-                </li>
-                <li>
-                  <span>{{ $t('roleInfo.table.desc') }}:</span>
-                  <div v-for="item in data.row.permission" :key="item.id">
-                    <span
-                      >{{ $t('permissionInfo.table.id') }}:{{
-                        $t(`${item.id}`)
-                      }}&nbsp; {{ $t('permissionInfo.table.name') }}:{{
-                        $t(`${item.name}`)
-                      }}&nbsp; {{ $t('permissionInfo.table.desc') }}:{{
-                        $t(`${item.desc}`)
-                      }}</span
-                    >
-                  </div>
-                </li>
-                <li>
-                  <tiny-tree
-                    :data="data.row.menuTree"
-                    :size="medium"
-                    :indent="18"
-                    default-expand-all
-                  ></tiny-tree>
-                </li>
-              </ul>
-            </template>
-          </tiny-grid-column>
-          <tiny-grid-column field="name" :title="$t('roleInfo.table.id')">
-            <template #default="data">
-              <span>{{ $t(`${data.row.id}`) }}</span>
-            </template>
-          </tiny-grid-column>
-          <tiny-grid-column field="time" :title="$t('roleInfo.table.name')">
-            <template #default="data">
-              <span>{{ $t(`${data.row.name}`) }}</span>
-            </template>
-          </tiny-grid-column>
-          <tiny-grid-column field="type" :title="$t('roleInfo.table.desc')">
-            <template #default="data">
-              <div v-for="item in data.row.permission" :key="item.id">
-                <span>{{ $t(`${item.name}`) }}&nbsp;</span>
-              </div>
-            </template>
-          </tiny-grid-column>
-          <tiny-grid-column field="type" :title="$t('roleInfo.table.menu')">
-            <template #default="data">
-              <tiny-tree
-                :data="data.row.menuTree"
-                :size="medium"
-                :indent="18"
-              ></tiny-tree>
-            </template>
-          </tiny-grid-column>
-          <tiny-grid-column
-            :title="$t('roleInfo.table.operations')"
-            align="center"
+  <div>
+    <div class="tiny-fullscreen-scroll">
+      <div class="tiny-fullscreen-wrapper">
+        <div class="role-add-btn">
+          <tiny-button
+            v-permission="'role::add'"
+            type="primary"
+            @click="handleAddRole"
+            >{{ $t('roleInfo.modal.title.add') }}</tiny-button
           >
-            <template #default="data">
-              <a
-                v-permission="'role::update'"
-                class="operation-update"
-                @click="handleUpdate(data.row.id)"
-              >
-                {{ $t('roleInfo.table.operations.update') }}
-              </a>
-              <a
-                v-permission="'role::remove'"
-                class="operation-delete"
-                @click="handleDelete(data.row.id)"
-              >
-                {{ $t('roleInfo.table.operations.delete') }}
-              </a>
-            </template>
-          </tiny-grid-column>
-        </tiny-grid>
+        </div>
+        <div class="table">
+          <tiny-grid
+            ref="expandGrid"
+            :data="state.tableData"
+            :auto-resize="true"
+          >
+            <tiny-grid-column type="index" width="60"></tiny-grid-column>
+            <tiny-grid-column type="expand">
+              <template #default="data">
+                <permission-table :permission="data.row.permission" />
+              </template>
+            </tiny-grid-column>
+            <tiny-grid-column field="name" :title="$t('roleInfo.table.id')">
+              <template #default="data">
+                <span>{{ $t(`${data.row.id}`) }}</span>
+              </template>
+            </tiny-grid-column>
+            <tiny-grid-column field="time" :title="$t('roleInfo.table.name')">
+              <template #default="data">
+                <span>{{ $t(`${data.row.name}`) }}</span>
+              </template>
+            </tiny-grid-column>
+            <tiny-grid-column field="type" :title="$t('roleInfo.table.desc')">
+              <template #default="data">
+                <div v-for="item in data.row.permission" :key="item.id">
+                  <span>{{ $t(`${item.name}`) }}&nbsp;</span>
+                </div>
+              </template>
+            </tiny-grid-column>
+            <tiny-grid-column field="type" :title="$t('roleInfo.table.menu')">
+              <template #default="data">
+                <a
+                  v-permission="'menu::update'"
+                  @click="onMenuUpdate(data.row.menuTree, data.row.id)"
+                >
+                  绑定目录
+                </a>
+                <!-- {{ Object.keys(data.row.menuTree[0]).join(',') }} -->
+                <!-- <tiny-tree :data="data.row.menuTree" :indent="18"></tiny-tree> -->
+              </template>
+            </tiny-grid-column>
+            <tiny-grid-column
+              :title="$t('roleInfo.table.operations')"
+              align="center"
+            >
+              <template #default="data">
+                <a
+                  v-permission="'role::update'"
+                  class="operation-update"
+                  @click="handleUpdate(data.row.id)"
+                >
+                  {{ $t('roleInfo.table.operations.update') }}
+                </a>
+                <a
+                  v-permission="'role::remove'"
+                  class="operation-delete"
+                  @click="handleDelete(data.row.id)"
+                >
+                  {{ $t('roleInfo.table.operations.delete') }}
+                </a>
+              </template>
+            </tiny-grid-column>
+          </tiny-grid>
+        </div>
       </div>
     </div>
-  </div>
-  <div v-if="state.isRoleUpdate">
-    <tiny-modal
-      v-model="state.isRoleUpdate"
-      :lock-scroll="true"
-      show-header
-      show-footer
-      mask-closable="true"
-      height="auto"
-      width="600"
-      :title="$t('roleInfo.modal.title.update')"
-    >
-      <template #default>
-        <tiny-layout>
-          <tiny-form
-            :model="state.roleUpdData"
-            :rules="rules"
-            label-width="150px"
-            :label-align="true"
-            label-position="left"
-            size="small"
-          >
-            <tiny-row :flex="true" justify="left">
-              <tiny-col :span="10" label-width="100px">
-                <tiny-form-item :label="$t('roleInfo.modal.input.id')">
-                  <label>{{ state.roleUpdData.id }}</label>
-                </tiny-form-item>
-              </tiny-col>
-            </tiny-row>
-            <tiny-row :flex="true" justify="left">
-              <tiny-col :span="10" label-width="100px">
-                <tiny-form-item
-                  :label="$t('roleInfo.modal.input.name')"
-                  prop="name"
-                >
-                  <tiny-input v-model="state.roleUpdData.name"></tiny-input>
-                </tiny-form-item>
-              </tiny-col>
-            </tiny-row>
-
-            <tiny-row :flex="true" justify="left">
-              <tiny-col :span="10" label-width="100px">
-                <tiny-form-item
-                  :label="$t('roleInfo.modal.input.desc')"
-                  prop="desc"
-                >
-                  <tiny-base-select
-                    v-model="state.roleUpdData.desc"
-                    :placeholder="$t('baseForm.form.label.placeholder')"
-                    multiple
+    <menu-drawer
+      v-if="open"
+      v-loading="loading"
+      :visible="open"
+      :menus="i18MenuDatas"
+      :selected-id="selectedId"
+      @close="onMenuDrawerClose"
+      @confirm="onConfirm"
+    />
+    <div v-if="state.isRoleUpdate">
+      <tiny-modal
+        v-model="state.isRoleUpdate"
+        :lock-scroll="true"
+        show-header
+        show-footer
+        mask-closable="true"
+        height="auto"
+        width="600"
+        :title="$t('roleInfo.modal.title.update')"
+      >
+        <template #default>
+          <tiny-layout>
+            <tiny-form
+              :model="state.roleUpdData"
+              :rules="rules"
+              label-width="150px"
+              :label-align="true"
+              label-position="left"
+              size="small"
+            >
+              <tiny-row :flex="true" justify="left">
+                <tiny-col :span="10" label-width="100px">
+                  <tiny-form-item :label="$t('roleInfo.modal.input.id')">
+                    <label>{{ state.roleUpdData.id }}</label>
+                  </tiny-form-item>
+                </tiny-col>
+              </tiny-row>
+              <tiny-row :flex="true" justify="left">
+                <tiny-col :span="10" label-width="100px">
+                  <tiny-form-item
+                    :label="$t('roleInfo.modal.input.name')"
+                    prop="name"
                   >
-                    <tiny-option
-                      v-for="item in state.permissionData as any"
-                      :key="item.id"
-                      :label="$t(item.name)"
-                      :value="item.id"
-                    ></tiny-option>
-                  </tiny-base-select>
-                </tiny-form-item>
-              </tiny-col>
-            </tiny-row>
+                    <tiny-input v-model="state.roleUpdData.name"></tiny-input>
+                  </tiny-form-item>
+                </tiny-col>
+              </tiny-row>
 
-            <tiny-row :flex="true" justify="left">
-              <tiny-col :span="10" label-width="100px">
-                <tiny-form-item
-                  :label="$t('roleInfo.modal.input.menu')"
-                  prop="menu"
-                >
-                  <tiny-select
-                    v-model="state.roleUpdData.menus"
-                    :placeholder="$t('baseForm.form.label.placeholder')"
-                    multiple
-                    value-field="id"
-                    text-field="label"
-                    render-type="tree"
-                    :tree-op="state.menuOptionData"
+              <tiny-row :flex="true" justify="left">
+                <tiny-col :span="10" label-width="100px">
+                  <tiny-form-item
+                    :label="$t('roleInfo.modal.input.desc')"
+                    prop="desc"
                   >
-                  </tiny-select>
-                </tiny-form-item>
-              </tiny-col>
-            </tiny-row>
-          </tiny-form>
-        </tiny-layout>
-      </template>
-      <template #footer>
-        <tiny-button type="primary" @click="handleRoleUpdateSubmit">{{
-          $t('menu.btn.confirm')
-        }}</tiny-button>
-        <tiny-button @click="handleRoleUpdateCancel">{{
-          $t('menu.btn.cancel')
-        }}</tiny-button>
-      </template>
-    </tiny-modal>
-  </div>
-  <div v-if="state.isRoleAdd">
-    <tiny-modal
-      v-model="state.isRoleAdd"
-      :lock-scroll="true"
-      show-header
-      show-footer
-      mask-closable="true"
-      height="auto"
-      width="600"
-      :title="$t('roleInfo.modal.title.add')"
-    >
-      <template #default>
-        <tiny-layout>
-          <tiny-form
-            :model="state.roleAddData"
-            :rules="rules"
-            label-width="150px"
-            :label-align="true"
-            label-position="left"
-            size="small"
-          >
-            <tiny-row :flex="true" justify="left">
-              <tiny-col :span="10" label-width="100px">
-                <tiny-form-item
-                  :label="$t('roleInfo.modal.input.name')"
-                  prop="name"
-                >
-                  <tiny-input v-model="state.roleAddData.name"></tiny-input>
-                </tiny-form-item>
-              </tiny-col>
-            </tiny-row>
+                    <tiny-base-select
+                      v-model="state.roleUpdData.desc"
+                      :placeholder="$t('baseForm.form.label.placeholder')"
+                      multiple
+                    >
+                      <tiny-option
+                        v-for="item in state.permissionData"
+                        :key="item.id"
+                        :label="$t(item.name)"
+                        :value="item.id"
+                      ></tiny-option>
+                    </tiny-base-select>
+                  </tiny-form-item>
+                </tiny-col>
+              </tiny-row>
+            </tiny-form>
+          </tiny-layout>
+        </template>
+        <template #footer>
+          <tiny-button type="primary" @click="handleRoleUpdateSubmit">{{
+            $t('menu.btn.confirm')
+          }}</tiny-button>
+          <tiny-button @click="handleRoleUpdateCancel">{{
+            $t('menu.btn.cancel')
+          }}</tiny-button>
+        </template>
+      </tiny-modal>
+    </div>
+    <div v-if="state.isRoleAdd">
+      <tiny-modal
+        v-model="state.isRoleAdd"
+        :lock-scroll="true"
+        show-header
+        show-footer
+        mask-closable="true"
+        height="auto"
+        width="600"
+        :title="$t('roleInfo.modal.title.add')"
+      >
+        <template #default>
+          <tiny-layout>
+            <tiny-form
+              :model="state.roleAddData"
+              :rules="rules"
+              label-width="150px"
+              :label-align="true"
+              label-position="left"
+              size="small"
+            >
+              <tiny-row :flex="true" justify="left">
+                <tiny-col :span="10" label-width="100px">
+                  <tiny-form-item
+                    :label="$t('roleInfo.modal.input.name')"
+                    prop="name"
+                  >
+                    <tiny-input v-model="state.roleAddData.name"></tiny-input>
+                  </tiny-form-item>
+                </tiny-col>
+              </tiny-row>
 
-            <tiny-row :flex="true" justify="left">
-              <tiny-col :span="10" label-width="100px">
-                <tiny-form-item
-                  :label="$t('roleInfo.modal.input.desc')"
-                  prop="desc"
-                >
-                  <tiny-base-select
-                    v-model="state.roleAddData.desc"
-                    :placeholder="$t('baseForm.form.label.placeholder')"
-                    multiple
+              <tiny-row :flex="true" justify="left">
+                <tiny-col :span="10" label-width="100px">
+                  <tiny-form-item
+                    :label="$t('roleInfo.modal.input.desc')"
+                    prop="desc"
                   >
-                    <tiny-option
-                      v-for="item in state.permissionData as any"
-                      :key="item.id"
-                      :label="$t(item.name)"
-                      :value="item.id"
-                    ></tiny-option>
-                  </tiny-base-select>
-                </tiny-form-item>
-              </tiny-col>
-            </tiny-row>
+                    <tiny-base-select
+                      v-model="state.roleAddData.desc"
+                      :placeholder="$t('baseForm.form.label.placeholder')"
+                      multiple
+                    >
+                      <tiny-option
+                        v-for="item in state.permissionData"
+                        :key="item.id"
+                        :label="$t(item.name)"
+                        :value="item.id"
+                      ></tiny-option>
+                    </tiny-base-select>
+                  </tiny-form-item>
+                </tiny-col>
+              </tiny-row>
 
-            <tiny-row :flex="true" justify="left">
-              <tiny-col :span="10" label-width="100px">
-                <tiny-form-item
-                  :label="$t('roleInfo.modal.input.menu')"
-                  prop="menu"
-                >
-                  <tiny-select
-                    v-model="state.roleAddData.menus"
-                    :placeholder="$t('baseForm.form.label.placeholder')"
-                    multiple
-                    value-field="id"
-                    text-field="label"
-                    render-type="tree"
-                    :tree-op="state.menuOptionData"
+              <tiny-row :flex="true" justify="left">
+                <tiny-col :span="10" label-width="100px">
+                  <tiny-form-item
+                    :label="$t('roleInfo.modal.input.menu')"
+                    prop="menu"
                   >
-                  </tiny-select>
-                </tiny-form-item>
-              </tiny-col>
-            </tiny-row>
-          </tiny-form>
-        </tiny-layout>
-      </template>
-      <template #footer>
-        <tiny-button type="primary" @click="handleRoleAddSubmit">{{
-          $t('menu.btn.confirm')
-        }}</tiny-button>
-        <tiny-button @click="handleRoleAddCancel">{{
-          $t('menu.btn.cancel')
-        }}</tiny-button>
-      </template>
-    </tiny-modal>
+                    <tiny-select
+                      v-model="state.roleAddData.menus"
+                      :placeholder="$t('baseForm.form.label.placeholder')"
+                      multiple
+                      value-field="id"
+                      text-field="label"
+                      render-type="tree"
+                      :tree-op="state.menuOptionData"
+                    >
+                    </tiny-select>
+                  </tiny-form-item>
+                </tiny-col>
+              </tiny-row>
+            </tiny-form>
+          </tiny-layout>
+        </template>
+        <template #footer>
+          <tiny-button type="primary" @click="handleRoleAddSubmit">{{
+            $t('menu.btn.confirm')
+          }}</tiny-button>
+          <tiny-button @click="handleRoleAddCancel">{{
+            $t('menu.btn.cancel')
+          }}</tiny-button>
+        </template>
+      </tiny-modal>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { ref, reactive, onMounted, watch, computed } from 'vue';
-  import { useI18n } from 'vue-i18n';
+  import { ref, reactive, onMounted, computed, watch, onUnmounted } from 'vue';
   import {
     Tabs as TinyTabs,
     TabItem as TinyTabItem,
@@ -302,9 +268,9 @@
     Select as TinySelect,
     Option as TinyOption,
     Tree as TinyTree,
+    TinyLoading,
   } from '@opentiny/vue';
-  import { IconChevronDown } from '@opentiny/vue-icon';
-  import { useUserStore } from '@/store';
+  import { useUserStore } from '@/store/';
   import {
     getAllRoleDetail,
     updateRole,
@@ -317,11 +283,17 @@
   import { useRouter } from 'vue-router';
   import { getSimpleDate } from '@/utils/time';
   import { updateUserInfo } from '@/api/user';
+  import { useI18n } from 'vue-i18n';
+  import type { ITreeNodeData } from '@/router/guard/menu';
+  import { useDisclosure } from '@/hooks/useDisclosure';
+  import { useI18nMenu } from '@/hooks/useI18nMenu';
+  import useLoading from '@/hooks/loading';
+  import { useMenuId } from '@/hooks/useMenuId';
+  import permissionTable from './permission-table.vue';
+  import menuDrawer from './menu-drawer.vue';
 
   const router = useRouter();
-
   const { t } = useI18n();
-
   // 加载效果
   const state = reactive<{
     tableData: any;
@@ -343,9 +315,10 @@
     isRoleUpdate: false,
   });
 
-  // 变量设置
   const userStore = useUserStore();
-
+  const menus = ref<ITreeNodeData[]>([]);
+  const vLoading = TinyLoading.directive;
+  const { loading, setLoading } = useLoading();
   // 校验规则
   const rulesType = {
     required: true,
@@ -363,6 +336,30 @@
       menu: [rulesSelect],
     };
   });
+  const { open, onClose, onOpen } = useDisclosure();
+  const menuDatas = ref<ITreeNodeData[]>([]);
+  const selectedId = ref<number[]>([]);
+  const i18MenuDatas = computed(() => useI18nMenu(menus.value, t));
+  const roleId = ref(-1);
+
+  const stop = watch(
+    menuDatas,
+    () => {
+      selectedId.value = useMenuId(menuDatas.value);
+    },
+    {
+      immediate: true,
+    },
+  );
+
+  setLoading(true);
+  getAllMenu()
+    .then((res) => {
+      menus.value = res.data;
+    })
+    .finally(() => {
+      setLoading(false);
+    });
 
   // 初始化请求数据
   onMounted(() => {
@@ -370,6 +367,29 @@
     fetchPermissionData();
     fetchMenuData();
   });
+
+  const onMenuDrawerClose = () => {
+    onClose();
+  };
+
+  const onMenuUpdate = (data: ITreeNodeData[], roldId: number) => {
+    menuDatas.value = data;
+    roleId.value = roldId;
+    onOpen();
+  };
+
+  const onConfirm = (ids: number[]) => {
+    updateRole({
+      id: roleId.value,
+      menuIds: ids,
+    })
+      .then(() => {
+        selectedId.value = ids;
+      })
+      .finally(() => {
+        open.value = false;
+      });
+  };
 
   // 请求数据接口方法
   async function fetchRoleData() {
@@ -394,7 +414,7 @@
     try {
       await deleteRole(id);
       TinyModal.message({
-        message: '已删除',
+        message: t('message.delete.success'),
         status: 'success',
       });
       state.isRoleUpdate = false;
@@ -412,7 +432,7 @@
   }
 
   async function convertMenu(data: any) {
-    let menu = [] as any;
+    const menu = [] as any;
     for (let j = 0; j < data.menus.length; j += 1) {
       menu.push(data.menus[j].id);
       if (data.menus[j].children !== null) {
@@ -424,12 +444,12 @@
 
   const handleUpdate = (id: string) => {
     state.isRoleUpdate = true;
-    let data = state.tableData[id - 1];
-    let permission = [] as any;
+    const data = state.tableData[id - 1];
+    const permission = [] as any;
     for (let i = 0; i < data.permission.length; i += 1) {
       permission.push(data.permission[i].id);
     }
-    let menu = [] as any;
+    const menu = [] as any;
     for (let j = 0; j < data.menus.length; j += 1) {
       menu.push(data.menus[j].id);
     }
@@ -450,8 +470,8 @@
   };
 
   async function handleRoleUpdateSubmit() {
-    let data = state.roleUpdData;
-    let newTemp = {
+    const data = state.roleUpdData;
+    const newTemp = {
       id: data.id,
       name: data.name,
       permissionIds: data.desc,
@@ -491,8 +511,8 @@
   }
 
   async function handleRoleAddSubmit() {
-    let data = state.roleAddData;
-    let newTemp = {
+    const data = state.roleAddData;
+    const newTemp = {
       name: data.name,
       permissionIds: data.desc,
       menuIds: data.menus,
@@ -521,6 +541,10 @@
     state.isRoleAdd = false;
     state.roleAddData = {} as any;
   }
+
+  onUnmounted(() => {
+    stop();
+  });
 </script>
 
 <style scoped lang="less">
