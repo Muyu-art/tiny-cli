@@ -138,7 +138,29 @@ function handleSubmit() {
       const route = router
         .getRoutes()
         .filter((route) => route.name === redirectTo)[0];
-      router.replace({ path: route.path });
+      if (!route) {
+        const firstRoute = router.getRoutes().filter((route) => {
+          return (
+            route.path !== '' &&
+            !route.path.includes('login') &&
+            !route.path.includes('preview') &&
+            !route.path.includes('404') &&
+            route.path !== '/vue-pro'
+          );
+        })[0];
+        if (firstRoute) {
+          router.replace({ path: firstRoute.path });
+          return;
+        }
+        Notify({
+          type: 'error',
+          title: t('login.route.error'),
+          position: 'top-right',
+          duration: 2000,
+        });
+      } else {
+        router.replace({ path: route.path });
+      }
     } catch (err) {
       Notify({
         type: 'error',

@@ -61,9 +61,16 @@ export const toRoutes = (menus: ITreeNodeData[]) => {
 };
 
 export const setupMenuGuard = (router: any) => {
+  let depth = 100;
   let has404 = false;
   router.beforeEach(async (to, from, next) => {
-    await nextTick();
+    if (to.name === 'notFound') {
+      next();
+      return;
+    }
+    if ((depth -= 1) <= 0) {
+      return;
+    }
     has404 = router
       .getRoutes()
       .some((route: RouteRecord) => route.name === 'notFound');
@@ -77,7 +84,7 @@ export const setupMenuGuard = (router: any) => {
     const menuStore = useMenuStore();
     if (menuStore.menuList.length) {
       if (!to.matched.length) {
-        next({ name: 'login', replace: true });
+        next({ name: 'notFound', replace: true });
         return;
       }
       next();

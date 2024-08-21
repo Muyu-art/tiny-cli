@@ -89,6 +89,11 @@ export const useUserStore = defineStore('user', {
       this.$reset();
     },
 
+    async fetchInfo() {
+      const { data } = await getUserInfo();
+      this.setInfo(data);
+    },
+
     // Login
     async login(loginForm: LoginData) {
       try {

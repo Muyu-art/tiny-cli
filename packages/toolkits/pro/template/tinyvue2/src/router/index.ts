@@ -7,9 +7,6 @@ import appRoutes from './routes';
 import { getToken } from '@/utils/auth';
 import createRouteGuard from '@/router/guard';
 import { notFound } from './not-found';
-
-Vue.use(VueRouter);
-
 const router = new VueRouter({
   mode: 'history',
   routes: [

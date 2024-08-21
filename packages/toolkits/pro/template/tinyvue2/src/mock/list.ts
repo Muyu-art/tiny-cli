@@ -39,6 +39,7 @@ export default [
       const offset = (index - 1) * size;
       const count = index * size;
       treeData = taskList.list.slice(offset, count);
+      console.log(taskList);
 
       const data = Mock.mock({
         total: 60,
