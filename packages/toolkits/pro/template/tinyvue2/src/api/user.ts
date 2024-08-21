@@ -38,6 +38,16 @@ export interface UserData {
   filterType?: [];
 }
 
+export type Role = {
+  id: number;
+  name: string;
+  permission: {
+    name: string;
+    desc: string;
+    id: number;
+  }[];
+};
+
 export function login(data: LoginData) {
   return axios.post<LoginRes>('/api/auth/login', data);
 }

@@ -13,6 +13,7 @@ import chinaMap from './assets/chaina.json';
 import { registerMap } from 'echarts';
 import Breadcrumb from '@/components/breadcrumb/index.vue';
 import * as icons from '@opentiny/vue-icon';
+import VueRouter from 'vue-router';
 
 // 全局注册所有图标组件
 Object.keys(icons).forEach((key) => {
@@ -22,6 +23,7 @@ Object.keys(icons).forEach((key) => {
 registerMap('china', chinaMap as any);
 
 Vue.use(PiniaVuePlugin);
+Vue.use(VueRouter);
 Vue.component('Breadcrumb', Breadcrumb);
 Vue.use(directive);
 

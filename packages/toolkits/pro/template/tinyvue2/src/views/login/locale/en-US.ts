@@ -46,4 +46,6 @@ export default {
   'login.tip.mail': "User name: admin{'@'}example.com; password: admin",
   'login.tip.right': 'Enter the correct user name and password',
   'login.main.text': 'TinyPro Mid-Back-End Front-End Solution',
+  'login.route.error':
+    'Uncapted routing exception, please contact the website administrator',
 };

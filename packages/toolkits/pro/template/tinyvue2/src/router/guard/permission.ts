@@ -1,12 +1,9 @@
-import { getUserInfo } from '@/api/user';
-import { useUserStore } from '@/stores';
-import { clearToken, isLogin } from '@/utils/auth';
-import { nextTick } from 'vue';
+import { isLogin } from '@/utils/auth';
 
 export default function setupPermissionGuard(router: any) {
-  router.beforeEach(async (to, from, next) => {
+  router.beforeEach((to, from, next) => {
     if (!isLogin()) {
-      if (to.name === 'login') {
+      if (to.name === 'login' || to.name === 'notFound') {
         next();
         return;
       }
@@ -15,22 +12,9 @@ export default function setupPermissionGuard(router: any) {
         query: {
           redirect: to.name,
           ...to.query,
-        } as any,
+        },
       });
     } else {
-      await nextTick();
-      const userStore = useUserStore();
-      if (!userStore.email) {
-        clearToken();
-        next({
-          name: 'login',
-          query: {
-            redirect: to.name,
-            ...to.query,
-          } as any,
-        });
-        return;
-      }
       next();
     }
   });
