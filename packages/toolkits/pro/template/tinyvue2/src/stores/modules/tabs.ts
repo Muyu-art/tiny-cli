@@ -1,3 +1,4 @@
+import { useRouter } from '@/router';
 import { defineStore } from 'pinia';
 
 type Tab = {
@@ -37,6 +38,7 @@ export const useTabStore = defineStore('tabs', {
       return this.data.filter((tab) => tab.link === link);
     },
     delByLink(link: string) {
+      let curName = '';
       if (this.data.length === 1) {
         return;
       }
@@ -46,14 +48,15 @@ export const useTabStore = defineStore('tabs', {
       }
       const hasNext = idx < this.data.length - 1;
       if (hasNext) {
-        this.current = this.data[idx + 1];
+        curName = this.data[idx + 1].name;
       } else {
         const hasPrev = idx > 0;
         if (hasPrev) {
-          this.current = this.data[idx - 1];
+          curName = this.data[idx - 1].name;
         }
       }
       this.data.splice(idx, 1);
+      return curName;
     },
   },
 });

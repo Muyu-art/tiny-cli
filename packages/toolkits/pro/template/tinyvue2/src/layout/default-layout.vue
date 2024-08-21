@@ -117,7 +117,12 @@ const onClick = (tab: { name: string; link: string }) => {
   router.replace({ path: tab.name });
 };
 const onClose = (name: string) => {
-  tabStore.delByLink(name);
+  const curName = tabStore.delByLink(name);
+  if (curName) {
+    tabStore.set(curName);
+    const { link } = tabStore.getByName(curName)[0];
+    router.push({ path: link });
+  }
 };
 
 // 切换简约模式，图标按钮
