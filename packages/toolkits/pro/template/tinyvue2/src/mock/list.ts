@@ -4,21 +4,21 @@ import { successResponseWrap } from '../utils/setup-mock';
 const taskList = Mock.mock({
   'list|60': [
     {
-      'id': '@id',
-      'name': 'xiaoming',
-      'rank': '初级',
-      'description': '一段描述文字',
-      'createTime': '@datetime',
+      id: '@id',
+      name: 'xiaoming',
+      rank: '初级',
+      description: '一段描述文字',
+      createTime: '@datetime',
       'status|1': ['0', '1', '2'],
-      'type': 'Tiny Design',
-      'roles': '前端',
-      'employeeNo': '00022456',
-      'department': '公共服务',
-      'departmentLevel': '中级',
-      'workbenchName': 'work',
-      'project': 'TinyDesign',
-      'address': '西安研究所',
-      'lastUpdateUser': '张三',
+      type: 'Tiny Design',
+      roles: '前端',
+      employeeNo: '00022456',
+      department: '公共服务',
+      departmentLevel: '中级',
+      workbenchName: 'work',
+      project: 'TinyDesign',
+      address: '西安研究所',
+      lastUpdateUser: '张三',
     },
   ],
 });
@@ -30,7 +30,7 @@ export default [
   {
     url: '/api/employee/getEmployee',
     method: 'post',
-    response: (params: { body: any; }) => {
+    response: (params: { body: any }) => {
       const { pageIndex = 1, pageSize = 10 } = JSON.parse(
         JSON.stringify(params.body)
       );
