@@ -6,11 +6,9 @@ export type CreateRole = {
   permissionIds: number[];
 };
 
-export type UpdateRole = Prettify<
-  Partial<CreateRole> & {
-    id: number;
-  }
->;
+export type UpdateRole = Partial<CreateRole> & {
+  id: number;
+};
 
 export function getAllRole() {
   return axios.get('/api/role');
