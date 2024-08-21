@@ -139,7 +139,6 @@ function handleSubmit() {
         .getRoutes()
         .filter((route) => route.name === redirectTo)[0];
       router.replace({ path: route.path });
-      console.log(route.path);
     } catch (err) {
       Notify({
         type: 'error',

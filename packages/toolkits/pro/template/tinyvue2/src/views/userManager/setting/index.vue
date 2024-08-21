@@ -324,7 +324,6 @@ async function fetchData(email: string) {
 
 async function fetchRole() {
   const { data } = await getAllRole();
-  console.log(data);
   state.roleData = data;
 }
 </script>
