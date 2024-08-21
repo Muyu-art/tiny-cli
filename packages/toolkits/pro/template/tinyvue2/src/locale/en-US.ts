@@ -36,6 +36,8 @@ import localeRole from '@/views/role/info/locale/en-US';
 
 import localeMenu from '@/views/menu/info/locale/en-US';
 
+import localeMenuDemo from '@/views/menu/demo/locale/en-US';
+
 import localeSettings from './en-US/settings';
 
 import localeHttpError from './en-US/httpError';
@@ -51,6 +53,9 @@ export default {
   'menu.profile': 'Profile',
   'menu.profile.detail': 'Basic details page',
   'menu.visualization': 'Data Visualization',
+  'menu.menuPage': 'Menu Page',
+  'menu.menuPage.second': 'Second Page',
+  'menu.menuPage.third': 'Menu Demo Page',
   'menu.user': 'User Center',
   'menu.userManager': 'User Manager',
   'menu.userManager.info': 'All User Info',
@@ -98,4 +103,5 @@ export default {
   ...localePermission,
   ...localeRole,
   ...localeMenu,
+  ...localeMenuDemo,
 };
