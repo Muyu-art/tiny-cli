@@ -380,9 +380,6 @@
         }
       }
 
-      //.margin-bottom {
-      //  margin: 15px 0;
-      //}
       .col {
         padding: 4px 0;
         color: #fff;
