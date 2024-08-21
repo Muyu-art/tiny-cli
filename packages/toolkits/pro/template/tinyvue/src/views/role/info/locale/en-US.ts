@@ -15,4 +15,9 @@ export default {
   'roleInfo.modal.input.menu': 'Menu',
   'roleInfo.modal.message.error': 'Error',
   'roleInfo.modal.message.notNull': 'Not Null',
+  'roleInfo.permissionTable.id': 'ID',
+  'roleInfo.permissionTable.name': 'Name',
+  'roleInfo.permissionTable.desc': 'Description',
+  'roleInfo.menuUpdate.confirm': 'Confirm',
+  'roleInfo.menuUpdate.cancel': 'Cancel',
 };

@@ -24,18 +24,7 @@
 
 <script lang="ts" setup>
   import Footer from '@/components/footer/index.vue';
-  import { useMenuStore } from '@/store/modules/router';
-  import { useRouter } from 'vue-router';
-  import { onMounted } from 'vue';
   import LoginForm from './components/login-form.vue';
-
-  const router = useRouter();
-  onMounted(() => {
-    const menuStore = useMenuStore();
-    if (menuStore.menuList.length) {
-      router.go(0);
-    }
-  });
 </script>
 
 <style lang="less" scoped>

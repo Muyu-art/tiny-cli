@@ -3,7 +3,7 @@
     <img src="@/assets/images/user-head.png" alt="user" class="user-image" />
     <div>
       <h3 class="user-name">{{ $t('stepForm.head.admin') }}</h3>
-      <h3 class="user-name">{{ userStore.name }}</h3>
+      <h3 class="user-name">{{ userStore.userInfo.name }}</h3>
     </div>
   </div>
   <div class="divider"></div>
@@ -15,7 +15,7 @@
           <div class="col">
             <div>{{ $t('stepForm.recruitment.department') }}</div>
             <div class="space"></div>
-            <div>{{ userStore.department }}</div>
+            <div>{{ userStore.userInfo.department }}</div>
           </div>
         </tiny-col>
         <img src="@/assets/images/head-2.png" class="head-image" />
@@ -23,7 +23,7 @@
           <div class="col">
             <div>{{ $t('stepForm.recruitment.type') }}</div>
             <div class="space"></div>
-            <div>{{ userStore.employeeType }}</div>
+            <div>{{ userStore.userInfo.employeeType }}</div>
           </div>
         </tiny-col>
         <img src="@/assets/images/head-3.png" class="head-image" />
@@ -31,7 +31,7 @@
           <div class="col">
             <div>{{ $t('stepForm.recruitment.position') }}</div>
             <div class="space"></div>
-            <div>{{ userStore.job }}</div>
+            <div>{{ userStore.userInfo.job }}</div>
           </div>
         </tiny-col>
       </tiny-row>
@@ -42,9 +42,9 @@
             <div>{{ $t('stepForm.probation.start') }}</div>
             <div class="space"></div>
             <div>
-              {{ userStore.probationStart }}
+              {{ userStore.userInfo.probationStart }}
               ~
-              {{ userStore.probationEnd }}
+              {{ userStore.userInfo.probationEnd }}
             </div>
           </div>
         </tiny-col>
@@ -53,7 +53,7 @@
           <div class="col">
             <div>{{ $t('stepForm.start.date') }}</div>
             <div class="space"></div>
-            <div>{{ userStore.protocolStart }}</div>
+            <div>{{ userStore.userInfo.protocolStart }}</div>
           </div>
         </tiny-col>
         <img src="@/assets/images/head-6.png" class="head-image" />
@@ -62,7 +62,7 @@
             <div>{{ $t('stepForm.probation.period') }}</div>
             <div class="space"></div>
             <div
-              >{{ userStore.probationDuration
+              >{{ userStore.userInfo.probationDuration
               }}{{ $t('stepForm.probation.day') }}</div
             >
           </div>

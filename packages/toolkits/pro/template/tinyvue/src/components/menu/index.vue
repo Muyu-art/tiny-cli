@@ -66,7 +66,8 @@
     for (let i = 0; i < rawMenuData.length; i += 1) {
       filter.push(rawMenuData[i].label);
     }
-    filter.push('MenuSecond');
+    console.log(filter);
+    filter.push('SecondMenu');
     if (filter.indexOf(data.label) === -1) {
       router.replace({ name: data.label });
     }

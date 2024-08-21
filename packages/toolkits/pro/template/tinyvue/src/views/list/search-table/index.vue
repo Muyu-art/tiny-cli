@@ -364,11 +364,10 @@
     state.loading = true;
     try {
       const { data } = await queryEmployeeList(queryParmas);
-      const { data: list } = data;
-      tableData.value = list.data;
-      const { total } = list;
+      const { data: list, total } = data;
+      tableData.value = list;
       return {
-        result: list.data,
+        result: list,
         page: { total },
       };
     } finally {
@@ -379,6 +378,7 @@
   const fetchDataOption = reactive({
     api: ({ page }: any) => {
       const { currentPage, pageSize } = page;
+
       return fetchData({
         pageIndex: currentPage,
         pageSize,
