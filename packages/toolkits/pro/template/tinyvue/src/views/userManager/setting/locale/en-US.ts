@@ -14,4 +14,6 @@ export default {
   'userSetting.name': 'UserName',
   'userSetting.address': 'Address',
   'userSetting.status': 'Status',
+  'userInfo.modal.title.add': 'Add User',
+  'userInfo.modal.title.update': 'Update User',
 };

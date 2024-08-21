@@ -58,7 +58,7 @@ export default {
   'menu.menuPage.third': '菜单demo页',
   'menu.user': '个人中心',
   'menu.userManager': '用户管理',
-  'menu.userManager.info': '所有用户',
+  'menu.userManager.info': '查看用户',
   'menu.userManager.setting': '修改信息',
   'menu.userManager.useradd': '添加用户',
   'menu.permission': '权限管理',
