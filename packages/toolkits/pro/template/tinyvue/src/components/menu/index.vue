@@ -7,6 +7,7 @@
       node-key="id"
       wrap
       :default-expanded-keys="expandeArr"
+      only-check-children
       @current-change="currentChange"
     >
       <template #default="slotScope">
@@ -22,15 +23,17 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, onMounted, watch, computed, reactive } from 'vue';
+  import { ref, onMounted, watch, computed, reactive, unref } from 'vue';
   import { TreeMenu as tinyTreeMenu } from '@opentiny/vue';
   import { useMenuStore } from '@/store/modules/router';
   import router from '@/router';
   import { ITreeNodeData } from '@/router/guard/menu';
   import * as icons from '@opentiny/vue-icon';
+  import { useTabStore } from '@/store';
+  import { useDeepClone } from '@/hooks/useDeepClone';
 
   const menuStore = useMenuStore();
-  const rawMenuData = menuStore.menuList;
+  const rawMenuData = useDeepClone(unref(menuStore.menuList));
   type SideMenuData = (ITreeNodeData & { meta: { url: string } })[];
 
   const routerTitle = [] as any;
@@ -61,33 +64,64 @@
 
   const MenuData = ref<SideMenuData>(filtter(rawMenuData));
 
-  const currentChange = (data: any) => {
+  const currentChange = (data: any, node) => {
+    if (!node.isLeaf) {
+      return;
+    }
     let filter = [];
     for (let i = 0; i < rawMenuData.length; i += 1) {
       filter.push(rawMenuData[i].label);
     }
-    filter.push('SecondMenu');
     if (filter.indexOf(data.label) === -1) {
       router.replace({ name: data.label });
     }
   };
 
+  const findId = (name: string, path: string) => {
+    const dfs = (item, url: string[]) => {
+      if (url.join('/') === path) {
+        return item.id;
+      }
+      const len = item.children.length ?? 0;
+      for (let i = 0; i < len; i += 1) {
+        if (item.children?.[i]) {
+          const id = dfs(item.children[i], [...url, item.children[i].meta.url]);
+          if (id !== undefined) {
+            return id;
+          }
+        }
+      }
+      return undefined;
+    };
+    for (let i = 0; i < MenuData.value.length; i += 1) {
+      const menu = MenuData.value[i];
+      const data = dfs(menu, [
+        import.meta.env.VITE_CONTEXT.replace(/\/$/, ''),
+        menu.meta.url.endsWith('/')
+          ? menu.meta.url.replace(/\/$/, '')
+          : menu.meta.url,
+      ]);
+      if (data !== undefined) {
+        return data;
+      }
+    }
+    return -1;
+  };
+
   const tree = ref();
-  const expandeArr = ref();
-  /**
-   * 监听路由变化高亮当前菜单
-   */
+  const expandeArr = ref<(string | number)[]>([]);
+  const tabStore = useTabStore();
   onMounted(() => {
     watch(
-      () => router.currentRoute.value.path,
-      (newValue: string) => {
-        const menuKey = newValue
-          .replace(/^.*\//, '')
-          .replace(/^[a-z]/, (s: string) => s.toUpperCase());
-        expandeArr.value = [menuKey];
-        tree.value.setCurrentKey(menuKey);
+      () => tabStore.current,
+      () => {
+        const key = findId(tabStore.current.name, tabStore.current.link);
+        if (!expandeArr.value.includes(key)) {
+          expandeArr.value.push(key);
+        }
+        tree.value.setCurrentKey(key);
       },
-      { immediate: true },
+      { deep: true, immediate: true },
     );
   });
 </script>

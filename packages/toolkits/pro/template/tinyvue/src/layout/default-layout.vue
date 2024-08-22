@@ -18,8 +18,18 @@
         </tiny-layout>
       </template>
       <tiny-layout class="layout-content">
-        <Tabs v-model="currentTabName" @click="onClick" with-close @close="onClose">
-          <tab-item v-for="(history,idx) of tabsHistory" :key="idx" :title="t(history.name)" :name="history.link"></tab-item>
+        <Tabs
+          v-model="currentTabName"
+          with-close
+          @click="onClick"
+          @close="onClose"
+        >
+          <tab-item
+            v-for="(history, idx) of tabsHistory"
+            :key="idx"
+            :title="t(history.name)"
+            :name="history.link"
+          ></tab-item>
         </Tabs>
         <PageLayout />
       </tiny-layout>
@@ -62,44 +72,51 @@
 
 <script lang="ts" setup>
   import { ref, watch, onMounted, computed } from 'vue';
-  import {useI18n} from 'vue-i18n';
+  import { useI18n } from 'vue-i18n';
   import {
     Container as TinyContainer,
     Layout as TinyLayout,
     Modal as tinyModal,
-  } from '@opentiny/vue';
+   Tabs, TabItem } from '@opentiny/vue';
   import TinyThemeTool from '@opentiny/vue-theme/theme-tool.js';
-  import { useAppStore } from '@/store';
-    // eslint-disable-next-line import/extensions
+  import { useAppStore , useTabStore } from '@/store';
+  // eslint-disable-next-line import/extensions
   import Footer from '@/components/footer/index.vue';
   import NavBar from '@/components/navbar/index.vue';
   import Theme from '@/components/theme/index.vue';
   import Menu from '@/components/menu/index.vue';
   import { DefaultTheme } from '@/components/theme/type';
-  import {Tabs, TabItem} from '@opentiny/vue';
-  import {useTabStore} from '@/store';
-  import { useRouter } from 'vue-router';
+      import { useRouter } from 'vue-router';
   import PageLayout from './page-layout.vue';
   // 动态切换
   const router = useRouter();
   const appStore = useAppStore();
   const changefooter = ref('#fff');
 
-  const {t} = useI18n();
+  const { t } = useI18n();
   const tabStore = useTabStore();
 
   const tabsHistory = computed(() => tabStore.data);
   const currentTabName = ref();
-  watch(()=>tabStore.current, ()=>{
-    currentTabName.value = tabStore.current?.link;
-  }, {deep: true, immediate: true});
+  watch(
+    () => tabStore.current,
+    () => {
+      currentTabName.value = tabStore.current?.link;
+    },
+    { deep: true, immediate: true },
+  );
 
-  const onClick = (tab: {name: string, link: string}) => {
+  const onClick = (tab: { name: string; link: string }) => {
     router.replace(tab.name);
-  }
-  const onClose = (name:string) => {
-    tabStore.delByLink(name);
-  }
+  };
+  const onClose = (name: string) => {
+    const curName = tabStore.delByLink(name);
+    if (curName) {
+      tabStore.set(curName);
+      const { link } = tabStore.getByName(curName)[0];
+      router.push({ path: link });
+    }
+  };
 
   // 切换简约模式，图标按钮
   const top = ref('10px');
@@ -114,7 +131,7 @@
 
   // 主题配置
   const disTheme = ref(false);
-  const theme = new TinyThemeTool()
+  const theme = new TinyThemeTool();
   const themeVisible = () => {
     disTheme.value = !disTheme.value;
   };
@@ -200,8 +217,8 @@
 
   .layout :deep(.tiny-container .tiny-container__footer) {
     display: flex;
-    padding-top: 15px;
     justify-content: center;
+    padding-top: 15px;
     background-color: #f5f6f7;
   }
 
@@ -217,15 +234,19 @@
       padding-left: 6px !important;
     }
   }
-   :deep(.tiny-tree-node__children > .tree-node-body) {
+
+  :deep(.tiny-tree-node__children > .tree-node-body) {
     padding-left: 50px;
-   }
-   :deep(.tiny-tabs__content) {
+  }
+
+  :deep(.tiny-tabs__content) {
     display: none;
-   }
-   :deep(.tiny-tabs--top) {
+  }
+
+  :deep(.tiny-tabs--top) {
     padding: 0 16px;
-   }
+  }
+
   .theme-box {
     position: fixed;
     top: 88%;
