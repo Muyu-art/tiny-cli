@@ -57,6 +57,7 @@ export default {
   'menu.menuPage.second': 'Second Page',
   'menu.menuPage.third': 'Menu Demo Page',
   'menu.user': 'User Center',
+  'menu.systemManager': 'System Manager',
   'menu.userManager': 'User Manager',
   'menu.userManager.info': 'All User Info',
   'menu.userManager.setting': 'All User Setting',
