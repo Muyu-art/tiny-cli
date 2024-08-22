@@ -13,11 +13,12 @@ import { existsSync, writeFileSync } from 'fs';
 import { UserService } from './user/user.service';
 import { RoleService } from './role/role.service';
 import { PermissionService } from './permission/permission.service';
-import { MenuService } from "./menu/menu.service";
+import { MenuService } from './menu/menu.service';
 import { Permission } from '@app/models';
 import { MenuModule } from './menu/menu.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import {menuData} from "./menu/init/menuData";
+import { menuData } from './menu/init/menuData';
+import { I18Module } from './i18/i18.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import {menuData} from "./menu/init/menuData";
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    I18Module,
   ],
   providers: [
     {
@@ -47,7 +49,7 @@ export class AppModule implements OnModuleInit {
     private user: UserService,
     private role: RoleService,
     private permission: PermissionService,
-    private menu: MenuService,
+    private menu: MenuService
   ) {}
   async onModuleInit() {
     const ROOT = __dirname;
@@ -56,7 +58,7 @@ export class AppModule implements OnModuleInit {
       return;
     }
     // TODO: permission
-    const modules = ['user', 'permission', 'role', 'menu'];
+    const modules = ['user', 'permission', 'role', 'menu', 'i18n', 'lang'];
     const actions = ['add', 'remove', 'update', 'query'];
     const tasks = [];
     let permission;
@@ -90,10 +92,10 @@ export class AppModule implements OnModuleInit {
     }
     // TODO Menu
     try {
-      for (const item of menuData){
-        await this.menu.createMenu(item, isInit)
+      for (const item of menuData) {
+        await this.menu.createMenu(item, isInit);
       }
-    }catch (e){
+    } catch (e) {
       const err = e as HttpException;
       Logger.error(err.message);
       Logger.error(`Please clear the database and try again`);
@@ -112,7 +114,7 @@ export class AppModule implements OnModuleInit {
       Logger.error('Please clear the database and try again');
       process.exit(-1);
     }
-    const menuId = this.menu.getMenuAllId()
+    const menuId = this.menu.getMenuAllId();
     const role = await this.role.create(
       {
         name: 'admin',
