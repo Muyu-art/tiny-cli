@@ -57,6 +57,7 @@ export default {
   'menu.menuPage.second': '二级菜单',
   'menu.menuPage.third': '菜单demo页',
   'menu.user': '个人中心',
+  'menu.systemManager': '系统管理',
   'menu.userManager': '用户管理',
   'menu.userManager.info': '查看用户',
   'menu.userManager.setting': '修改信息',
