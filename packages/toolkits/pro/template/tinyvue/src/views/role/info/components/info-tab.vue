@@ -45,7 +45,7 @@
                   v-permission="'menu::update'"
                   @click="onMenuUpdate(data.row.menuTree, data.row.id)"
                 >
-                  绑定目录
+                  {{ $t('roleInfo.table.bind') }}
                 </a>
                 <!-- {{ Object.keys(data.row.menuTree[0]).join(',') }} -->
                 <!-- <tiny-tree :data="data.row.menuTree" :indent="18"></tiny-tree> -->

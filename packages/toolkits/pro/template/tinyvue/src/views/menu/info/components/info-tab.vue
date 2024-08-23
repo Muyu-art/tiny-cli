@@ -11,7 +11,7 @@
       </div>
       <div class="table">
         <tiny-tree
-          :data="state.tableData"
+          :data="i18MenuDatas"
           :size="medium"
           :indent="18"
           :show-line="showLine === 'show'"
@@ -405,6 +405,8 @@
   import { useRouter } from 'vue-router';
   import { getSimpleDate } from '@/utils/time';
   import { updateUserInfo } from '@/api/user';
+  import { useI18nMenu } from '@/hooks/useI18nMenu';
+  import useLoading from '@/hooks/loading';
 
   const router = useRouter();
 
@@ -478,10 +480,21 @@
     }
     return data;
   };
+  const { loading, setLoading } = useLoading();
+  const menus = ref<ITreeNodeData[]>([]);
+  const i18MenuDatas = computed(() => useI18nMenu(menus.value, t));
+  setLoading(true);
+  getAllMenu()
+    .then((res) => {
+      menus.value = res.data;
+    })
+    .finally(() => {
+      setLoading(false);
+    });
 
   async function fetchMenuData() {
     const { data } = await getAllMenu();
-    state.tableData = data;
+    state.tableData = i18nMenu(data);
   }
 
   async function handleDelete(node: any) {
