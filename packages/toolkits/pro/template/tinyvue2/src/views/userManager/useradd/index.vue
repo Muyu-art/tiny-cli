@@ -1,5 +1,6 @@
 <template>
   <div class="container-set">
+    <Breadcrumb :items="['menu.userManager', 'menu.userManager.useradd']" />
     <div class="general-card">
       <div class="general-contain">
         <tiny-layout>
@@ -7,12 +8,12 @@
             ref="setFormRef"
             :model="state.userData"
             :rules="rules"
-            label-width="80"
+            label-width="150px"
             :label-align="true"
             label-position="left"
             size="small"
           >
-            <tiny-row :flex="true" justify="left">
+            <tiny-row :flex="true">
               <tiny-col :span="5" label-width="100px">
                 <tiny-form-item :label="$t('userAdd.email')" prop="email">
                   <tiny-input v-model="state.userData.email"></tiny-input>
@@ -29,7 +30,7 @@
               </tiny-col>
             </tiny-row>
 
-            <tiny-row :flex="true" justify="left">
+            <tiny-row :flex="true">
               <tiny-col :span="5" label-width="100px">
                 <tiny-form-item :label="$t('userAdd.name')" prop="name">
                   <tiny-input v-model="state.userData.name"></tiny-input>
@@ -42,7 +43,7 @@
               </tiny-col>
             </tiny-row>
 
-            <tiny-row :flex="true" justify="left">
+            <tiny-row :flex="true">
               <tiny-col :span="5" label-width="100px">
                 <tiny-form-item
                   :label="$t('userAdd.department')"
@@ -68,7 +69,7 @@
               </tiny-col>
             </tiny-row>
 
-            <tiny-row :flex="true" justify="left">
+            <tiny-row :flex="true">
               <tiny-col :span="5" label-width="100px">
                 <tiny-form-item :label="$t('userAdd.type')" prop="employeeType">
                   <tiny-select
@@ -101,7 +102,7 @@
               </tiny-col>
             </tiny-row>
 
-            <tiny-row :flex="true" justify="left">
+            <tiny-row :flex="true">
               <tiny-col :span="5" label-width="100px">
                 <tiny-form-item
                   :label="$t('userAdd.during')"
@@ -125,7 +126,7 @@
               </tiny-col>
             </tiny-row>
 
-            <tiny-row :flex="true" justify="left">
+            <tiny-row :flex="true">
               <tiny-col :span="5" label-width="100px">
                 <tiny-form-item
                   :label="$t('userAdd.endTime')"
@@ -262,11 +263,6 @@ const rules = computed(() => {
   };
 });
 
-// btn操作
-function handleFormReset() {
-  router.go(0);
-}
-
 async function handleSubmit() {
   let data = state.userData;
   if (data.status === 'Active') {
@@ -297,7 +293,6 @@ async function handleSubmit() {
       status: 'success',
     });
     state.userData = {} as any;
-    handleFormReset();
   } catch (error) {
     if (error.response && error.response.data) {
       const errorMessage = error.response.data.message || '未知错误';
@@ -357,25 +352,31 @@ const handleBlur = () => {
     .general-contain {
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       min-height: 75%;
-      padding: 30px 0 10px 0;
+      padding: 30px 0 10px 20px;
+      color: black;
+      background-color: #fff;
+      border-radius: 10px;
 
       .tiny-layout {
-        width: 100%;
-        margin-left: 8%;
+        width: 80%;
       }
     }
 
     .general-btn {
       position: relative;
-      margin: 0 auto;
+      left: 160px;
 
       button {
         width: 100px;
         height: 36px;
         border-radius: 4px;
       }
+    }
+
+    .margin-bottom {
+      margin: 15px 0;
     }
 
     .col {

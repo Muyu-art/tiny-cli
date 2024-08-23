@@ -1,10 +1,11 @@
 <template>
   <div class="container">
-    <Breadcrumb :items="['menu.systemManager', 'menu.role.info']" />
+    <Breadcrumb :items="['menu.systemManager', 'menu.i18n']" />
     <div class="container-info">
       <div class="general-card">
         <div class="general-content">
-          <info-tab></info-tab>
+          <add-locale v-permission="'i18n::add'" />
+          <locale-table />
         </div>
       </div>
     </div>
@@ -12,7 +13,8 @@
 </template>
 
 <script lang="ts" setup>
-import infoTab from './components/info-tab.vue';
+import addLocale from './components/add-locale.vue';
+import localeTable from './components/locale-table.vue';
 </script>
 
 <style scoped lang="less">
@@ -47,7 +49,9 @@ import infoTab from './components/info-tab.vue';
     }
 
     .general-content {
-      height: calc(100% - 198px);
+      flex-grow: 1;
+      height: 100%;
+      padding: 16px;
       position: relative;
       color: black;
       font-size: medium;

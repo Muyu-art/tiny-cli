@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <Breadcrumb :items="['menu.userManager', 'menu.userManager.info']" />
+    <Breadcrumb :items="['menu.systemManager', 'menu.userManager.info']" />
     <div class="container-info">
       <div class="general-card">
         <div class="general-content">

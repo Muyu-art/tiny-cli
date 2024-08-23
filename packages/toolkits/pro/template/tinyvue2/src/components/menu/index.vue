@@ -89,16 +89,17 @@ const expandeArr = ref<(string | number)[]>([]);
 const tabStore = useTabStore();
 
 const currentChange = (data: any, node) => {
-  let filter = [];
+  const filter = [];
   if (!node.isLeaf) {
     return;
   }
-  for (let i = 0; i < rawMenuData.length; i += 1) {
-    filter.push(rawMenuData[i].label);
-  }
-  if (filter.indexOf(data.label) === -1) {
-    router.replace({ name: data.label });
-  }
+  router.replace({ name: data.label });
+  // for (let i = 0; i < rawMenuData.length; i += 1) {
+  //   filter.push(rawMenuData[i].label);
+  // }
+  // if (filter.indexOf(data.label) === -1) {
+
+  // }
 };
 
 const findId = (name: string, path: string) => {
