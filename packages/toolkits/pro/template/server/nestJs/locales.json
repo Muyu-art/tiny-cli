@@ -596,7 +596,9 @@
     "locale.add.lang.btn": "Add Language",
     "lang.manage.title": "Mange Language",
     "lang.manage.remove": "Remove",
-    "locale.remove": "Remove"
+    "locale.remove": "Remove",
+    "component.error": "Component Error",
+    "component.error.contact": "Please contact the administrator or log in again"
   },
   "zhCN": {
     "en-US": "English",
@@ -1195,6 +1197,8 @@
     "locale.add.lang.btn": "新增语言",
     "lang.manage.title": "管理语言",
     "lang.manage.remove": "删除",
-    "locale.remove": "删除"
+    "locale.remove": "删除",
+    "component.error": "组件错误",
+    "component.error.contact": "请联系管理员或重新登录"
   }
 }
