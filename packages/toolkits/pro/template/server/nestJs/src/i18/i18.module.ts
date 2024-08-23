@@ -10,6 +10,6 @@ import { I18nLangController } from './lang.controller';
   controllers: [I18Controller, I18nLangController],
   providers: [I18Service, I18LangService],
   imports: [TypeOrmModule.forFeature([Lang, I18])],
-  exports: [I18Service],
+  exports: [I18Service, I18LangService],
 })
 export class I18Module {}

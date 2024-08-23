@@ -1,5 +1,11 @@
 import { SequelizeModule } from '@nestjs/sequelize';
-import { HttpException, Logger, Module, OnModuleInit } from '@nestjs/common';
+import {
+  HttpException,
+  Logger,
+  LoggerService,
+  Module,
+  OnModuleInit,
+} from '@nestjs/common';
 import { UserModule } from './user/user.module';
 import { DbModule } from '@app/db';
 import { PermissionModule } from './permission/permission.module';
@@ -9,7 +15,7 @@ import { AuthGuard } from './auth/auth.guard';
 import { PermissionGuard } from './permission/permission.guard';
 import { RoleModule } from './role/role.module';
 import { join } from 'path';
-import { existsSync, writeFileSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { UserService } from './user/user.service';
 import { RoleService } from './role/role.service';
 import { PermissionService } from './permission/permission.service';
@@ -19,6 +25,8 @@ import { MenuModule } from './menu/menu.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { menuData } from './menu/init/menuData';
 import { I18Module } from './i18/i18.module';
+import { I18LangService } from './i18/lang.service';
+import { I18Service } from './i18/i18.service';
 
 @Module({
   imports: [
@@ -49,16 +57,42 @@ export class AppModule implements OnModuleInit {
     private user: UserService,
     private role: RoleService,
     private permission: PermissionService,
-    private menu: MenuService
+    private menu: MenuService,
+    private lang: I18LangService,
+    private i18: I18Service
   ) {}
   async onModuleInit() {
     const ROOT = __dirname;
     const LOCK_FILE = join(ROOT, 'lock');
     if (existsSync(LOCK_FILE)) {
+      Logger.warn(
+        'Lock file exists, if you want init agin, please remove dist or dist/lock'
+      );
       return;
     }
-    // TODO: permission
-    const modules = ['user', 'permission', 'role', 'menu', 'i18n', 'lang'];
+    const I18_INIT_FILE_PATH = join(process.cwd(), 'locales.json');
+    const I18_INIT_FILE = JSON.parse(
+      readFileSync(I18_INIT_FILE_PATH).toString()
+    );
+    const dbLangNames = (await this.lang.findAll()).map((lang) => lang.name);
+    const langs = Object.keys(I18_INIT_FILE).filter(
+      (key) => !dbLangNames.includes(key)
+    );
+    for (const name of langs) {
+      const { id } = await this.lang.create({ name });
+      for (const [key, value] of Object.entries(I18_INIT_FILE[name])) {
+        const dbValue = await this.i18.has(key, id);
+        if (dbValue) {
+          Logger.warn(`${name} - ${key} exists value is ${dbValue.content}`);
+          continue;
+        }
+        Logger.log(`${name} - ${key} not exists`);
+        await this.i18.create({ key, content: value as string, lang: id });
+        Logger.log(`${name} - ${key} save success`);
+      }
+    }
+    // // TODO: permission
+    const modules = ['user', 'permission', 'role', 'menu'];
     const actions = ['add', 'remove', 'update', 'query'];
     const tasks = [];
     let permission;

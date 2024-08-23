@@ -27,5 +27,5 @@
       ]
     }
   },
-  "include": ["src/**/*", "./src/global.d.ts"]
+  "include": ["src/**/*", "./src/global.d.ts", "libs/**/*"]
 }
