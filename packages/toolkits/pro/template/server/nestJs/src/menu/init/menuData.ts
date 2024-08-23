@@ -304,9 +304,9 @@ export const menuData = [
     order: 14,
     parentId: null,
     menuType: '',
-    icon: '',
-    component: 'local/index',
-    path: 'local',
+    icon: 'IconFlag',
+    component: 'locale/index',
+    path: 'locale',
     locale: 'menu.i18n',
   },
 ];
