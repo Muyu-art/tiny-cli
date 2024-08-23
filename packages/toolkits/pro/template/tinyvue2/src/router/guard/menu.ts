@@ -3,6 +3,7 @@ import { nextTick } from 'vue';
 import type { RouteRecord } from 'vue-router';
 import { notFound } from '../not-found';
 import Demo from '@/views/menu/demo/index.vue';
+import NotFound from '@/views/not-found/404/index.vue';
 
 export interface ITreeNodeData {
   // node-key='id' 设置节点的唯一标识
@@ -50,7 +51,7 @@ export const toRoutes = (menus: ITreeNodeData[]) => {
       router.push({
         name: menu.label,
         path: menu.url,
-        component: Demo,
+        component: NotFound,
         children: [...toRoutes(menu.children ?? [])],
         meta: {
           locale: menu.locale,
