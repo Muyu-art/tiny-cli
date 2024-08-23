@@ -92,7 +92,7 @@ export class AppModule implements OnModuleInit {
       }
     }
     // // TODO: permission
-    const modules = ['user', 'permission', 'role', 'menu'];
+    const modules = ['user', 'permission', 'role', 'menu', 'i18n', 'lang'];
     const actions = ['add', 'remove', 'update', 'query'];
     const tasks = [];
     let permission;

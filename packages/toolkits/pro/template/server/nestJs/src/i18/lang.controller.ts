@@ -9,26 +9,26 @@ import {
   Post,
 } from '@nestjs/common';
 import { I18LangService } from './lang.service';
-import { Public } from '../public/public.decorator';
 import { CreateLang } from './dto/create-lang.dto';
+import { Permission } from '../public/permission.decorator';
 
 @Controller('/lang')
 export class I18nLangController {
   constructor(private readonly langService: I18LangService) {}
 
-  @Public()
+  @Permission('lang::add')
   @Post('')
   createLang(@Body() data: CreateLang) {
     return this.langService.create(data);
   }
 
-  @Public()
+  @Permission('lang::query')
   @Get('')
   findAllLang() {
     return this.langService.findAll();
   }
 
-  @Public()
+  @Permission('lang::update')
   @Patch(':id')
   updateLang(
     @Param('id', ParseIntPipe) id: number,
@@ -37,7 +37,7 @@ export class I18nLangController {
     return this.langService.update(id, data);
   }
 
-  @Public()
+  @Permission('lang::remove')
   @Delete(':id')
   removeLang(@Param('id', ParseIntPipe) id: number) {
     return this.langService.remove(id);
