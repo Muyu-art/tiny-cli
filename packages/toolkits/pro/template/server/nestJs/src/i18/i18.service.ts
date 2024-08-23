@@ -41,7 +41,6 @@ export class I18Service {
         id: lang,
       },
     });
-    console.log(langRecord);
     if (!langRecord) {
       throw new HttpException(`${lang} 不存在`, HttpStatus.NOT_FOUND);
     }
@@ -61,22 +60,45 @@ export class I18Service {
     const items = await this.i18.save(i18);
     return items;
   }
-
+  async has(key: string, langId: number) {
+    return this.i18.findOne({
+      where: {
+        key,
+        lang: {
+          id: langId,
+        },
+      },
+    });
+  }
   async findAll(page?: number, limit?: number, all?: boolean) {
     let count = 0;
     if (all) {
       count = await this.i18.count();
     }
     if (page && limit) {
-      return paginate<I18>(this.i18, {
-        limit,
-        page,
-      });
+      return paginate<I18>(
+        this.i18,
+        {
+          limit,
+          page,
+        },
+        {
+          relations: ['lang'],
+          loadEagerRelations: true,
+        }
+      );
     } else {
-      return paginate(this.i18, {
-        limit: all ? count || process.env.PAGITION_LIMIT : limit,
-        page: Number.isNaN(page) ? process.env.PAGITION_PAGE : page,
-      });
+      return paginate(
+        this.i18,
+        {
+          limit: all ? count || process.env.PAGITION_LIMIT : limit,
+          page: Number.isNaN(page) ? process.env.PAGITION_PAGE : page,
+        },
+        {
+          relations: ['lang'],
+          loadEagerRelations: true,
+        }
+      );
     }
   }
 

@@ -299,4 +299,14 @@ export const menuData = [
     path: 'userManager/allInfo',
     locale: 'menu.userManager.info',
   },
+  {
+    name: 'Local',
+    order: 14,
+    parentId: null,
+    menuType: '',
+    icon: 'IconFlag',
+    component: 'locale/index',
+    path: 'locale',
+    locale: 'menu.i18n',
+  },
 ];

@@ -54,7 +54,7 @@
 </template>
 
 <script lang="ts" setup>
-import { inject, ref, reactive, onMounted } from 'vue';
+import { inject, ref, reactive, onMounted, getCurrentInstance } from 'vue';
 import { useRouter } from '@/router';
 import {
   Form as TinyForm,
@@ -71,10 +71,12 @@ import { useUserStore } from '@/stores/user';
 import { useMenuStore } from '@/stores/modules/router';
 import useLoading from '@/hooks/loading';
 import { toRoutes } from '@/router/guard/menu';
+import { useLocales } from '@/stores/modules/locales';
 
 const userStore = useUserStore();
 const userMenu = useMenuStore();
 const { t } = useI18n();
+const instance = getCurrentInstance()?.proxy;
 const router = useRouter();
 const { loading, setLoading } = useLoading();
 const loginFormMail = ref();
@@ -106,6 +108,7 @@ const handle: any = inject('handle');
 const typeChange = () => {
   handle(true);
 };
+const localeStore = useLocales();
 
 function handleSubmit() {
   loginFormMail.value?.validate(async (valid: boolean) => {
@@ -160,6 +163,16 @@ function handleSubmit() {
         });
       } else {
         router.replace({ path: route.path });
+        await localeStore.fetchLocalTable();
+        const entries = Object.entries(localeStore.localTable);
+        for (let i = 0; i < entries.length; i += 1) {
+          const key = entries[i][0];
+          const messages = entries[i][1];
+          instance?.$i18n.mergeLocaleMessage(key, messages);
+        }
+        localeStore.$patch({
+          shouldMerge: false,
+        });
       }
     } catch (err) {
       Notify({

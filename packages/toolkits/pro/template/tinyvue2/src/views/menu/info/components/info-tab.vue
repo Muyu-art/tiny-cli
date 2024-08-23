@@ -12,7 +12,7 @@
         </div>
         <div class="table">
           <tiny-tree
-            :data="state.tableData"
+            :data="i18MenuDatas"
             :indent="18"
             :show-line="true"
             default-expand-all
@@ -423,6 +423,8 @@ import { useRouter } from '@/router';
 import { getSimpleDate } from '@/utils/time';
 import { updateUserInfo } from '@/api/user';
 import { useI18n } from 'vue-i18n-composable';
+import { useI18nMenu } from '@/hooks/useI18nMenu';
+import useLoading from '@/hooks/loading';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -449,6 +451,29 @@ const state = reactive<{
   isMenuUpdate: false,
   isMenuInfo: false,
 });
+
+interface ITreeNodeData {
+  // node-key='id' 设置节点的唯一标识
+  id: number | string;
+  // 节点显示文本
+  label: string;
+  // 子节点
+  children?: ITreeNodeData[];
+  // 链接
+  url: string;
+  // 组件
+  component: string;
+  // 图标
+  customIcon: string;
+  // 类型
+  menuType: string;
+  // 父节点
+  parentId: number;
+  // 排序
+  order: number;
+  // 国际化
+  locale: string;
+}
 
 // 变量设置
 const userStore = useUserStore();
@@ -479,6 +504,18 @@ const rules = computed(() => {
 onMounted(() => {
   fetchMenuData();
 });
+
+const { loading, setLoading } = useLoading();
+const menus = ref<ITreeNodeData[]>([]);
+const i18MenuDatas = computed(() => useI18nMenu(menus.value, t));
+setLoading(true);
+getAllMenu()
+  .then((res) => {
+    menus.value = res.data;
+  })
+  .finally(() => {
+    setLoading(false);
+  });
 
 // 请求数据接口方法
 async function fetchMenuData() {

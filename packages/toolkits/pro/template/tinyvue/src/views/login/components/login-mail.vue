@@ -55,7 +55,12 @@
 
 <script lang="ts" setup>
   import { inject, ref, reactive, computed } from 'vue';
-  import { RouteParamsRaw, RouteRecordRaw, useRoute, useRouter } from 'vue-router';
+  import {
+    RouteParamsRaw,
+    RouteRecordRaw,
+    useRoute,
+    useRouter,
+  } from 'vue-router';
   import {
     Form as TinyForm,
     FormItem as TinyFormItem,
@@ -70,11 +75,13 @@
   import { useUserStore } from '@/store';
   import useLoading from '@/hooks/loading';
   import { useMenuStore } from '@/store/modules/router';
+  import { useLocales } from '@/store/modules/locales';
 
   const router = useRouter();
-  const { t } = useI18n();
+  const { t, mergeLocaleMessage } = useI18n();
   const { loading, setLoading } = useLoading();
   const userStore = useUserStore();
+  const localeStore = useLocales();
   const loginFormMail = ref();
 
   const rules = computed(() => {
@@ -102,7 +109,6 @@
     rememberPassword: true,
   });
 
-
   // 切换模式
   const handle: any = inject('handle');
   const typeChange = () => {
@@ -127,9 +133,19 @@
           status: 'success',
         });
 
+        await localeStore.fetchLocalTable();
+        const entries = Object.entries(localeStore.localTable);
+        for (let i = 0; i < entries.length; i += 1) {
+          const key = entries[i][0];
+          const messages = entries[i][1];
+          mergeLocaleMessage(key, messages);
+        }
+        localeStore.$patch({
+          shouldMerge: false,
+        });
+
         router.replace('/vue-pro/redirect?to=Home');
       } catch (err) {
-        console.log(err);
         Notify({
           type: 'error',
           title: t('login.tip.right'),

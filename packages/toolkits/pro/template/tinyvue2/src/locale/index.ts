@@ -11,7 +11,7 @@ export const LOCALE_OPTIONS = [
 
 Vue.use(VueI18n);
 
-let _i18n: VueI18n;
+export let _i18n: VueI18n;
 
 export const useI18n = () => _i18n;
 

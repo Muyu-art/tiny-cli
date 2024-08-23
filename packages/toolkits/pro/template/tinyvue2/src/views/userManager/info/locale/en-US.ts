@@ -28,6 +28,4 @@ export default {
   'userInfo.modal.input.confirmNewPassword': 'Confirm New Password',
   'userInfo.modal.message.error': 'Confirm New Password Error',
   'userInfo.modal.message.notNull': 'Password Is Not Null',
-  'userInfo.modal.title.add': 'Add User',
-  'userInfo.modal.title.update': 'Update User',
 };

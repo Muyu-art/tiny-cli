@@ -10,6 +10,6 @@ export class I18 {
   lang: Lang;
   @Column()
   key: string;
-  @Column()
+  @Column({ type: 'longtext' })
   content: string;
 }
