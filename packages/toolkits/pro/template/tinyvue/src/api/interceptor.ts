@@ -10,8 +10,8 @@ export interface HttpResponse<T = unknown> {
   data: T;
 }
 
-const { VITE_API_BASE_URL, VITE_BASE_API, VITE_MOCK_IGNORE } =
-  import.meta.env || {VITE_BASE_API:'', VITE_MOCK_IGNORE: ''};
+const { VITE_API_BASE_URL, VITE_BASE_API, VITE_MOCK_IGNORE } = import.meta
+  .env || { VITE_BASE_API: '', VITE_MOCK_IGNORE: '' };
 
 if (VITE_API_BASE_URL) {
   axios.defaults.baseURL = VITE_API_BASE_URL;
@@ -33,14 +33,14 @@ axios.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
 
-     config.headers = { ...config.headers };
+    config.headers = { ...config.headers };
 
     return config;
   },
   (error) => {
     // do something
     return Promise.reject(error);
-  }
+  },
 );
 // add response interceptors
 axios.interceptors.response.use(
@@ -49,7 +49,6 @@ axios.interceptors.response.use(
     return res;
   },
   (error) => {
-    console.log(error)
     const { status, data } = error.response;
     if (status === 401) {
       clearToken();
@@ -58,14 +57,8 @@ axios.interceptors.response.use(
         message: locale.t('http.error.TokenExpire'),
         status: 'error',
       });
-    } else {
-      data.errMsg &&
-        Modal.message({
-          message: locale.t(`http.error.${data.errMsg}`),
-          status: 'error',
-        });
     }
 
     return Promise.reject(error);
-  }
+  },
 );

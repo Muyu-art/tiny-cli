@@ -1,10 +1,11 @@
 <template>
   <div class="container">
-    <Breadcrumb :items="['menu.systemManager', 'menu.userManager.info']" />
+    <Breadcrumb :items="['menu.systemManager', 'menu.i18n']" />
     <div class="container-info">
       <div class="general-card">
         <div class="general-content">
-          <info-tab></info-tab>
+          <add-locale v-permission="'i18n::add'" />
+          <locale-table />
         </div>
       </div>
     </div>
@@ -12,7 +13,11 @@
 </template>
 
 <script lang="ts" setup>
-  import infoTab from './components/info-tab.vue';
+  import { useI18n } from 'vue-i18n';
+  import addLocale from './components/add-locale.vue';
+  import localeTable from './components/locale-table.vue';
+
+  const { availableLocales, getLocaleMessage } = useI18n();
 </script>
 
 <style scoped lang="less">
@@ -49,7 +54,9 @@
 
       .general-content {
         position: relative;
-        height: calc(100% - 198px);
+        flex-grow: 1;
+        height: 100%;
+        padding: 16px;
         overflow-y: auto;
         color: black;
         font-size: medium;
