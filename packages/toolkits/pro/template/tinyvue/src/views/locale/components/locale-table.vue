@@ -104,7 +104,6 @@
           }
           const offset = (currentPage - 1) * pageSize;
           const l = offset;
-          const h = offset + pageSize;
           for (let i = 0; i < data.items.length; i += 1) {
             const item = data.items[i];
             items.value[l + i] = {

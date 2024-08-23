@@ -94,12 +94,6 @@ const currentChange = (data: any, node) => {
     return;
   }
   router.replace({ name: data.label });
-  // for (let i = 0; i < rawMenuData.length; i += 1) {
-  //   filter.push(rawMenuData[i].label);
-  // }
-  // if (filter.indexOf(data.label) === -1) {
-
-  // }
 };
 
 const findId = (name: string, path: string) => {

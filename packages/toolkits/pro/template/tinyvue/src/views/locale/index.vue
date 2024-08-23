@@ -16,8 +16,6 @@
   import { useI18n } from 'vue-i18n';
   import addLocale from './components/add-locale.vue';
   import localeTable from './components/locale-table.vue';
-
-  const { availableLocales, getLocaleMessage } = useI18n();
 </script>
 
 <style scoped lang="less">
