@@ -2,7 +2,7 @@ import { useMenuStore } from '@/stores/modules/router';
 import { nextTick } from 'vue';
 import type { RouteRecord } from 'vue-router';
 import { notFound } from '../not-found';
-// import { Router, RouteRecordRaw } from "vue-router";
+import Demo from '@/views/menu/demo/index.vue';
 
 export interface ITreeNodeData {
   // node-key='id' 设置节点的唯一标识
@@ -35,7 +35,7 @@ if (BUILD_TOOLS === 'VITE' || BUILD_TOOLS === 'WEBPACK') {
   const components = require.context('../../views', true, reg, 'sync');
   components.keys().forEach((path) => {
     if (path.endsWith('.vue')) {
-      views[`../../views/${path.replace('./', '')}`] = () => components(path);
+      views[`../../views/${path.replace('./', '')}`] = components(path).default;
     }
   });
 }
@@ -50,7 +50,7 @@ export const toRoutes = (menus: ITreeNodeData[]) => {
       router.push({
         name: menu.label,
         path: menu.url,
-        component: () => import('@/views/menu/demo/index.vue'),
+        component: Demo,
         children: [...toRoutes(menu.children ?? [])],
         meta: {
           locale: menu.locale,
@@ -61,7 +61,7 @@ export const toRoutes = (menus: ITreeNodeData[]) => {
       router.push({
         name: menu.label,
         path: menu.url,
-        component: () => views[path](),
+        component: views[path],
         children: [...toRoutes(menu.children ?? [])],
         meta: {
           locale: menu.locale,
