@@ -71,7 +71,6 @@ const toRoutes = (menus: ITreeNodeData[]) => {
 
 export const setupMenuGuard = (router: Router) => {
   router.beforeEach(async (to, from, next) => {
-    debugger;
     if (to.name?.toString().toLowerCase() === 'login') {
       next();
       return;
