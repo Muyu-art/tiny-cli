@@ -33,7 +33,7 @@
             </div>
             <template #reference>
               <tiny-button
-                v-permission="'lang::create'"
+                v-permission="'lang::add'"
                 type="text"
                 :text="$t('locale.add.lang.btn')"
               ></tiny-button>
