@@ -79,7 +79,10 @@
       const len = item.children.length ?? 0;
       for (let i = 0; i < len; i += 1) {
         if (item.children?.[i]) {
-          const id = dfs(item.children[i], [...url, item.children[i].meta.url]);
+          const id = dfs(
+            item.children[i],
+            [...url, item.children[i].meta.url].filter((p) => p.length),
+          );
           if (id !== undefined) {
             return id;
           }
@@ -91,9 +94,7 @@
       const menu = MenuData.value[i];
       const data = dfs(menu, [
         import.meta.env.VITE_CONTEXT.replace(/\/$/, ''),
-        menu.meta.url.endsWith('/')
-          ? menu.meta.url.replace(/\/$/, '')
-          : menu.meta.url,
+        menu.meta.url.replace(/\/$/, ''),
       ]);
       if (data !== undefined) {
         return data;

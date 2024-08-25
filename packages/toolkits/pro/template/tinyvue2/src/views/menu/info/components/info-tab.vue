@@ -223,9 +223,19 @@
                     :label="$t('menuInfo.table.icon')"
                     prop="customIcon"
                   >
-                    <tiny-input
+                    <tiny-select
                       v-model="state.menuUpdData.customIcon"
-                    ></tiny-input>
+                      :placeholder="$t('baseForm.form.label.placeholder')"
+                      filterable
+                      no-match-text="No Match"
+                    >
+                      <tiny-option
+                        v-for="icon in state.iconData"
+                        :key="icon.value"
+                        :label="$t(icon.label)"
+                        :value="icon.value"
+                      ></tiny-option>
+                    </tiny-select>
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
@@ -254,7 +264,19 @@
                     :label="$t('menuInfo.table.locale')"
                     prop="url"
                   >
-                    <tiny-input v-model="state.menuUpdData.locale"></tiny-input>
+                    <tiny-select
+                      v-model="state.menuUpdData.locale"
+                      :placeholder="$t('baseForm.form.label.placeholder')"
+                      filterable
+                      no-match-text="No Match"
+                    >
+                      <tiny-option
+                        v-for="locale in state.localeData"
+                        :key="locale.key"
+                        :label="$t(locale.content)"
+                        :value="locale.key"
+                      ></tiny-option>
+                    </tiny-select>
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
@@ -348,9 +370,19 @@
                     :label="$t('menuInfo.table.icon')"
                     prop="customIcon"
                   >
-                    <tiny-input
+                    <tiny-select
                       v-model="state.menuAddData.customIcon"
-                    ></tiny-input>
+                      :placeholder="$t('baseForm.form.label.placeholder')"
+                      filterable
+                      no-match-text="No Match"
+                    >
+                      <tiny-option
+                        v-for="icon in state.iconData"
+                        :key="icon.value"
+                        :label="$t(icon.label)"
+                        :value="icon.value"
+                      ></tiny-option>
+                    </tiny-select>
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
@@ -379,7 +411,19 @@
                     :label="$t('menuInfo.table.locale')"
                     prop="locale"
                   >
-                    <tiny-input v-model="state.menuAddData.locale"></tiny-input>
+                    <tiny-select
+                      v-model="state.menuAddData.locale"
+                      :placeholder="$t('baseForm.form.label.placeholder')"
+                      filterable
+                      no-match-text="No Match"
+                    >
+                      <tiny-option
+                        v-for="locale in state.localeData"
+                        :key="locale.key"
+                        :label="$t(locale.content)"
+                        :value="locale.key"
+                      ></tiny-option>
+                    </tiny-select>
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
@@ -424,7 +468,9 @@ import { getSimpleDate } from '@/utils/time';
 import { updateUserInfo } from '@/api/user';
 import { useI18n } from 'vue-i18n-composable';
 import { useI18nMenu } from '@/hooks/useI18nMenu';
+import { getAllLocalItems } from '@/api/local';
 import useLoading from '@/hooks/loading';
+import * as icons from '@opentiny/vue-icon';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -441,6 +487,8 @@ const state = reactive<{
   isMenuUpdate: boolean;
   isMenuAdd: boolean;
   isMenuInfo: boolean;
+  iconData: any;
+  localeData: any;
 }>({
   tableData: [] as any,
   menuData: {} as any,
@@ -450,6 +498,8 @@ const state = reactive<{
   isMenuAdd: false,
   isMenuUpdate: false,
   isMenuInfo: false,
+  iconData: [] as any,
+  localeData: [] as any,
 });
 
 interface ITreeNodeData {
@@ -503,6 +553,8 @@ const rules = computed(() => {
 // 初始化请求数据
 onMounted(() => {
   fetchMenuData();
+  fetchIconData();
+  fetchLocaleData();
 });
 
 const { loading, setLoading } = useLoading();
@@ -521,6 +573,19 @@ getAllMenu()
 async function fetchMenuData() {
   const { data } = await getAllMenu();
   state.tableData = data;
+}
+
+async function fetchIconData() {
+  state.iconData = Object.keys(icons).map((key) => ({
+    label: key,
+    value: key,
+  }));
+}
+
+async function fetchLocaleData() {
+  getAllLocalItems(1, 0, 1).then(({ data }) => {
+    state.localeData = data.items;
+  });
 }
 
 async function handleDelete(node: any) {
