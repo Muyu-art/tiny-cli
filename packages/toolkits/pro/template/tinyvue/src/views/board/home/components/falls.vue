@@ -1,8 +1,10 @@
 <template>
-  <div class="falls">
-    <img src="@/assets/images/map-background2.png" class="image" />
-    <h3>{{ $t('home.falls.line') }}</h3>
-    <div id="flow" ref="echartsDom"></div>
+  <div class="falls-box">
+    <div class="falls">
+      <img src="@/assets/images/map-background2.png" class="image" />
+      <h3>{{ $t('home.falls.line') }}</h3>
+      <div id="flow" ref="echartsDom"></div>
+    </div>
   </div>
 </template>
 
@@ -175,7 +177,7 @@
       myChart.resize();
     });
     nextTick(() => {
-      myChart.resize()
+      myChart.resize();
     });
   });
 
@@ -187,13 +189,18 @@
 </script>
 
 <style scoped lang="less">
+  .falls-box {
+    margin-top: 20px;
+    padding: 20px 16px;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 3px 10px #4062e133;
+  }
+
   .falls {
     width: 100%;
     height: 406px;
     margin-top: 2%;
-    background: #fff;
-    border-radius: 6px;
-    box-shadow: 0 3px 10px 0 rgb(64 98 225 / 20%);
   }
 
   #flow {

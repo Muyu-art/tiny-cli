@@ -130,7 +130,7 @@
   #contain {
     height: 100%;
     padding: 15px;
-    overflow: hidden;
+    overflow: auto;
   }
 
   .contentFilter {

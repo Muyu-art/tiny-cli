@@ -1,14 +1,16 @@
 <template>
-  <div class="region">
-    <div>
-      <div class="region-title">
-        <img src="@/assets/images/map-background3.png" class="image" />
-        <h3>{{ $t('home.region.title') }}</h3>
+  <div class="region-box">
+    <div class="region">
+      <div>
+        <div class="region-title">
+          <img src="@/assets/images/map-background3.png" class="image" />
+          <h3>{{ $t('home.region.title') }}</h3>
+        </div>
+        <div id="earth" ref="echartsDom"></div>
       </div>
-      <div id="earth" ref="echartsDom"></div>
-    </div>
-    <div class="region-from">
-      <RegionTable></RegionTable>
+      <div class="region-from">
+        <RegionTable></RegionTable>
+      </div>
     </div>
   </div>
 </template>
@@ -115,19 +117,23 @@
       myChart.resize();
     });
     nextTick(() => {
-      myChart.resize()
+      myChart.resize();
     });
   });
 </script>
 
 <style scoped lang="less">
+  .region-box {
+    margin-top: 20px;
+    padding: 20px 16px;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 3px 10px #4062e133;
+  }
+
   .region {
     display: flex;
     justify-content: space-between;
-    margin-top: 2%;
-    background: #fff;
-    border-radius: 6px;
-    box-shadow: 0 3px 10px 0 rgb(64 98 225 / 20%);
 
     .region-title {
       display: flex;
