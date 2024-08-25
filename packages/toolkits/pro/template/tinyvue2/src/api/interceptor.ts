@@ -10,8 +10,8 @@ export interface HttpResponse<T = unknown> {
   data: T;
 }
 
-const { VITE_API_BASE_URL, VITE_BASE_API, VITE_MOCK_IGNORE } =
-  import.meta.env || {VITE_BASE_API:'', VITE_MOCK_IGNORE: ''};
+const { VITE_API_BASE_URL, VITE_BASE_API, VITE_MOCK_IGNORE } = import.meta
+  .env || { VITE_BASE_API: '', VITE_MOCK_IGNORE: '' };
 
 if (VITE_API_BASE_URL) {
   axios.defaults.baseURL = VITE_API_BASE_URL;
@@ -33,7 +33,7 @@ axios.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
 
-     config.headers = { ...config.headers };
+    config.headers = { ...config.headers };
 
     return config;
   },
@@ -46,6 +46,9 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   (response: any) => {
     const res = response;
+    if (res.request.responseURL.includes('mock')) {
+      return res.data;
+    }
     return res;
   },
   (error) => {
