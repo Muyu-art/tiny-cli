@@ -12,9 +12,9 @@
       <div class="table">
         <tiny-tree
           :data="i18MenuDatas"
-          :size="medium"
+          size="'medium'"
           :indent="18"
-          :show-line="showLine === 'show'"
+          show-line
           default-expand-all
         >
           <template #operation="{ node }">
@@ -224,7 +224,7 @@
                     <tiny-option
                       v-for="icon in state.iconData"
                       :key="icon.value"
-                      :label="$t(icon.label)"
+                      :label="icon.label"
                       :value="icon.value"
                     ></tiny-option>
                   </tiny-select>
@@ -258,13 +258,10 @@
                     :placeholder="$t('baseForm.form.label.placeholder')"
                     filterable
                     no-match-text="No Match"
+                    :options="state.localeData"
+                    is-drop-inherit-width
+                    optimization
                   >
-                    <tiny-option
-                      v-for="locale in state.localeData"
-                      :key="locale.key"
-                      :label="$t(locale.content)"
-                      :value="locale.key"
-                    ></tiny-option>
                   </tiny-select>
                 </tiny-form-item>
               </tiny-col>
@@ -360,7 +357,7 @@
                     <tiny-option
                       v-for="icon in state.iconData"
                       :key="icon.value"
-                      :label="$t(icon.label)"
+                      :label="icon.label"
                       :value="icon.value"
                     ></tiny-option>
                   </tiny-select>
@@ -397,13 +394,15 @@
                     :placeholder="$t('baseForm.form.label.placeholder')"
                     filterable
                     no-match-text="No Match"
+                    :options="state.localeData"
+                    optimization
                   >
-                    <tiny-option
+                    <!-- <tiny-option
                       v-for="locale in state.localeData"
                       :key="locale.key"
                       :label="$t(locale.content)"
                       :value="locale.key"
-                    ></tiny-option>
+                    ></tiny-option> -->
                   </tiny-select>
                 </tiny-form-item>
               </tiny-col>
@@ -440,7 +439,6 @@
     Option as TinyOption,
     Tree as TinyTree,
   } from '@opentiny/vue';
-  import { IconChevronDown } from '@opentiny/vue-icon';
   import { useUserStore } from '@/store';
   import {
     getAllMenu,
@@ -449,21 +447,12 @@
     deleteMenu,
     ITreeNodeData,
   } from '@/api/menu';
-  import { getAllPermission } from '@/api/permission';
-  import { useRouter } from 'vue-router';
-  import { getSimpleDate } from '@/utils/time';
-  import { updateUserInfo } from '@/api/user';
   import { useI18nMenu } from '@/hooks/useI18nMenu';
   import { getAllLocalItems } from '@/api/local';
   import useLoading from '@/hooks/loading';
   import * as icons from '@opentiny/vue-icon';
 
-  const router = useRouter();
-
   const { t } = useI18n();
-
-  const treeRef = ref();
-
   // 加载效果
   const state = reactive<{
     tableData: any;
@@ -562,7 +551,12 @@
 
   async function fetchLocaleData() {
     getAllLocalItems(1, 0, 1).then(({ data }) => {
-      state.localeData = data.items;
+      state.localeData = data.items.map((item) => {
+        return {
+          value: item.key,
+          label: t(item.key),
+        };
+      });
     });
   }
 

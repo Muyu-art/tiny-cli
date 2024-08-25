@@ -77,16 +77,18 @@
     Container as TinyContainer,
     Layout as TinyLayout,
     Modal as tinyModal,
-   Tabs, TabItem } from '@opentiny/vue';
+    Tabs,
+    TabItem,
+  } from '@opentiny/vue';
   import TinyThemeTool from '@opentiny/vue-theme/theme-tool.js';
-  import { useAppStore , useTabStore } from '@/store';
+  import { useAppStore, useTabStore } from '@/store';
   // eslint-disable-next-line import/extensions
   import Footer from '@/components/footer/index.vue';
   import NavBar from '@/components/navbar/index.vue';
   import Theme from '@/components/theme/index.vue';
   import Menu from '@/components/menu/index.vue';
   import { DefaultTheme } from '@/components/theme/type';
-      import { useRouter } from 'vue-router';
+  import { useRouter } from 'vue-router';
   import PageLayout from './page-layout.vue';
   // 动态切换
   const router = useRouter();
@@ -239,7 +241,9 @@
     padding-left: 50px;
   }
 
-  :deep(.tiny-tabs__content) {
+  :deep(
+      .tiny-container__main > .tiny-layout > .tiny-tabs > .tiny-tabs__content
+    ) {
     display: none;
   }
 

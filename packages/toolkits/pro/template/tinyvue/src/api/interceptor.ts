@@ -46,6 +46,9 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   (response: AxiosResponse<HttpResponse>) => {
     const res = response;
+    if (res.request.responseURL.includes('mock')) {
+      return res.data;
+    }
     return res;
   },
   (error) => {

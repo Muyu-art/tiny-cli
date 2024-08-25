@@ -1,12 +1,14 @@
 <template>
-  <div class="round">
-    <div>
-      <img src="@/assets/images/map-background3.png" class="image" />
-      <h3>{{ $t('home.round.title') }}</h3>
-      <div id="circled" ref="echartsDom"></div>
-    </div>
-    <div class="round-from">
-      <RoundTable></RoundTable>
+  <div class="round-box">
+    <div class="round">
+      <div>
+        <img src="@/assets/images/map-background3.png" class="image" />
+        <h3>{{ $t('home.round.title') }}</h3>
+        <div id="circled" ref="echartsDom"></div>
+      </div>
+      <div class="round-from">
+        <RoundTable></RoundTable>
+      </div>
     </div>
   </div>
 </template>
@@ -75,7 +77,7 @@
       myChart.resize();
     });
     nextTick(() => {
-      myChart.resize()
+      myChart.resize();
     });
   });
 
@@ -87,13 +89,18 @@
 </script>
 
 <style scoped lang="less">
+  .round-box {
+    margin-top: 20px;
+    padding: 20px 16px;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 3px 10px #4062e133;
+  }
+
   .round {
     display: flex;
     justify-content: space-between;
-    margin-top: 2%;
-    background: #fff;
     border-radius: 6px;
-    box-shadow: 0 3px 10px 0 rgb(64 98 225 / 20%);
   }
 
   #circled {
