@@ -33,10 +33,10 @@
   import { useDeepClone } from '@/hooks/useDeepClone';
 
   const menuStore = useMenuStore();
-  const rawMenuData = useDeepClone(unref(menuStore.menuList));
+  const rawMenuData = computed(() => useDeepClone(unref(menuStore.menuList)));
   type SideMenuData = (ITreeNodeData & { meta: { url: string } })[];
 
-  const routerTitle = [] as any;
+  let routerTitle = [] as any;
 
   const filtter = (treeNodeDatas: ITreeNodeData[]) => {
     const menus: SideMenuData = [];
@@ -62,7 +62,12 @@
     return menus;
   };
 
-  const MenuData = ref<SideMenuData>(filtter(rawMenuData));
+  const MenuData = computed(() => {
+    if (routerTitle.length) {
+      routerTitle = [];
+    }
+    return filtter(rawMenuData.value);
+  });
 
   const currentChange = (data: any, node) => {
     if (!node.isLeaf) {
