@@ -23,6 +23,17 @@ export interface ITreeNodeData {
   locale: string;
 }
 
+export type CreateMenuDto = {
+  order: number;
+  menuType: string;
+  name: string;
+  path: string;
+  component: string;
+  icon: string;
+  locale: string;
+  parentId: number | null;
+};
+
 export function getAllMenu() {
   return axios.get<ITreeNodeData[]>('/api/menu');
 }

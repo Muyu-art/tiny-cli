@@ -51,7 +51,7 @@
         :lock-scroll="true"
         show-header
         show-footer
-        mask-closable="true"
+        :mask-closable="true"
         height="auto"
         width="600"
         :title="$t('menuInfo.modal.title.info')"
@@ -66,63 +66,63 @@
               label-position="left"
               size="small"
             >
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item :label="$t('menuInfo.table.id')">
                     <label>{{ state.menuInfoData.id }}</label>
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item :label="$t('menuInfo.table.name')">
                     <label>{{ state.menuInfoData.label }}</label>
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item :label="$t('menuInfo.table.order')">
                     <label>{{ state.menuInfoData.order }}</label>
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item :label="$t('menuInfo.table.parentId')">
                     <label>{{ state.menuInfoData.parentId }}</label>
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item :label="$t('menuInfo.table.menuType')">
                     <label>{{ state.menuInfoData.menuType }}</label>
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item :label="$t('menuInfo.table.icon')">
                     <label>{{ state.menuInfoData.customIcon }}</label>
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item :label="$t('menuInfo.table.component')">
                     <label>{{ state.menuInfoData.component }}</label>
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item :label="$t('menuInfo.table.path')">
                     <label>{{ state.menuInfoData.url }}</label>
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item :label="$t('menuInfo.table.locale')">
                     <label>{{ state.menuInfoData.locale }}</label>
@@ -145,7 +145,7 @@
         :lock-scroll="true"
         show-header
         show-footer
-        mask-closable="true"
+        :mask-closable="true"
         height="auto"
         width="600"
         :title="$t('menuInfo.modal.title.update')"
@@ -160,14 +160,14 @@
               label-position="left"
               size="small"
             >
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item :label="$t('menuInfo.table.id')">
                     <label>{{ state.menuUpdData.id }}</label>
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item
                     :label="$t('menuInfo.table.name')"
@@ -177,7 +177,7 @@
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item
                     :label="$t('menuInfo.table.order')"
@@ -187,7 +187,7 @@
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item
                     :label="$t('menuInfo.table.parentId')"
@@ -205,7 +205,7 @@
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item
                     :label="$t('menuInfo.table.menuType')"
@@ -217,7 +217,7 @@
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item
                     :label="$t('menuInfo.table.icon')"
@@ -232,14 +232,14 @@
                       <tiny-option
                         v-for="icon in state.iconData"
                         :key="icon.value"
-                        :label="$t(icon.label)"
+                        :label="icon.label"
                         :value="icon.value"
                       ></tiny-option>
                     </tiny-select>
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item
                     :label="$t('menuInfo.table.component')"
@@ -251,14 +251,14 @@
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item :label="$t('menuInfo.table.path')" prop="url">
                     <tiny-input v-model="state.menuUpdData.url"></tiny-input>
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item
                     :label="$t('menuInfo.table.locale')"
@@ -269,13 +269,10 @@
                       :placeholder="$t('baseForm.form.label.placeholder')"
                       filterable
                       no-match-text="No Match"
+                      :options="state.localeData"
+                      is-drop-inherit-width
+                      optimization
                     >
-                      <tiny-option
-                        v-for="locale in state.localeData"
-                        :key="locale.key"
-                        :label="$t(locale.content)"
-                        :value="locale.key"
-                      ></tiny-option>
                     </tiny-select>
                   </tiny-form-item>
                 </tiny-col>
@@ -299,7 +296,7 @@
         :lock-scroll="true"
         show-header
         show-footer
-        mask-closable="true"
+        :mask-closable="true"
         height="auto"
         width="600"
         :title="$t('menuInfo.modal.title.add')"
@@ -314,7 +311,7 @@
               label-position="left"
               size="small"
             >
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item
                     :label="$t('menuInfo.table.name')"
@@ -324,7 +321,7 @@
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item
                     :label="$t('menuInfo.table.order')"
@@ -334,7 +331,7 @@
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item
                     :label="$t('menuInfo.table.parentId')"
@@ -352,7 +349,7 @@
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item
                     :label="$t('menuInfo.table.menuType')"
@@ -364,7 +361,7 @@
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item
                     :label="$t('menuInfo.table.icon')"
@@ -379,14 +376,14 @@
                       <tiny-option
                         v-for="icon in state.iconData"
                         :key="icon.value"
-                        :label="$t(icon.label)"
+                        :label="icon.label"
                         :value="icon.value"
                       ></tiny-option>
                     </tiny-select>
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item
                     :label="$t('menuInfo.table.component')"
@@ -398,14 +395,14 @@
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item :label="$t('menuInfo.table.path')" prop="url">
                     <tiny-input v-model="state.menuAddData.url"></tiny-input>
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item
                     :label="$t('menuInfo.table.locale')"
@@ -416,13 +413,9 @@
                       :placeholder="$t('baseForm.form.label.placeholder')"
                       filterable
                       no-match-text="No Match"
+                      :options="state.localeData"
+                      optimization
                     >
-                      <tiny-option
-                        v-for="locale in state.localeData"
-                        :key="locale.key"
-                        :label="$t(locale.content)"
-                        :value="locale.key"
-                      ></tiny-option>
                     </tiny-select>
                   </tiny-form-item>
                 </tiny-col>
@@ -458,14 +451,11 @@ import {
   Select as TinySelect,
   Option as TinyOption,
   Tree as TinyTree,
+  Layout as TinyLayout,
 } from '@opentiny/vue';
-import { IconChevronDown } from '@opentiny/vue-icon';
 import { useUserStore } from '@/stores';
 import { getAllMenu, updateMenu, createMenu, deleteMenu } from '@/api/menu';
-import { getAllPermission } from '@/api/permission';
-import { useRouter } from '@/router';
-import { getSimpleDate } from '@/utils/time';
-import { updateUserInfo } from '@/api/user';
+
 import { useI18n } from 'vue-i18n-composable';
 import { useI18nMenu } from '@/hooks/useI18nMenu';
 import { getAllLocalItems } from '@/api/local';
@@ -473,9 +463,6 @@ import useLoading from '@/hooks/loading';
 import * as icons from '@opentiny/vue-icon';
 
 const { t } = useI18n();
-const router = useRouter();
-
-const treeRef = ref();
 
 // 加载效果
 const state = reactive<{
@@ -584,7 +571,12 @@ async function fetchIconData() {
 
 async function fetchLocaleData() {
   getAllLocalItems(1, 0, 1).then(({ data }) => {
-    state.localeData = data.items;
+    state.localeData = data.items.map((item) => {
+      return {
+        value: item.key,
+        label: t(item.key),
+      };
+    });
   });
 }
 

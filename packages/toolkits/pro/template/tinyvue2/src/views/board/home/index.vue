@@ -20,20 +20,20 @@ import Region from './components/region.vue';
 </script>
 
 <style scoped lang="less">
-  .container {
-    width: 98%;
-    height: inherit;
-    margin: 0 auto;
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
+.container {
+  width: 100%;
+  height: calc(100% - 60px);
+  margin: 0 auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
 </style>
 
 <style lang="less" scoped>
-  // responsive
-  @media (max-width: @screen-xs) {
-    .container {
-      overflow-x: auto;
-    }
+// responsive
+@media (max-width: @screen-xs) {
+  .container {
+    overflow-x: hidden;
   }
+}
 </style>

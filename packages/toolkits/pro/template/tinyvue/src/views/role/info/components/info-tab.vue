@@ -289,6 +289,7 @@
   import { useI18nMenu } from '@/hooks/useI18nMenu';
   import useLoading from '@/hooks/loading';
   import { useMenuId } from '@/hooks/useMenuId';
+  import { useMenuStore } from '@/store/modules/router';
   import permissionTable from './permission-table.vue';
   import menuDrawer from './menu-drawer.vue';
 
@@ -377,7 +378,7 @@
     roleId.value = roldId;
     onOpen();
   };
-
+  const menuStore = useMenuStore();
   const onConfirm = (ids: number[]) => {
     updateRole({
       id: roleId.value,
@@ -385,6 +386,8 @@
     })
       .then(() => {
         selectedId.value = ids;
+        menuStore.getMenuList();
+        router.go(0);
       })
       .finally(() => {
         open.value = false;

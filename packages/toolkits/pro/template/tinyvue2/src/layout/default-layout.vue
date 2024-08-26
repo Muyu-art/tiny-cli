@@ -244,7 +244,7 @@ onMounted(() => {
 :deep(.tiny-tree-node__children > .tree-node-body) {
   padding-left: 50px;
 }
-:deep(.tiny-tabs__content) {
+:deep(.tiny-container__main > .tiny-layout > .tiny-tabs > .tiny-tabs__content) {
   display: none;
 }
 :deep(.tiny-tabs--top) {

@@ -36,8 +36,6 @@
     .general-card {
       flex: 1 1 auto;
       height: 100%;
-      // overflow-x: hidden;
-      // overflow-y: auto;
       border-radius: 10px;
 
       .general-top {
