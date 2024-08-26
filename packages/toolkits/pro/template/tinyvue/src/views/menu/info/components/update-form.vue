@@ -1,5 +1,5 @@
 <template>
-  <tiny-form v-model="menuInfo" :display-only="props.readonly" :rules="rules">
+  <tiny-form :display-only="props.readonly" :rules="rules" :model="menuInfo">
     <tiny-form-item :label="$t('menuInfo.table.name')" prop="locale">
       <tiny-select
         v-model="menuInfo.locale"

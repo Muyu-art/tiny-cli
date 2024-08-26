@@ -1,5 +1,5 @@
 <template>
-  <tiny-form :rules="rules">
+  <tiny-form :rules="rules" :model="menuInfo">
     <tiny-form-item :label="$t('menuInfo.table.name')" prop="name">
       <tiny-input v-model="menuInfo.name"></tiny-input>
     </tiny-form-item>
