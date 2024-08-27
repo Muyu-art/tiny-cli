@@ -17,7 +17,7 @@
     </div>
     <div>
       <tiny-layout>
-        <tiny-row :flex="true" justify="center">
+        <tiny-row :flex="true">
           <tiny-col :span="8">
             <div class="col">
               <div class="left">
@@ -68,14 +68,14 @@ import { getUserData, getUserChange } from '@/api/board';
 
 // 加载效果
 const state = reactive<{
-    loading: any;
-    options: any;
-    project: string;
-  }>({
-    loading: null,
-    options: [] as any,
-    project: '',
-  });
+  loading: any;
+  options: any;
+  project: string;
+}>({
+  loading: null,
+  options: [] as any,
+  project: '',
+});
 
 // 请求数据接口方法
 const fetchData = async () => {
@@ -100,7 +100,9 @@ onMounted(() => {
 // 切换数据
 const number = ref([]);
 const fetchSelect = async (param: string) => {
-  const { data:{data} } = await getUserChange(param);
+  const {
+    data: { data },
+  } = await getUserChange(param);
   number.value = data;
 };
 
@@ -115,105 +117,105 @@ watch(
 </script>
 
 <style scoped lang="less">
-  .col {
-    display: flex;
-    justify-content: space-around;
-    min-height: 150px;
-    text-align: center;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.05);
-  }
+.col {
+  display: flex;
+  justify-content: space-around;
+  min-height: 150px;
+  text-align: center;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.05);
+}
 
-  .col:hover {
-    box-shadow: 0 3px 10px 0 rgb(64 98 225 / 45%);
-  }
+.col:hover {
+  box-shadow: 0 3px 10px 0 rgb(64 98 225 / 45%);
+}
 
-  .num {
+.num {
+  color: #575d6c;
+  font-weight: 600;
+  font-size: 30px;
+  font-family: PingFang SC, PingFang SC-PingFang SC;
+  line-height: 36px;
+  text-align: left;
+}
+
+.left {
+  width: 50%;
+}
+
+.right {
+  width: 50%;
+}
+
+.left,
+.right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.left-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4e5969;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 14px;
+}
+
+.left-content {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 15px;
+}
+
+.divider {
+  width: 1px;
+  height: 41px;
+  margin: 0 20px;
+  margin-top: 8%;
+  background: #7b7e84;
+  opacity: 0.3;
+}
+
+.coach-select {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 8px;
+
+  h3 {
+    width: 20%;
     color: #575d6c;
-    font-weight: 600;
-    font-size: 30px;
-    font-family: PingFang SC, PingFang SC-PingFang SC;
-    line-height: 36px;
+    font-size: 16px;
+    line-height: 14px;
     text-align: left;
   }
 
-  .left {
-    width: 50%;
+  div {
+    width: 323px;
   }
 
-  .right {
-    width: 50%;
-  }
+  :deep(.tiny-input) {
+    background-color: #f5f6f7;
 
-  .left,
-  .right {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    input {
+      border-radius: 17px;
+    }
+  }
+}
+// responsive
+@media (max-width: @screen-md) {
+  .num {
+    font-size: 24px;
   }
 
   .left-title {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #4e5969;
-    font-weight: normal;
-    font-size: 18px;
-    line-height: 14px;
+    font-size: 10px;
   }
-
-  .left-content {
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    padding-bottom: 15px;
-  }
-
-  .divider {
-    width: 1px;
-    height: 41px;
-    margin: 0 20px;
-    margin-top: 8%;
-    background: #7b7e84;
-    opacity: 0.3;
-  }
-
-  .coach-select {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 8px;
-
-    h3 {
-      width: 20%;
-      color: #575d6c;
-      font-size: 16px;
-      line-height: 14px;
-      text-align: left;
-    }
-
-    div {
-      width: 323px;
-    }
-
-    :deep(.tiny-input) {
-      background-color: #f5f6f7;
-
-      input {
-        border-radius: 17px;
-      }
-    }
-  }
-  // responsive
-  @media (max-width: @screen-md) {
-    .num {
-      font-size: 24px;
-    }
-
-    .left-title {
-      font-size: 10px;
-    }
-  }
+}
 </style>

@@ -106,14 +106,14 @@
               label-position="left"
               size="small"
             >
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item :label="$t('roleInfo.modal.input.id')">
                     <label>{{ state.roleUpdData.id }}</label>
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item
                     :label="$t('roleInfo.modal.input.name')"
@@ -124,7 +124,7 @@
                 </tiny-col>
               </tiny-row>
 
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item
                     :label="$t('roleInfo.modal.input.desc')"
@@ -179,7 +179,7 @@
               label-position="left"
               size="small"
             >
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item
                     :label="$t('roleInfo.modal.input.name')"
@@ -190,7 +190,7 @@
                 </tiny-col>
               </tiny-row>
 
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item
                     :label="$t('roleInfo.modal.input.desc')"
@@ -212,7 +212,7 @@
                 </tiny-col>
               </tiny-row>
 
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item
                     :label="$t('roleInfo.modal.input.menu')"

@@ -10,7 +10,7 @@
     <div class="divider"></div>
     <div class="user-content">
       <tiny-layout>
-        <tiny-row :flex="true" justify="center" class="margin-bottom">
+        <tiny-row :flex="true" class="margin-bottom">
           <img src="@/assets/images/head-1.png" class="head-image" />
           <tiny-col :span="6">
             <div class="col">
@@ -36,7 +36,7 @@
             </div>
           </tiny-col>
         </tiny-row>
-        <tiny-row :flex="true" justify="center" class="margin-bottom">
+        <tiny-row :flex="true" class="margin-bottom">
           <img src="@/assets/images/head-4.png" class="head-image" />
           <tiny-col :span="6">
             <div class="col">

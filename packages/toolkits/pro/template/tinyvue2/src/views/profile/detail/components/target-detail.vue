@@ -1,7 +1,7 @@
 <template>
   <div>
     <tiny-layout>
-      <tiny-row :flex="true" justify="left" class="margin-bottom">
+      <tiny-row :flex="true" class="margin-bottom">
         <tiny-col :span="9">
           <div class="col">
             {{ $t('menu.plan.develop') }}
@@ -10,7 +10,7 @@
           </div>
         </tiny-col>
       </tiny-row>
-      <tiny-row :flex="true" justify="left" class="margin-bottom">
+      <tiny-row :flex="true" class="margin-bottom">
         <tiny-col :span="9">
           <div class="col">
             {{ $t('menu.plan.role') }}
@@ -19,7 +19,7 @@
           </div>
         </tiny-col>
       </tiny-row>
-      <tiny-row :flex="true" justify="left" class="margin-bottom">
+      <tiny-row :flex="true" class="margin-bottom">
         <tiny-col :span="9">
           <div class="col">
             {{ $t('menu.plan.condition') }}
@@ -41,12 +41,12 @@ import {
 </script>
 
 <style scoped lang="less">
-  .margin-bottom {
-    margin-top: 20px;
-    margin-bottom: 30px;
-  }
+.margin-bottom {
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
 
-  .col > span {
-    padding: 0 10px;
-  }
+.col > span {
+  padding: 0 10px;
+}
 </style>

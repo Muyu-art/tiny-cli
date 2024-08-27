@@ -10,7 +10,7 @@
       label-position="left"
       size="small"
     >
-      <tiny-row :flex="true" justify="left">
+      <tiny-row :flex="true">
         <tiny-col :span="8" label-width="100px">
           <tiny-form-item
             :label="$t('baseForm.form.label.culture')"
@@ -28,7 +28,7 @@
         </tiny-col>
       </tiny-row>
 
-      <tiny-row :flex="true" justify="left">
+      <tiny-row :flex="true">
         <tiny-col :span="8" label-width="100px">
           <tiny-form-item
             :label="$t('baseForm.form.label.develop')"
@@ -46,7 +46,7 @@
         </tiny-col>
       </tiny-row>
 
-      <tiny-row :flex="true" justify="left">
+      <tiny-row :flex="true">
         <tiny-col :span="8" label-width="100px">
           <tiny-form-item
             :label="$t('baseForm.form.label.effective')"
@@ -84,22 +84,22 @@ import {
   Radio as TinyRadio,
 } from '@opentiny/vue';
 
-  interface FilterOptions {
-    culture: string;
-    develop: string;
-    effective: string;
-  }
+interface FilterOptions {
+  culture: string;
+  develop: string;
+  effective: string;
+}
 
 // 加载效果
 const state = reactive<{
-    filterOptions: FilterOptions;
-  }>({
-    filterOptions: {
-      culture: '1',
-      develop: '1',
-      effective: '1',
-    } as FilterOptions,
-  });
+  filterOptions: FilterOptions;
+}>({
+  filterOptions: {
+    culture: '1',
+    develop: '1',
+    effective: '1',
+  } as FilterOptions,
+});
 const { filterOptions } = toRefs(state);
 
 // 校验规则

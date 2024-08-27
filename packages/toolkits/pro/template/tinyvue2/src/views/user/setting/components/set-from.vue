@@ -9,7 +9,7 @@
       label-position="left"
       size="small"
     >
-      <tiny-row :flex="true" justify="left">
+      <tiny-row :flex="true">
         <tiny-col :span="5" label-width="100px">
           <tiny-form-item
             :label="$t('userSetting.department')"
@@ -25,7 +25,7 @@
         </tiny-col>
       </tiny-row>
 
-      <tiny-row :flex="true" justify="left">
+      <tiny-row :flex="true">
         <tiny-col :span="5" label-width="100px">
           <tiny-form-item :label="$t('userSetting.type')" prop="type">
             <tiny-select
@@ -55,7 +55,7 @@
         </tiny-col>
       </tiny-row>
 
-      <tiny-row :flex="true" justify="left">
+      <tiny-row :flex="true">
         <tiny-col :span="5" label-width="100px">
           <tiny-form-item :label="$t('userSetting.during')" prop="during">
             <tiny-input v-model="state.filterOptions.during"></tiny-input>
@@ -71,7 +71,7 @@
         </tiny-col>
       </tiny-row>
 
-      <tiny-row :flex="true" justify="left">
+      <tiny-row :flex="true">
         <tiny-col :span="5" label-width="100px">
           <tiny-form-item :label="$t('userSetting.endTime')" prop="endTime">
             <tiny-date-picker

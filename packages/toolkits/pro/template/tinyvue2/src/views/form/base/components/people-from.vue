@@ -9,7 +9,7 @@
       label-position="left"
       size="small"
     >
-      <tiny-row :flex="true" justify="left">
+      <tiny-row :flex="true">
         <tiny-col :span="4" label-width="100px">
           <tiny-form-item :label="$t('baseForm.form.label.type')" prop="person">
             <tiny-select
@@ -18,7 +18,7 @@
               multiple
             >
               <tiny-option
-                v-for="item in (projectData?.person)"
+                v-for="item in projectData?.person"
                 :key="item.value"
                 :label="$t(item.label)"
                 :value="item.value"
@@ -34,7 +34,7 @@
               multiple
             >
               <tiny-option
-                v-for="item in (projectData?.rank)"
+                v-for="item in projectData?.rank"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -44,7 +44,7 @@
         </tiny-col>
       </tiny-row>
 
-      <tiny-row :flex="true" justify="left">
+      <tiny-row :flex="true">
         <tiny-col :span="4" label-width="100px">
           <tiny-form-item
             :label="$t('baseForm.form.label.culture')"
@@ -89,19 +89,19 @@ import {
   Input as TinyInput,
 } from '@opentiny/vue';
 
-  interface FilterOptions {
-    department: string;
-    business: string;
-    rank: Array<object>;
-    person: Array<object>;
-  }
+interface FilterOptions {
+  department: string;
+  business: string;
+  rank: Array<object>;
+  person: Array<object>;
+}
 
 // 加载效果
 const state = reactive<{
-    filterOptions: FilterOptions;
-  }>({
-    filterOptions: {} as FilterOptions,
-  });
+  filterOptions: FilterOptions;
+}>({
+  filterOptions: {} as FilterOptions,
+});
 const { filterOptions } = toRefs(state);
 
 // 初始化请求数据

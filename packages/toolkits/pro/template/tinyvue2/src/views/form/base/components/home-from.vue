@@ -6,7 +6,7 @@
       label-position="left"
       size="small"
     >
-      <tiny-row :flex="true" justify="left">
+      <tiny-row :flex="true">
         <tiny-col :span="4" label-width="100px">
           <tiny-form-item
             :label="$t('baseForm.form.project')"
@@ -43,15 +43,15 @@ import {
   Option as TinyOption,
 } from '@opentiny/vue';
 
-  interface FilterOptions {
-    project: string;
-  }
+interface FilterOptions {
+  project: string;
+}
 
 const state = reactive<{
-    filterOptions: FilterOptions;
-  }>({
-    filterOptions: {} as FilterOptions,
-  });
+  filterOptions: FilterOptions;
+}>({
+  filterOptions: {} as FilterOptions,
+});
 const { filterOptions } = toRefs(state);
 
 const props = defineProps({

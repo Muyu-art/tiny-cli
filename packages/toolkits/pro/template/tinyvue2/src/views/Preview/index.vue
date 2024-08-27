@@ -46,7 +46,7 @@
             </div>
           </tiny-col>
         </tiny-row>
-        <tiny-row :flex="true" justify="center"></tiny-row>
+        <tiny-row :flex="true"></tiny-row>
       </tiny-layout>
     </div>
     <div class="preview-table">

@@ -10,7 +10,7 @@
       label-position="left"
       size="small"
     >
-      <tiny-row :flex="true" justify="left">
+      <tiny-row :flex="true">
         <tiny-col :span="8" label-width="100px">
           <tiny-form-item
             :label="$t('baseForm.form.label.wholeconfirm')"
@@ -27,7 +27,7 @@
           </tiny-form-item>
         </tiny-col>
       </tiny-row>
-      <tiny-row :flex="true" justify="left">
+      <tiny-row :flex="true">
         <tiny-col :span="8" label-width="100px">
           <tiny-form-item
             :label="$t('baseForm.form.label.evaluation')"
@@ -59,20 +59,20 @@ import {
   Radio as TinyRadio,
 } from '@opentiny/vue';
 
-  interface FilterOptions {
-    wholeconfirm: string;
-    overallevaluation: string;
-  }
+interface FilterOptions {
+  wholeconfirm: string;
+  overallevaluation: string;
+}
 
 // 加载效果
 const state = reactive<{
-    filterOptions: FilterOptions;
-  }>({
-    filterOptions: {
-      wholeconfirm: '1',
-      overallevaluation: '1',
-    } as FilterOptions,
-  });
+  filterOptions: FilterOptions;
+}>({
+  filterOptions: {
+    wholeconfirm: '1',
+    overallevaluation: '1',
+  } as FilterOptions,
+});
 const { filterOptions } = toRefs(state);
 
 // 校验规则

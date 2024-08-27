@@ -9,7 +9,7 @@
       label-position="left"
       size="small"
     >
-      <tiny-row :flex="true" justify="left">
+      <tiny-row :flex="true">
         <tiny-col :span="4" label-width="100px">
           <tiny-form-item :label="$t('stepForm.sum.self')" prop="summarize">
             <tiny-input
@@ -35,9 +35,9 @@ import {
   Input as TinyInput,
 } from '@opentiny/vue';
 
-  interface FilterOptions {
-    summarize: string;
-  }
+interface FilterOptions {
+  summarize: string;
+}
 
 const props = defineProps({
   summationPlay: Boolean,
@@ -47,10 +47,10 @@ const { summationPlay } = toRefs(props);
 
 // 加载效果
 const state = reactive<{
-    filterOptions: FilterOptions;
-  }>({
-    filterOptions: {} as FilterOptions,
-  });
+  filterOptions: FilterOptions;
+}>({
+  filterOptions: {} as FilterOptions,
+});
 
 // 初始化请求数据
 const summarizeRef = ref();
