@@ -2,7 +2,7 @@ export default {
   'menu.allPermission.info': 'Permission',
   'permissionInfo.table.id': 'ID',
   'permissionInfo.table.name': 'Name',
-  'permissionInfo.table.desc': 'Desc',
+  'permissionInfo.table.desc': 'Desc Description',
   'permissionInfo.table.operations': 'Operation',
   'permissionInfo.table.operations.update': 'Update',
   'permissionInfo.table.operations.delete': 'Delete',

@@ -187,12 +187,8 @@
     Button as TinyButton,
   } from '@opentiny/vue';
   import { getSimpleDate } from '@/utils/time';
-  import { useRoute, useRouter } from 'vue-router';
-  import { getUserInfo, registerUser, updateUserInfo } from '@/api/user';
+  import { registerUser } from '@/api/user';
   import { getAllRole } from '@/api/role';
-
-  const route = useRoute();
-  const router = useRouter();
 
   // 初始化请求数据
   onMounted(() => {
@@ -209,6 +205,10 @@
     userData: {} as any,
     roleData: [] as any,
   });
+
+  const emit = defineEmits<{
+    confirm: [];
+  }>();
 
   const projectData = [
     {
@@ -264,11 +264,6 @@
     };
   });
 
-  // btn操作
-  function handleFormReset() {
-    router.go(0);
-  }
-
   async function handleSubmit() {
     let data = state.userData;
     if (data.status === 'Active') {
@@ -299,7 +294,7 @@
         status: 'success',
       });
       state.userData = {} as any;
-      handleFormReset();
+      emit('confirm');
     } catch (error) {
       if (error.response && error.response.data) {
         const errorMessage = error.response.data.message || '未知错误';
