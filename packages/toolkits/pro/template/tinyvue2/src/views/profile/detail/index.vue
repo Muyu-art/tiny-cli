@@ -109,8 +109,8 @@ const fetchData = async () => {
   });
   try {
     const { data } = await getDetailData();
-    state.Project = data.Project;
-    state.tableData = data.tableData;
+    state.Project = data.data.Project;
+    state.tableData = data.data.tableData;
   } finally {
     state.loading.close();
   }

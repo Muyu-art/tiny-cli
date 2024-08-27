@@ -85,7 +85,9 @@ const fetchData = async () => {
     background: 'rgba(0, 0, 0, 0.7)',
   });
   try {
-    const { data } = await getUserData();
+    const {
+      data: { data },
+    } = await getUserData();
     state.options = data.options;
   } finally {
     state.loading.close();

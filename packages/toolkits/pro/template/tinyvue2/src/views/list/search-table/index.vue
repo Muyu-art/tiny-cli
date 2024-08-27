@@ -361,12 +361,10 @@ async function fetchData(
   state.loading = true;
   try {
     const { data } = await queryEmployeeList(queryParmas);
-    const { data: list } = data;
-    tableData.value = list.data;
-    const { total } = list;
-    console.log(data);
+    const { data: list, total } = data;
+    tableData.value = list;
     return {
-      result: list.data,
+      result: list,
       page: { total },
     };
   } finally {
