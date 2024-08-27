@@ -38,7 +38,7 @@ if (BUILD_TOOLS === 'VITE' || BUILD_TOOLS === 'WEBPACK') {
     }
   });
 }
-const toRoutes = (menus: ITreeNodeData[]) => {
+export const toRoutes = (menus: ITreeNodeData[]) => {
   const router: RouteRecordRaw[] = [];
   for (let i = 0; i < menus.length; i += 1) {
     const menu = menus[i];
@@ -71,10 +71,19 @@ const toRoutes = (menus: ITreeNodeData[]) => {
 };
 
 export const setupMenuGuard = (router: Router) => {
+  let has404 = false;
   router.beforeEach(async (to, from, next) => {
     if (to.name?.toString().toLowerCase() === 'login') {
       next();
       return;
+    }
+    if (!has404) {
+      has404 = true;
+      router.addRoute({
+        path: `${import.meta.env.VITE_CONTEXT}:pathMatch(.*)*`,
+        name: 'notFound',
+        component: () => import('@/views/not-found/index.vue'),
+      });
     }
     await nextTick();
     const menuStore = useMenuStore();
@@ -84,7 +93,11 @@ export const setupMenuGuard = (router: Router) => {
     }
     const data = await menuStore.getMenuList();
     const routes = toRoutes(data);
-    routes.forEach((route) => router.addRoute('root', route));
+    routes.forEach((route) => {
+      if (!router.hasRoute(route.name)) {
+        router.addRoute('root', route);
+      }
+    });
     next({ ...to, replace: true });
   });
 };

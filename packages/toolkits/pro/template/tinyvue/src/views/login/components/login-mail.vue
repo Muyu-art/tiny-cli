@@ -76,11 +76,13 @@
   import useLoading from '@/hooks/loading';
   import { useMenuStore } from '@/store/modules/router';
   import { useLocales } from '@/store/modules/locales';
+  import { toRoutes } from '@/router/guard/menu';
 
   const router = useRouter();
   const { t, mergeLocaleMessage } = useI18n();
   const { loading, setLoading } = useLoading();
   const userStore = useUserStore();
+  const menuStore = useMenuStore();
   const localeStore = useLocales();
   const loginFormMail = ref();
 
@@ -144,7 +146,41 @@
           shouldMerge: false,
         });
 
-        router.replace('/vue-pro/redirect?to=Home');
+        await menuStore.getMenuList();
+        const routes = toRoutes(menuStore.menuList);
+
+        routes.forEach((route) => {
+          if (!router.hasRoute(route.name)) {
+            router.addRoute('root', route);
+          }
+        });
+
+        const route = router.currentRoute;
+        const { redirect = 'Home' } = route.value.query;
+        const blackList = ['login', 'notFound', 'redirect', 'preview', 'root'];
+        let redirectTo = blackList.includes(redirect.toString())
+          ? 'Home'
+          : redirect.toString();
+        if (!router.hasRoute(redirectTo)) {
+          const [routerItem] = router.getRoutes().filter((routeItem) => {
+            return (
+              routeItem.name &&
+              !blackList.includes(routeItem.name.toString()) &&
+              routeItem.children.length === 0
+            );
+          });
+          if (!routerItem) {
+            Notify({
+              type: 'error',
+              message: t('router.not-exists-valid-route'),
+              duration: 2000,
+            });
+            return;
+          }
+          redirectTo = routerItem.name.toString();
+        }
+
+        router.replace({ name: redirectTo });
       } catch (err) {
         Notify({
           type: 'error',

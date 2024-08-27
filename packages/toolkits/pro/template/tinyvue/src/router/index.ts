@@ -7,8 +7,6 @@ import createRouteGuard from './guard';
 
 NProgress.configure({ showSpinner: false }); // NProgress Configuration
 
-
-
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -34,12 +32,6 @@ const router = createRouter({
       path: import.meta.env.VITE_CONTEXT,
       component: DefaultLayout,
       children: [],
-      // children: appRoutes,
-    },
-    {
-      path: import.meta.env.VITE_CONTEXT + ':pathMatch(.*)*',
-      name: 'notFound',
-      component: () => import('@/views/not-found/index.vue'),
     },
     {
       path: import.meta.env.VITE_CONTEXT + 'preview',
@@ -47,10 +39,10 @@ const router = createRouter({
       component: () => import('@/views/Preview/index.vue'),
     },
     {
-      name:'redirect',
+      name: 'redirect',
       path: import.meta.env.VITE_CONTEXT + 'redirect',
-      component: ()=>import('@/views/redirect.vue')
-    }
+      component: () => import('@/views/redirect.vue'),
+    },
   ],
   scrollBehavior() {
     return { top: 0 };
