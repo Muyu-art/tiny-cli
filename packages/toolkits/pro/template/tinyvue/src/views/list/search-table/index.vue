@@ -364,10 +364,10 @@
     state.loading = true;
     try {
       const { data } = await queryEmployeeList(queryParmas);
-      tableData.value = data.data;
-      const { total } = data.total;
+      const { data: list, total } = data;
+      tableData.value = list;
       return {
-        result: data.data,
+        result: list,
         page: { total },
       };
     } finally {
