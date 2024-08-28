@@ -5,7 +5,7 @@
       <div class="detail-contain">
         <tiny-collapse v-model="state.activeNames">
           <tiny-collapse-item :title="$t('baseForm.form.label.type')" name="1">
-            <tiny-row :flex="true" justify="left" class="margin-bottom">
+            <tiny-row :flex="true" class="margin-bottom">
               <tiny-col :span="9">
                 <div class="col">
                   {{ $t('baseForm.form.label.type') }}
@@ -27,7 +27,10 @@
             </tiny-row>
           </tiny-collapse-item>
 
-          <tiny-collapse-item :title="$t('baseForm.form.label.people')" name="2">
+          <tiny-collapse-item
+            :title="$t('baseForm.form.label.people')"
+            name="2"
+          >
             <planDetail></planDetail>
           </tiny-collapse-item>
 
@@ -53,9 +56,7 @@
             <mentor></mentor>
           </tiny-collapse-item>
           <tiny-collapse-item :title="$t('baseForm.form.record')" name="7">
-            <recordDetail
-              :table-data="state.tableData"
-            ></recordDetail>
+            <recordDetail :table-data="state.tableData"></recordDetail>
           </tiny-collapse-item>
         </tiny-collapse>
       </div>
@@ -84,20 +85,20 @@ import recordDetail from './components/record-detail.vue';
 
 // 加载效果
 const state = reactive<{
-    loading: any;
-    filterOptions: object;
-    activeNames: Array<string>;
-    Project: Array<string>;
-    tableData: Array<object>;
-    project: string;
-  }>({
-    loading: null,
-    filterOptions: {},
-    activeNames: ['1', '2', '3', '4', '5', '6', '7'],
-    Project: [],
-    tableData: [],
-    project: '',
-  });
+  loading: any;
+  filterOptions: object;
+  activeNames: Array<string>;
+  Project: Array<string>;
+  tableData: Array<object>;
+  project: string;
+}>({
+  loading: null,
+  filterOptions: {},
+  activeNames: ['1', '2', '3', '4', '5', '6', '7'],
+  Project: [],
+  tableData: [],
+  project: '',
+});
 
 // 请求数据接口方法
 const fetchData = async () => {
@@ -122,49 +123,49 @@ onMounted(() => {
 </script>
 
 <style scoped lang="less">
-  .detail-page {
-    height: 100%;
-  }
-  #container {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: calc(100% - 60px);
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
+.detail-page {
+  height: 100%;
+}
+#container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: calc(100% - 60px);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
 
-  .detail-contain {
-    flex: 1 1 auto;
-    height: 100%;
-    margin: 8px 10px;
-    padding: 22px 20px;
-    overflow: auto;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 0 8px 8px rgba(169, 174, 184, 0.05);
-  }
+.detail-contain {
+  flex: 1 1 auto;
+  height: 100%;
+  margin: 8px 10px;
+  padding: 22px 20px;
+  overflow: auto;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 8px 8px rgba(169, 174, 184, 0.05);
+}
 
-  :deep(.tiny-select) {
-    width: 400px;
-  }
+:deep(.tiny-select) {
+  width: 400px;
+}
 
-  :deep(.tiny-collapse-item) {
-    margin-bottom: 20px;
-  }
+:deep(.tiny-collapse-item) {
+  margin-bottom: 20px;
+}
 
-  .margin-bottom {
-    margin-top: 20px;
-    margin-bottom: 30px;
-  }
+.margin-bottom {
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
 
-  .col > span {
-    padding: 0 10px;
-  }
-  :deep(.tiny-collapse-item__arrow.is-active, .tiny-collapse-item__arrow:hover){
-    fill: var(--ti-common-color-text-highlight);
-  }
-  :deep(.tiny-collapse-item__header svg){
-    fill: var(--ti-common-color-text-highlight);
-  }
+.col > span {
+  padding: 0 10px;
+}
+:deep(.tiny-collapse-item__arrow.is-active, .tiny-collapse-item__arrow:hover) {
+  fill: var(--ti-common-color-text-highlight);
+}
+:deep(.tiny-collapse-item__header svg) {
+  fill: var(--ti-common-color-text-highlight);
+}
 </style>

@@ -2,7 +2,7 @@ export default {
   'menu.allPermission.info': '查看权限',
   'permissionInfo.table.id': 'ID',
   'permissionInfo.table.name': '名称',
-  'permissionInfo.table.desc': '权限',
+  'permissionInfo.table.desc': '权限描述',
   'permissionInfo.table.operations': '操作',
   'permissionInfo.table.operations.update': '修改',
   'permissionInfo.table.operations.delete': '删除',

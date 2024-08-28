@@ -156,7 +156,7 @@
             @click="handleSubmit"
             >{{ $t('userSetting.save') }}
           </tiny-button>
-          <tiny-button @click="handleFormReset">
+          <tiny-button @click="handleCancel">
             {{ $t('userSetting.cancel') }}
           </tiny-button>
         </div>
@@ -182,17 +182,19 @@
     Button as TinyButton,
   } from '@opentiny/vue';
   import { getSimpleDate } from '@/utils/time';
-  import { useRoute, useRouter } from 'vue-router';
-  import { getAllUser, getUserInfo, updateUserInfo } from '@/api/user';
+  import { getUserInfo, updateUserInfo } from '@/api/user';
   import { getAllRole } from '@/api/role';
+  import { useUserStore } from '@/store';
 
-  const route = useRoute();
-  const router = useRouter();
+  const userStore = useUserStore();
 
   const props = defineProps({
     email: String,
   });
-
+  const emit = defineEmits<{
+    cancel: [];
+    confirm: [];
+  }>();
   // 初始化请求数据
   onMounted(() => {
     fetchData(props.email);
@@ -261,10 +263,9 @@
 
   const { t } = useI18n();
 
-  // btn操作
-  function handleFormReset() {
-    router.go(0);
-  }
+  const handleCancel = () => {
+    emit('cancel');
+  };
 
   async function handleSubmit() {
     let data = state.userData;
@@ -294,7 +295,11 @@
         message: t('baseForm.form.submit.success'),
         status: 'success',
       });
-      handleFormReset();
+      if (data.email === userStore.email) {
+        const { data: userInfo = null } = await getUserInfo();
+        userStore.setInfo(userInfo);
+      }
+      emit('confirm');
     } catch (error) {
       if (error.response && error.response.data) {
         const errorMessage = error.response.data.message || '未知错误';

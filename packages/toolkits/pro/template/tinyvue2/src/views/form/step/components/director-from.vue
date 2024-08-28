@@ -9,7 +9,7 @@
       label-position="left"
       size="small"
     >
-      <tiny-row :flex="true" justify="left">
+      <tiny-row :flex="true">
         <tiny-col :span="4" label-width="100px">
           <tiny-form-item
             :label="$t('stepForm.dire.supervisor')"
@@ -40,7 +40,7 @@
         </tiny-col>
       </tiny-row>
 
-      <tiny-row :flex="true" justify="left">
+      <tiny-row :flex="true">
         <tiny-col :span="4" label-width="100px">
           <tiny-form-item
             :label="$t('stepForm.dire.startTime')"

@@ -9,7 +9,7 @@
       label-position="left"
       size="small"
     >
-      <tiny-row :flex="true" justify="left">
+      <tiny-row :flex="true">
         <tiny-col :span="4" label-width="100px">
           <tiny-form-item :label="$t('stepForm.coach.culture')" prop="sector">
             <tiny-input
@@ -41,7 +41,7 @@
         </tiny-col>
       </tiny-row>
 
-      <tiny-row :flex="true" justify="left">
+      <tiny-row :flex="true">
         <tiny-col :span="4" label-width="100px">
           <tiny-form-item label="HR" prop="hr">
             <tiny-select
@@ -78,7 +78,7 @@
         </tiny-col>
       </tiny-row>
 
-      <tiny-row :flex="true" justify="left">
+      <tiny-row :flex="true">
         <tiny-col :span="4" label-width="100px">
           <tiny-form-item
             :label="$t('stepForm.coach.startTime')"

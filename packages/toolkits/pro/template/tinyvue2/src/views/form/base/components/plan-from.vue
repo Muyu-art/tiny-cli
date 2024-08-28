@@ -10,7 +10,7 @@
       label-position="left"
       size="small"
     >
-      <tiny-row :flex="true" justify="left">
+      <tiny-row :flex="true">
         <tiny-col :span="8" label-width="100px">
           <tiny-form-item
             :label="$t('baseForm.form.label.confirm')"
@@ -28,7 +28,7 @@
         </tiny-col>
       </tiny-row>
 
-      <tiny-row :flex="true" justify="left">
+      <tiny-row :flex="true">
         <tiny-col :span="8" label-width="100px">
           <tiny-form-item
             :label="$t('baseForm.form.label.frequency')"
@@ -52,7 +52,7 @@
         </tiny-col>
       </tiny-row>
 
-      <tiny-row :flex="true" justify="left">
+      <tiny-row :flex="true">
         <tiny-col :span="8" label-width="100px">
           <tiny-form-item :label="$t('baseForm.form.label.role')" prop="role">
             <div>
@@ -67,7 +67,7 @@
         </tiny-col>
       </tiny-row>
 
-      <tiny-row :flex="true" justify="left">
+      <tiny-row :flex="true">
         <tiny-col :span="8" label-width="100px">
           <tiny-form-item
             :label="$t('baseForm.form.label.condition')"
@@ -91,7 +91,7 @@
         </tiny-col>
       </tiny-row>
 
-      <tiny-row :flex="true" justify="left">
+      <tiny-row :flex="true">
         <tiny-col :span="8" label-width="100px">
           <tiny-form-item
             :label="$t('baseForm.form.label.staged')"
@@ -135,25 +135,25 @@ import {
   Radio as TinyRadio,
 } from '@opentiny/vue';
 
-  interface FilterOptions {
-    frequency: Array<object>;
-    confirm: string;
-    role: string;
-    condition: string;
-    staged: string;
-  }
+interface FilterOptions {
+  frequency: Array<object>;
+  confirm: string;
+  role: string;
+  condition: string;
+  staged: string;
+}
 
 // 加载效果
 const state = reactive<{
-    filterOptions: FilterOptions;
-  }>({
-    filterOptions: {
-      confirm: '1',
-      role: '1',
-      condition: '1',
-      staged: '1',
-    } as FilterOptions,
-  });
+  filterOptions: FilterOptions;
+}>({
+  filterOptions: {
+    confirm: '1',
+    role: '1',
+    condition: '1',
+    staged: '1',
+  } as FilterOptions,
+});
 const { filterOptions } = toRefs(state);
 
 // 初始化请求数据
@@ -206,7 +206,7 @@ defineExpose({
 </script>
 
 <style scoped lang="less">
-  :deep(.tiny-select) {
-    width: 380px;
-  }
+:deep(.tiny-select) {
+  width: 380px;
+}
 </style>

@@ -89,9 +89,9 @@ const fetchData = async () => {
     background: 'rgba(0, 0, 0, 0.7)',
   });
   try {
-    // const { data } = await getUserData(userStore.$state as any);
-    // state.chartData = data.chartData;
-    // state.tableData = data.tableData;
+    const { data } = await getUserData(userStore.$state as any);
+    state.chartData = data.chartData;
+    state.tableData = data.tableData;
   } finally {
     state.loading.close();
   }
@@ -104,7 +104,7 @@ onMounted(() => {
 
 // 筛选函数
 const changeTime = (value: number) => {
-  // userStore.setInfo({ sort: value });
+  userStore.setInfo({ sort: value });
   fetchData();
 };
 const changeFilter = () => {

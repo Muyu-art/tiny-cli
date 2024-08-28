@@ -4,14 +4,13 @@
       <img src="@/assets/images/user-head.png" alt="user" class="user-image" />
       <div>
         <h3 class="user-name">{{ $t('stepForm.head.admin') }}</h3>
-        <h3 class="user-name"> admin </h3>
-        <!-- <h3 class="user-name">{{ userStore.info?.name }}</h3> -->
+        <h3 class="user-name">admin</h3>
       </div>
     </div>
     <div class="divider"></div>
     <div class="user-content">
       <tiny-layout>
-        <tiny-row :flex="true" justify="center" class="margin-y">
+        <tiny-row :flex="true" class="margin-y">
           <img src="@/assets/images/head-1.png" class="head-image" />
           <tiny-col :span="6">
             <div class="col">
@@ -25,7 +24,9 @@
             <div class="col">
               <div>{{ $t('stepForm.recruitment.type') }}</div>
               <div class="space"></div>
-              <div>{{ userStore.info?.role?.map((role) => role.name).join(',') }}</div>
+              <div>
+                {{ userStore.info?.role?.map((role) => role.name).join(',') }}
+              </div>
             </div>
           </tiny-col>
           <img src="@/assets/images/head-3.png" class="head-image" />
@@ -37,7 +38,7 @@
             </div>
           </tiny-col>
         </tiny-row>
-        <tiny-row :flex="true" justify="center" class="margin-y">
+        <tiny-row :flex="true" class="margin-y">
           <img src="@/assets/images/head-4.png" class="head-image" />
           <tiny-col :span="6">
             <div class="col">
@@ -95,7 +96,7 @@ const userStore = useUserStore();
   padding: 0 43px;
   justify-content: space-between;
   .user {
-    width:fit-content;
+    width: fit-content;
     display: flex;
     gap: 32px;
     flex: 0 0 auto;
@@ -121,22 +122,22 @@ const userStore = useUserStore();
 </style>
 
 <style lang="less" scoped>
-  // responsive
-  @media (max-width: @screen-lg) {
-    .margin-bottom {
-      margin-top: 10px;
-      margin-bottom: 12px;
-    }
+// responsive
+@media (max-width: @screen-lg) {
+  .margin-bottom {
+    margin-top: 10px;
+    margin-bottom: 12px;
   }
-  @media (max-width: @screen-ml) {
-    .margin-bottom {
-      margin-top: 10px;
-      margin-bottom: 12px;
-    }
+}
+@media (max-width: @screen-ml) {
+  .margin-bottom {
+    margin-top: 10px;
+    margin-bottom: 12px;
   }
-  @media (max-width: @screen-xs) {
-    .user {
-      width: 25%;
-    }
+}
+@media (max-width: @screen-xs) {
+  .user {
+    width: 25%;
   }
+}
 </style>

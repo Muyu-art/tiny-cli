@@ -34,7 +34,7 @@
         class="filter-form"
         size="small"
       >
-        <tiny-row :flex="true" justify="center" class="col">
+        <tiny-row :flex="true" class="col">
           <tiny-col :span="4" label-width="100px">
             <tiny-form-item :label="$t('searchTable.columns.name')">
               <tiny-input
@@ -64,7 +64,7 @@
           </tiny-col>
         </tiny-row>
 
-        <tiny-row v-if="setCollapse" :flex="true" justify="center" class="col">
+        <tiny-row v-if="setCollapse" :flex="true" class="col">
           <tiny-col :span="4">
             <tiny-form-item :label="$t('searchTable.columns.workname')">
               <tiny-input
@@ -94,7 +94,7 @@
           </tiny-col>
         </tiny-row>
 
-        <tiny-row :flex="true" justify="end" class="col">
+        <tiny-row :flex="true" class="col">
           <tiny-col v-if="setCollapse" :span="4" label-width="100px">
             <tiny-form-item :label="$t('searchTable.columns.study')">
               <tiny-input
@@ -361,11 +361,10 @@ async function fetchData(
   state.loading = true;
   try {
     const { data } = await queryEmployeeList(queryParmas);
-    const { data: list } = data;
-    tableData.value = list.data;
-    const { total } = list;
+    const { data: list, total } = data;
+    tableData.value = list;
     return {
-      result: list.data,
+      result: list,
       page: { total },
     };
   } finally {

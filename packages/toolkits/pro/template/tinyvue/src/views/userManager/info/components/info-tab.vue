@@ -233,7 +233,7 @@
       width="800"
       :title="$t('userInfo.modal.title.add')"
     >
-      <UserAdd></UserAdd>
+      <UserAdd @confirm="onAddConfirm"></UserAdd>
     </tiny-modal>
   </div>
   <div v-if="state.isUserUpdate">
@@ -245,7 +245,11 @@
       width="800"
       :title="$t('userInfo.modal.title.update')"
     >
-      <UserSetting :email="state.email"></UserSetting>
+      <UserSetting
+        :email="state.email"
+        @cancel="onUpdateCancel"
+        @confirm="onUserUpdateConfirm"
+      ></UserSetting>
     </tiny-modal>
   </div>
   <div v-if="state.isPwdUpdate">
@@ -321,11 +325,9 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, reactive, onMounted, watch, computed } from 'vue';
+  import { reactive, computed } from 'vue';
   import { useI18n } from 'vue-i18n';
   import {
-    Tabs as TinyTabs,
-    TabItem as TinyTabItem,
     Loading,
     GridColumn as TinyGridColumn,
     Grid as TinyGrid,
@@ -338,20 +340,11 @@
     Col as TinyCol,
     Input as TinyInput,
   } from '@opentiny/vue';
-  import { IconChevronDown } from '@opentiny/vue-icon';
   import { useUserStore } from '@/store';
-  import {
-    getAllUser,
-    deleteUser,
-    updatePwdAdmin,
-    registerUser,
-    updatePwdUser,
-  } from '@/api/user';
+  import { getAllUser, deleteUser, updatePwdAdmin } from '@/api/user';
   import { useRouter } from 'vue-router';
   import UserAdd from '../../useradd/index.vue';
   import UserSetting from '../../setting/index.vue';
-
-  const router = useRouter();
 
   const { t } = useI18n();
 
@@ -378,12 +371,6 @@
 
   // 变量设置
   const userStore = useUserStore();
-  const ChevronDown = IconChevronDown();
-  const activeName = ref('1');
-  const Filter = ref(false);
-  const Sort = ref(false);
-
-  const filterInfo = ref();
 
   const pagerConfig = reactive({
     component: TinyPager,
@@ -437,6 +424,16 @@
       });
     },
   });
+
+  const onUpdateCancel = () => {
+    state.isUserUpdate = false;
+  };
+  const onUserUpdateConfirm = () => {
+    state.isUserUpdate = false;
+  };
+  const onAddConfirm = () => {
+    state.isUserAdd = false;
+  };
 
   const handleDelete = (email: string) => {
     deleteUser(email).then((res) => {

@@ -92,7 +92,7 @@ const initStep = Mock.mock({
 export default [
   // init-base
   {
-    url: '/mock/base/getdata',
+    url: '/api/base/getdata',
     method: 'get',
     response: () => {
       return successResponseWrap(initBase);
@@ -101,7 +101,7 @@ export default [
 
   // init-step
   {
-    url: '/mock/step/getdata',
+    url: '/api/step/getdata',
     method: 'get',
     response: () => {
       return successResponseWrap(initStep);
@@ -110,7 +110,7 @@ export default [
 
   // submit
   {
-    url: '/mock/channel-form/submit',
+    url: '/api/channel-form/submit',
     method: 'post',
     response: () => {
       return successResponseWrap('ok');
