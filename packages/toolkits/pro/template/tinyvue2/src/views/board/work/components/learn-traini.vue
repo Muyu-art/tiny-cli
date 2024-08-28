@@ -93,9 +93,7 @@ const fetchData = async () => {
     background: 'rgba(0, 0, 0, 0.7)',
   });
   try {
-    const {
-      data: { data },
-    } = await getUserTrain();
+    const { data } = await getUserTrain();
     state.options = data.options;
   } finally {
     state.loading.close();
@@ -110,9 +108,7 @@ onMounted(() => {
 // 切换数据
 const number = ref([]);
 const fetchSelect = async (param: string) => {
-  const {
-    data: { data },
-  } = await getUserChange(param);
+  const { data } = await getUserChange(param);
   number.value = data;
 };
 

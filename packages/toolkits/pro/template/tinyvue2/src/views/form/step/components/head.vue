@@ -5,7 +5,6 @@
       <div>
         <h3 class="user-name">{{ $t('stepForm.head.admin') }}</h3>
         <h3 class="user-name">admin</h3>
-        <!-- <h3 class="user-name">{{ userStore.info?.name }}</h3> -->
       </div>
     </div>
     <div class="divider"></div>
