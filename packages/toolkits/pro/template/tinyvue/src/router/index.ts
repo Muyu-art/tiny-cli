@@ -1,9 +1,8 @@
 /* eslint-disable prefer-template */
 import { createRouter, createWebHistory } from 'vue-router';
 import NProgress from 'nprogress'; // progress bar
-import DefaultLayout from '@/layout/default-layout.vue';
-import appRoutes from './routes';
 import createRouteGuard from './guard';
+import constant from './constant';
 
 NProgress.configure({ showSpinner: false }); // NProgress Configuration
 
@@ -11,38 +10,7 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     // 本地地址
-    {
-      path: '/',
-      redirect: `${import.meta.env.VITE_CONTEXT}login`,
-    },
-    {
-      path: import.meta.env.VITE_CONTEXT,
-      redirect: { path: `${import.meta.env.VITE_CONTEXT}login` },
-    },
-    {
-      path: import.meta.env.VITE_CONTEXT + 'login',
-      name: 'login',
-      component: () => import('@/views/login/index.vue'),
-      meta: {
-        requiresAuth: false,
-      },
-    },
-    {
-      name: 'root',
-      path: import.meta.env.VITE_CONTEXT,
-      component: DefaultLayout,
-      children: [],
-    },
-    {
-      path: import.meta.env.VITE_CONTEXT + 'preview',
-      name: 'preview',
-      component: () => import('@/views/Preview/index.vue'),
-    },
-    {
-      name: 'redirect',
-      path: import.meta.env.VITE_CONTEXT + 'redirect',
-      component: () => import('@/views/redirect.vue'),
-    },
+    ...constant,
   ],
   scrollBehavior() {
     return { top: 0 };

@@ -12,7 +12,7 @@
         <tiny-layout class="layout-sider">
           <div class="menu-wrapper">
             <Suspense>
-              <Menu />
+              <Menu v-if="reloadKey !== 'menu'" />
             </Suspense>
           </div>
         </tiny-layout>
@@ -71,7 +71,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, watch, onMounted, computed } from 'vue';
+  import { ref, watch, onMounted, computed, nextTick, provide } from 'vue';
   import { useI18n } from 'vue-i18n';
   import {
     Container as TinyContainer,
@@ -100,6 +100,18 @@
 
   const tabsHistory = computed(() => tabStore.data);
   const currentTabName = ref();
+
+  const reloadKey = ref('');
+  const reloadMenu = () => {
+    reloadKey.value = 'menu';
+    nextTick(() => {
+      reloadKey.value = '';
+    });
+  };
+  provide('RELOAD', {
+    reloadMenu,
+  });
+
   watch(
     () => tabStore.current,
     () => {

@@ -248,7 +248,15 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, reactive, onMounted, computed, watch, onUnmounted } from 'vue';
+  import {
+    ref,
+    reactive,
+    onMounted,
+    computed,
+    watch,
+    onUnmounted,
+    inject,
+  } from 'vue';
   import {
     Tabs as TinyTabs,
     TabItem as TinyTabItem,
@@ -270,7 +278,7 @@
     Tree as TinyTree,
     TinyLoading,
   } from '@opentiny/vue';
-  import { useUserStore } from '@/store/';
+  import { useTabStore, useUserStore } from '@/store/';
   import {
     getAllRoleDetail,
     updateRole,
@@ -281,14 +289,13 @@
   import { getAllPermission } from '@/api/permission';
   import { getAllMenu } from '@/api/menu';
   import { useRouter } from 'vue-router';
-  import { getSimpleDate } from '@/utils/time';
-  import { updateUserInfo } from '@/api/user';
   import { useI18n } from 'vue-i18n';
-  import type { ITreeNodeData } from '@/router/guard/menu';
+  import { toRoutes, type ITreeNodeData } from '@/router/guard/menu';
   import { useDisclosure } from '@/hooks/useDisclosure';
   import { useI18nMenu } from '@/hooks/useI18nMenu';
   import useLoading from '@/hooks/loading';
   import { useMenuId } from '@/hooks/useMenuId';
+  import constant from '@/router/constant';
   import { useMenuStore } from '@/store/modules/router';
   import permissionTable from './permission-table.vue';
   import menuDrawer from './menu-drawer.vue';
@@ -378,7 +385,25 @@
     roleId.value = roldId;
     onOpen();
   };
+  const { reloadMenu } = inject('RELOAD');
   const menuStore = useMenuStore();
+  const flushRouter = async () => {
+    router.clearRoutes();
+    constant.forEach((staticRoute) => router.addRoute(staticRoute));
+    await menuStore.getMenuList();
+    const routes = toRoutes(menuStore.menuList);
+    routes.forEach((route) => {
+      router.addRoute('root', route);
+    });
+  };
+  const flushTabs = () => {
+    const tabStore = useTabStore();
+    const routePaths = router.getRoutes().map((routeItem) => routeItem.path);
+    const removeTabs = tabStore.data.filter(
+      ({ link }) => !routePaths.includes(link),
+    );
+    removeTabs.forEach(({ link }) => tabStore.delByLink(link));
+  };
   const onConfirm = (ids: number[]) => {
     updateRole({
       id: roleId.value,
@@ -386,8 +411,12 @@
     })
       .then(() => {
         selectedId.value = ids;
-        menuStore.getMenuList();
-        router.go(0);
+        return flushRouter();
+        // return reloadMenu();
+      })
+      .then(() => {
+        flushTabs();
+        reloadMenu();
       })
       .finally(() => {
         open.value = false;
@@ -473,12 +502,12 @@
   };
 
   async function handleRoleUpdateSubmit() {
-    const dataTmp = state.roleUpdData;
+    const data = state.roleUpdData;
     const newTemp = {
-      id: dataTmp.id,
-      name: dataTmp.name,
-      permissionIds: dataTmp.desc,
-      menuIds: dataTmp.menus,
+      id: data.id,
+      name: data.name,
+      permissionIds: data.desc,
+      menuIds: data.menus,
     };
     try {
       await updateRole(newTemp);
@@ -489,10 +518,12 @@
       state.isRoleUpdate = false;
       state.roleUpdData = {} as any;
       await fetchRoleData();
-      const { userInfo } = userStore;
-      const { data } = await getRoleInfo(userInfo.role[0].id);
-      userInfo.rolePermission = data.permission;
-      userInfo.$patch();
+      const userInfo = userStore;
+      const { roleTmp } = await getRoleInfo(userInfo.roleId);
+      const permissions = roleTmp.permission;
+      for (let i = 0; i < permissions.length; i += 1) {
+        userInfo.rolePermission.push(permissions[i].name);
+      }
     } catch (error) {
       if (error.response && error.response.data) {
         const errorMessage = error.response.data.message || '未知错误';

@@ -23,7 +23,15 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, onMounted, watch, computed, reactive, unref } from 'vue';
+  import {
+    ref,
+    onMounted,
+    watch,
+    computed,
+    reactive,
+    unref,
+    getCurrentInstance,
+  } from 'vue';
   import { TreeMenu as tinyTreeMenu } from '@opentiny/vue';
   import { useMenuStore } from '@/store/modules/router';
   import router from '@/router';
@@ -33,6 +41,7 @@
   import { useDeepClone } from '@/hooks/useDeepClone';
 
   const menuStore = useMenuStore();
+  await menuStore.getMenuList();
   const rawMenuData = computed(() => useDeepClone(unref(menuStore.menuList)));
   type SideMenuData = (ITreeNodeData & { meta: { url: string } })[];
 
