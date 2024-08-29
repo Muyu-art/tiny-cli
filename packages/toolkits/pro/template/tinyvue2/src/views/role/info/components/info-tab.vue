@@ -487,9 +487,13 @@ async function handleRoleUpdateSubmit() {
     state.roleUpdData = {} as any;
     await fetchRoleData();
     const { userInfo } = userStore;
-    const { data } = await getRoleInfo(userInfo.role[0].id);
-    userInfo.rolePermission = data.permission;
-    userStore.setInfo(userInfo);
+    if (userInfo.role[0].id === dataTmp.id) {
+      const { data } = await getRoleInfo(userInfo.role[0].id);
+      userInfo.rolePermission = data.permission.map(
+        (permission) => permission.name
+      );
+      userStore.setInfo(userInfo);
+    }
   } catch (error) {
     if (error.response && error.response.data) {
       const errorMessage = error.response.data.message || '未知错误';
