@@ -1,15 +1,37 @@
 import { defineStore } from 'pinia';
+import { useRoute, useRouter } from 'vue-router';
 
 type Tab = {
   name: string;
   link: string;
 };
 
+export const TAB_PERSISTENCE_KEYS = {
+  TABS: 'tiny-pro::tabs',
+  CURRENT: 'tiny-pro::tabs:current',
+};
+
+const initTabs = () => {
+  const tabs = JSON.parse(
+    localStorage.getItem(TAB_PERSISTENCE_KEYS.TABS) ?? '[]',
+  ) as Tab[];
+  const routes = useRouter()
+    .getRoutes()
+    .map((route) => route.path);
+  return tabs.filter((tab) => routes.includes(tab.link));
+};
+const initCurrent = () => {
+  const current = JSON.parse(
+    localStorage.getItem(TAB_PERSISTENCE_KEYS.CURRENT) ?? '{}',
+  ) as Tab;
+  return current;
+};
+
 export const useTabStore = defineStore('tabs', {
   state() {
     return {
-      data: [] as Tab[],
-      current: {} as Tab,
+      data: initTabs(),
+      current: initCurrent(),
     };
   },
   actions: {
@@ -21,10 +43,18 @@ export const useTabStore = defineStore('tabs', {
         this.data.push(item);
       }
       this.current = item;
+      localStorage.setItem(
+        TAB_PERSISTENCE_KEYS.TABS,
+        JSON.stringify(this.data),
+      );
       return { ...item };
     },
     set(name: string) {
       this.current = this.getByName(name)[0] ?? null;
+      localStorage.setItem(
+        TAB_PERSISTENCE_KEYS.CURRENT,
+        JSON.stringify(this.current),
+      );
       return this.current;
     },
     has(name: string) {
@@ -55,6 +85,10 @@ export const useTabStore = defineStore('tabs', {
         }
       }
       this.data.splice(idx, 1);
+      localStorage.setItem(
+        TAB_PERSISTENCE_KEYS.TABS,
+        JSON.stringify(this.data),
+      );
       return curName;
     },
   },

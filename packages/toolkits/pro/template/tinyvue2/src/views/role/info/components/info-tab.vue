@@ -470,12 +470,12 @@ const handleRoleUpdateCancel = () => {
 };
 
 async function handleRoleUpdateSubmit() {
-  const data = state.roleUpdData;
+  const dataTmp = state.roleUpdData;
   const newTemp = {
-    id: data.id,
-    name: data.name,
-    permissionIds: data.desc,
-    menuIds: data.menus,
+    id: dataTmp.id,
+    name: dataTmp.name,
+    permissionIds: dataTmp.desc,
+    menuIds: dataTmp.menus,
   };
   try {
     await updateRole(newTemp);
@@ -486,11 +486,13 @@ async function handleRoleUpdateSubmit() {
     state.isRoleUpdate = false;
     state.roleUpdData = {} as any;
     await fetchRoleData();
-    const userInfo = userStore;
-    const { roleTmp } = await getRoleInfo(userInfo.roleId);
-    const permissions = roleTmp.permission;
-    for (let i = 0; i < permissions.length; i += 1) {
-      userInfo.rolePermission.push(permissions[i].name);
+    const { userInfo } = userStore;
+    if (userInfo.role[0].id === dataTmp.id) {
+      const { data } = await getRoleInfo(userInfo.role[0].id);
+      userInfo.rolePermission = data.permission.map(
+        (permission) => permission.name
+      );
+      userStore.setInfo(userInfo);
     }
   } catch (error) {
     if (error.response && error.response.data) {
