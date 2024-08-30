@@ -11,7 +11,6 @@
       </div>
       <div class="table">
         <tiny-grid
-          ref="expandGrid"
           :fetch-data="fetchDataOption"
           :pager="pagerConfig"
           :auto-resize="true"
@@ -325,7 +324,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { reactive, computed } from 'vue';
+  import { reactive, computed, ref } from 'vue';
   import { useI18n } from 'vue-i18n';
   import {
     Loading,
@@ -347,7 +346,7 @@
   import UserSetting from '../../setting/index.vue';
 
   const { t } = useI18n();
-
+  const router = useRouter();
   // 加载效果
   const state = reactive<{
     loading: any;
@@ -428,20 +427,23 @@
   const onUpdateCancel = () => {
     state.isUserUpdate = false;
   };
-  const onUserUpdateConfirm = () => {
+  const onUserUpdateConfirm = async () => {
     state.isUserUpdate = false;
+    router.go(0);
   };
-  const onAddConfirm = () => {
+  const onAddConfirm = async () => {
     state.isUserAdd = false;
+    router.go(0);
   };
 
-  const handleDelete = (email: string) => {
+  const handleDelete = async (email: string) => {
     deleteUser(email).then((res) => {
       TinyModal.message({
         message: '已删除',
         status: 'success',
       });
     });
+    router.go(0);
   };
 
   const handleUpdate = (email: string) => {
