@@ -1,16 +1,16 @@
-import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
-import {CreateUserDto} from './dto/create-user.dto';
-import {UpdateUserDto} from './dto/update-user.dto';
-import {PaginationQueryDto} from "./dto/pagination-query.dto";
-import {UpdatePwdAdminDto} from "./dto/update-pwd-admin.dto";
-import {UpdatePwdUserDto} from "./dto/update-pwd-user.dto";
-import {InjectRepository} from '@nestjs/typeorm';
-import {Role, User} from '@app/models';
-import {In, Repository} from 'typeorm';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { PaginationQueryDto } from './dto/pagination-query.dto';
+import { UpdatePwdAdminDto } from './dto/update-pwd-admin.dto';
+import { UpdatePwdUserDto } from './dto/update-pwd-user.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Role, User } from '@app/models';
+import { In, Repository } from 'typeorm';
 import * as crypto from 'crypto';
-import {AuthService} from '../auth/auth.service';
-import {paginate, IPaginationOptions} from 'nestjs-typeorm-paginate';
-import * as process from "process";
+import { AuthService } from '../auth/auth.service';
+import { paginate, IPaginationOptions } from 'nestjs-typeorm-paginate';
+import * as process from 'process';
 
 @Injectable()
 export class UserService {
@@ -19,15 +19,24 @@ export class UserService {
     private userRep: Repository<User>,
     @InjectRepository(Role)
     private roleRep: Repository<Role>,
-    private readonly authService: AuthService,
-  ) {
-  }
+    private readonly authService: AuthService
+  ) {}
 
   async create(createUserDto: CreateUserDto, isInit: boolean) {
     const {
-      email, password, roleIds = [], name,
-      department, employeeType, probationStart, probationEnd, probationDuration,
-      protocolStart, protocolEnd, address, status
+      email,
+      password,
+      roleIds = [],
+      name,
+      department,
+      employeeType,
+      probationStart,
+      probationEnd,
+      probationDuration,
+      protocolStart,
+      protocolEnd,
+      address,
+      status,
     } = createUserDto;
     const userInfo = this.getUserInfo(email);
     if (isInit == true && (await userInfo)) {
@@ -47,7 +56,6 @@ export class UserService {
         password,
         name: name,
         role: await roles,
-        deleteAt: 0,
         department: department,
         employeeType: employeeType,
         protocolStart: protocolStart,
@@ -69,29 +77,52 @@ export class UserService {
 
   //获取所有用户信息
   async getAllUser(paginationQuery: PaginationQueryDto): Promise<any> {
-    const {page, limit} = paginationQuery; // 从DTO获取分页参数
-    const relations = ['role', 'role.permission']
-    const result = await paginate<User>(this.userRep, {
-      page: Number(page) || Number(process.env.PAGITION_PAGE),
-      limit: Number(limit) || Number(process.env.PAGITION_LIMIT),
-    }, {
-      where: {deleteAt: 0},
-      select: ['id', 'name', 'email', 'department', 'employeeType', 'protocolStart', 'protocolEnd',
-        'probationEnd', 'probationStart', 'probationDuration', 'address', 'status'],
-      relations,
-    });
+    const { page, limit } = paginationQuery; // 从DTO获取分页参数
+    const relations = ['role', 'role.permission'];
+    const result = await paginate<User>(
+      this.userRep,
+      {
+        page: Number(page) || Number(process.env.PAGITION_PAGE),
+        limit: Number(limit) || Number(process.env.PAGITION_LIMIT),
+      },
+      {
+        select: [
+          'id',
+          'name',
+          'email',
+          'department',
+          'employeeType',
+          'protocolStart',
+          'protocolEnd',
+          'probationEnd',
+          'probationStart',
+          'probationDuration',
+          'address',
+          'status',
+        ],
+        relations,
+      }
+    );
     for (const user of result.items) {
       if (user.probationStart !== null) {
-        user.probationStart = await this.formatDateToDay(new Date(user.probationStart));
+        user.probationStart = await this.formatDateToDay(
+          new Date(user.probationStart)
+        );
       }
       if (user.probationEnd !== null) {
-        user.probationEnd = await this.formatDateToDay(new Date(user.probationEnd));
+        user.probationEnd = await this.formatDateToDay(
+          new Date(user.probationEnd)
+        );
       }
       if (user.protocolStart !== null) {
-        user.protocolStart = await this.formatDateToDay(new Date(user.protocolStart));
+        user.protocolStart = await this.formatDateToDay(
+          new Date(user.protocolStart)
+        );
       }
       if (user.protocolEnd !== null) {
-        user.protocolEnd = await this.formatDateToDay(new Date(user.protocolEnd));
+        user.protocolEnd = await this.formatDateToDay(
+          new Date(user.protocolEnd)
+        );
       }
     }
     return result;
@@ -110,36 +141,54 @@ export class UserService {
 
   async getUserInfo(email: string, relations: string[] = []) {
     const user = await this.userRep.findOne({
-      where: {email, deleteAt: 0},
+      where: { email },
       select: [
-        'id', 'name', 'email', 'department', 'employeeType', 'protocolStart', 'protocolEnd',
-        'probationEnd', 'probationStart', 'probationDuration', 'address', 'status'
+        'id',
+        'name',
+        'email',
+        'department',
+        'employeeType',
+        'protocolStart',
+        'protocolEnd',
+        'probationEnd',
+        'probationStart',
+        'probationDuration',
+        'address',
+        'status',
       ],
       relations,
     });
     if (user) {
       if (user.probationStart !== null) {
-        user.probationStart = await this.formatDateToDay(new Date(user.probationStart));
+        user.probationStart = await this.formatDateToDay(
+          new Date(user.probationStart)
+        );
       }
       if (user.probationEnd !== null) {
-        user.probationEnd = await this.formatDateToDay(new Date(user.probationEnd));
+        user.probationEnd = await this.formatDateToDay(
+          new Date(user.probationEnd)
+        );
       }
       if (user.protocolStart !== null) {
-        user.protocolStart = await this.formatDateToDay(new Date(user.protocolStart));
+        user.protocolStart = await this.formatDateToDay(
+          new Date(user.protocolStart)
+        );
       }
       if (user.protocolEnd !== null) {
-        user.protocolEnd = await this.formatDateToDay(new Date(user.protocolEnd));
+        user.protocolEnd = await this.formatDateToDay(
+          new Date(user.protocolEnd)
+        );
       }
     }
     return user;
   }
 
   async getUserPermission(token: string, userInfo: User) {
-    const {email} = userInfo;
-    const {role} = (await this.getUserInfo(email, [
+    const { email } = userInfo;
+    const { role } = (await this.getUserInfo(email, [
       'role',
       'role.permission',
-    ])) ?? {role: [] as Role[]};
+    ])) ?? { role: [] as Role[] };
     const permission = role.flatMap((r) => r.permission);
     const permissionNames = permission.map((p) => p.name);
     return [...new Set([...permissionNames])];
@@ -159,61 +208,78 @@ export class UserService {
   }
 
   async deleteUser(email: string) {
-    const user = await this.getUserInfo(email);
-    if (user) {
-      user.deleteAt = new Date().getTime(); // 设置软删除字段
-      await this.userRep.save(user);
-      return;
-    }
+    // const user = await this.getUserInfo(email);
+    // if (user) {
+    //   user.deleteAt = new Date().getTime(); // 设置软删除字段
+    //   await this.userRep.save(user);
+    //   return;
+    // }
+    const user = await this.userRep.findOne({
+      where: { email },
+    });
+    return this.userRep.remove(user);
   }
 
   //修改密码
   async updatePwdUser(data: UpdatePwdUserDto) {
-    const {email, newPassword, oldPassword,token} = data;
+    const { email, newPassword, oldPassword, token } = data;
     const user = this.userRep.findOne({
-      where: {email, deleteAt: 0},
-      select: [
-        'id',
-        'name',
-        'email',
-        'salt',
-        'password',
-      ],
+      where: { email },
+      select: ['id', 'name', 'email', 'salt', 'password'],
     });
     if (user) {
-      if (!(await this.verifyPassword(oldPassword, (await user).password, (await user).salt))) {
+      if (
+        !(await this.verifyPassword(
+          oldPassword,
+          (
+            await user
+          ).password,
+          (
+            await user
+          ).salt
+        ))
+      ) {
         throw new HttpException('旧密码错误', HttpStatus.BAD_REQUEST);
       } else {
-        (await user).password = await this.encry(newPassword, (await user).salt);
+        (await user).password = await this.encry(
+          newPassword,
+          (
+            await user
+          ).salt
+        );
         await this.userRep.save(await user);
         return;
       }
     }
   }
 
-  async updatePwdAdmin(data: UpdatePwdAdminDto){
-    const {email, newPassword } = data;
+  async updatePwdAdmin(data: UpdatePwdAdminDto) {
+    const { email, newPassword } = data;
     const user = this.userRep.findOne({
-      where: {email, deleteAt: 0},
-      select: [
-        'id',
-        'name',
-        'email',
-        'salt',
-        'password',
-      ],
+      where: { email },
+      select: ['id', 'name', 'email', 'salt', 'password'],
     });
     if (user) {
       (await user).password = await this.encry(newPassword, (await user).salt);
-        await this.userRep.save(await user);
-        return;
+      await this.userRep.save(await user);
+      return;
     }
   }
 
   async updateUserInfo(updateUserDto: UpdateUserDto) {
     const {
-      email, roleIds, department, employeeType, probationStart, probationEnd,
-      probationDuration, protocolStart, protocolEnd, address, status, name
+      email,
+      roleIds,
+      department,
+      employeeType,
+      probationStart,
+      probationEnd,
+      probationDuration,
+      protocolStart,
+      protocolEnd,
+      address,
+      status,
+      name,
     } = updateUserDto;
     const user = this.getUserInfo(email);
     const roles = this.roleRep.find({
@@ -236,5 +302,4 @@ export class UserService {
     }
     return await this.userRep.save(await user);
   }
-
 }
