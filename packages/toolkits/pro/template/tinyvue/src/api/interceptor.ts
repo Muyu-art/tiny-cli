@@ -61,6 +61,12 @@ axios.interceptors.response.use(
         status: 'error',
       });
     }
+    if (status === 403) {
+      Modal.message({
+        message: data.message,
+        status: 'error',
+      });
+    }
 
     return Promise.reject(error);
   },

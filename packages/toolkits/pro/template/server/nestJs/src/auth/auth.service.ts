@@ -1,10 +1,10 @@
-import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
-import {CreateAuthDto} from './dto/create-auth.dto';
-import {InjectRepository} from '@nestjs/typeorm';
-import {encry, User} from '@app/models';
-import {Repository} from 'typeorm';
-import {JwtService} from '@nestjs/jwt';
-import {RedisService} from '../../libs/redis/redis.service';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { CreateAuthDto } from './dto/create-auth.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { encry, User } from '@app/models';
+import { Repository } from 'typeorm';
+import { JwtService } from '@nestjs/jwt';
+import { RedisService } from '../../libs/redis/redis.service';
 
 @Injectable()
 export class AuthService {
@@ -13,8 +13,7 @@ export class AuthService {
     private user: Repository<User>,
     private jwtService: JwtService,
     private readonly redisService: RedisService
-  ) {
-  }
+  ) {}
 
   async getToken(userId: string): Promise<string | null> {
     return this.redisService.getUserToken(`user:${userId}:token`);
@@ -29,9 +28,9 @@ export class AuthService {
   }
 
   async login(dto: CreateAuthDto) {
-    const {email, password} = dto;
-    const userInfo = await this.user.findOne({where: {email}});
-    if (userInfo === null || userInfo.deleteAt != 0) {
+    const { email, password } = dto;
+    const userInfo = await this.user.findOne({ where: { email } });
+    if (userInfo === null) {
       throw new HttpException('该用户不存在', HttpStatus.NOT_FOUND);
     }
     if (encry(password, userInfo.salt) !== userInfo.password) {

@@ -12,13 +12,14 @@
 <script setup lang="ts">
   import type { ITreeNodeData } from '@/router/guard/menu';
   import { Drawer, Tree, Button as TinyButton } from '@opentiny/vue';
-  import { onMounted, ref, toRefs } from 'vue';
+  import { onMounted, ref, toRefs, watch } from 'vue';
 
   const props = defineProps<{
     visible: boolean;
     menus: ITreeNodeData[];
     selectedId: number[];
   }>();
+
   const emits = defineEmits<{
     (event: 'close'): void;
     (event: 'confirm', ids: number[]): void;

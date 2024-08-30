@@ -29,23 +29,23 @@ export class User {
   @ManyToMany(() => Role)
   @JoinTable({ name: 'user_role' })
   role: Role[];
-  @Column({nullable: true})
+  @Column({ nullable: true })
   department: string;
-  @Column({nullable: true})
+  @Column({ nullable: true })
   employeeType: string;
-  @Column({type: 'timestamp',nullable: true})
+  @Column({ type: 'timestamp', nullable: true })
   probationStart: string;
-  @Column({type: 'timestamp',nullable: true})
+  @Column({ type: 'timestamp', nullable: true })
   probationEnd: string;
-  @Column({nullable: true})
+  @Column({ nullable: true })
   probationDuration: string;
-  @Column({type: 'timestamp',nullable: true})
+  @Column({ type: 'timestamp', nullable: true })
   protocolStart: string;
-  @Column({type: 'timestamp',nullable: true})
+  @Column({ type: 'timestamp', nullable: true })
   protocolEnd: string;
-  @Column({nullable: true})
+  @Column({ nullable: true })
   address: string;
-  @Column({nullable: true})
+  @Column({ nullable: true })
   status: number;
   @CreateDateColumn()
   createTime: Date;
@@ -57,8 +57,6 @@ export class User {
   salt: string;
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   update_time: Date;
-  @Column({ type: 'bigint', nullable: true })
-  deleteAt: number;
   @BeforeInsert()
   beforeInsert() {
     this.salt = crypto.randomBytes(4).toString('base64');

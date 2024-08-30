@@ -319,7 +319,7 @@
       } else {
         data.status = statusData[1].label;
       }
-      if (data.role !== null) {
+      if (data.role && data.role.length) {
         data.roleIds = data.role[0].id;
         data.roleName = data.role[0].name;
       }
