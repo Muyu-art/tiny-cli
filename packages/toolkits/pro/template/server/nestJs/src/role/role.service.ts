@@ -2,9 +2,9 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Menu, Permission, Role } from '@app/models';
-import { DataSource, In, Repository } from 'typeorm';
-import { convertToTree } from "../menu/menu.service";
+import { Menu, Permission, Role, User } from '@app/models';
+import { In, Repository } from 'typeorm';
+import { convertToTree } from '../menu/menu.service';
 
 @Injectable()
 export class RoleService {
@@ -14,7 +14,9 @@ export class RoleService {
     @InjectRepository(Permission)
     private readonly permission: Repository<Permission>,
     @InjectRepository(Menu)
-    private readonly menu: Repository<Menu>
+    private readonly menu: Repository<Menu>,
+    @InjectRepository(User)
+    private readonly user: Repository<User>
   ) {}
   async create(createRoleDto: CreateRoleDto, isInit: boolean) {
     const { name, permissionIds = [], menuIds = [] } = createRoleDto;
@@ -42,7 +44,7 @@ export class RoleService {
     return this.role.save({ name, permission: permissions, menus });
   }
   findAll() {
-    return this.role.find()
+    return this.role.find();
   }
 
   async findAllDetail() {
@@ -52,15 +54,15 @@ export class RoleService {
       .leftJoinAndSelect('role.permission', 'permission')
       .getMany();
     const menuTree = [] as any;
-    for(const item of roleInfo){
+    for (const item of roleInfo) {
       const temp = convertToTree(item.menus);
-      menuTree.push(temp)
+      menuTree.push(temp);
     }
 
     return {
       roleInfo: roleInfo,
       menuTree: menuTree,
-    }
+    };
   }
 
   async findOne(id: string) {
@@ -71,7 +73,7 @@ export class RoleService {
       .where({
         id: parseInt(id),
       })
-      .getOne()
+      .getOne();
     if (!roleInfo) {
       throw new HttpException('角色不存在', HttpStatus.NOT_FOUND);
     }
@@ -110,6 +112,20 @@ export class RoleService {
         id: id,
       },
     });
+    const user = this.user.find({
+      where: {
+        role: {
+          id,
+        },
+      },
+      take: 1,
+    });
+    if (user) {
+      throw new HttpException(
+        '角色下存在用户，请清空用户',
+        HttpStatus.CONFLICT
+      );
+    }
     return this.role.remove(role);
   }
 }
