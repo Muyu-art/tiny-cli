@@ -113,7 +113,7 @@
           </tiny-grid-column>
           <tiny-grid-column field="type" :title="$t('userInfo.table.job')">
             <template #default="data">
-              <span>{{ $t(`${data.row.role[0].name}`) }}</span>
+              <span>{{ $t(`${data.row.role[0]?.name}`) }}</span>
             </template>
           </tiny-grid-column>
           <tiny-grid-column

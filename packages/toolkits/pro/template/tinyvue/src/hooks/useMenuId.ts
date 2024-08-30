@@ -4,7 +4,7 @@ export const useMenuId = (datas: ITreeNodeData[]) => {
   const ids: any[] = [];
   const dfs = (menu: ITreeNodeData) => {
     ids.push(menu.id);
-    for (let i = 0; i < menu.children.length; i += 1) {
+    for (let i = 0; i < menu.children?.length; i += 1) {
       const child = menu.children[i];
       dfs(child);
     }
