@@ -208,12 +208,6 @@ export class UserService {
   }
 
   async deleteUser(email: string) {
-    // const user = await this.getUserInfo(email);
-    // if (user) {
-    //   user.deleteAt = new Date().getTime(); // 设置软删除字段
-    //   await this.userRep.save(user);
-    //   return;
-    // }
     const user = await this.userRep.findOne({
       where: { email },
     });
