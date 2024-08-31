@@ -1,22 +1,18 @@
 <template>
   <div class="container-set">
-    <Breadcrumb :items="['menu.userManager', 'menu.userManager.setting']" />
     <div class="general-card">
-      <div class="general-top">
-        <headtop :userData="state.userData"></headtop>
-      </div>
       <div class="general-contain">
         <tiny-layout>
           <tiny-form
             ref="setFormRef"
             :model="state.userData"
             :rules="rules"
-            label-width="150px"
+            label-width="80"
             :label-align="true"
             label-position="left"
             size="small"
           >
-            <tiny-row :flex="true">
+            <tiny-row :flex="true" justify="left">
               <tiny-col :span="5" label-width="100px">
                 <tiny-form-item :label="$t('userSetting.name')" prop="name">
                   <tiny-input v-model="state.userData.name"></tiny-input>
@@ -32,7 +28,7 @@
               </tiny-col>
             </tiny-row>
 
-            <tiny-row :flex="true">
+            <tiny-row :flex="true" justify="left">
               <tiny-col :span="5" label-width="100px">
                 <tiny-form-item
                   :label="$t('userSetting.department')"
@@ -61,7 +57,7 @@
               </tiny-col>
             </tiny-row>
 
-            <tiny-row :flex="true">
+            <tiny-row :flex="true" justify="left">
               <tiny-col :span="5" label-width="100px">
                 <tiny-form-item
                   :label="$t('userSetting.type')"
@@ -97,7 +93,7 @@
               </tiny-col>
             </tiny-row>
 
-            <tiny-row :flex="true">
+            <tiny-row :flex="true" justify="left">
               <tiny-col :span="5" label-width="100px">
                 <tiny-form-item
                   :label="$t('userSetting.during')"
@@ -115,12 +111,13 @@
                 >
                   <tiny-date-picker
                     v-model="state.userData.protocolStart"
+                    @blur="handleBlur"
                   ></tiny-date-picker>
                 </tiny-form-item>
               </tiny-col>
             </tiny-row>
 
-            <tiny-row :flex="true">
+            <tiny-row :flex="true" justify="left">
               <tiny-col :span="5" label-width="100px">
                 <tiny-form-item
                   :label="$t('userSetting.endTime')"
@@ -128,6 +125,7 @@
                 >
                   <tiny-date-picker
                     v-model="state.userData.protocolEnd"
+                    @blur="handleBlur"
                   ></tiny-date-picker>
                 </tiny-form-item>
               </tiny-col>
@@ -158,7 +156,7 @@
             @click="handleSubmit"
             >{{ $t('userSetting.save') }}
           </tiny-button>
-          <tiny-button @click="handleFormReset">
+          <tiny-button @click="handleCancel">
             {{ $t('userSetting.cancel') }}
           </tiny-button>
         </div>
@@ -168,7 +166,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, reactive } from 'vue';
+import { computed, onMounted, reactive, defineProps } from 'vue';
 import { useI18n } from 'vue-i18n-composable';
 import {
   Select as TinySelect,
@@ -184,19 +182,22 @@ import {
   Button as TinyButton,
 } from '@opentiny/vue';
 import { getSimpleDate } from '@/utils/time';
-import { useRouter, useQuery } from '@/router';
-import { getAllUser, getUserInfo, updateUserInfo } from '@/api/user';
+import { getUserInfo, updateUserInfo } from '@/api/user';
 import { getAllRole } from '@/api/role';
+import { useUserStore } from '@/stores';
 
-import headtop from './components/head.vue';
+const userStore = useUserStore();
 
-const { t } = useI18n();
-const router = useRouter();
-
+const props = defineProps({
+  email: String,
+});
+const emit = defineEmits<{
+  cancel: [];
+  confirm: [];
+}>();
 // 初始化请求数据
 onMounted(() => {
-  const email = useQuery('email');
-  fetchData(email);
+  fetchData(props.email);
   fetchRole();
 });
 
@@ -260,10 +261,11 @@ const rules = computed(() => {
   };
 });
 
-// btn操作
-function handleFormReset() {
-  router.back();
-}
+const { t } = useI18n();
+
+const handleCancel = () => {
+  emit('cancel');
+};
 
 async function handleSubmit() {
   let data = state.userData;
@@ -293,7 +295,11 @@ async function handleSubmit() {
       message: t('baseForm.form.submit.success'),
       status: 'success',
     });
-    handleFormReset();
+    if (data.email === userStore.email) {
+      const { data: userInfo = null } = await getUserInfo();
+      userStore.setInfo(userInfo);
+    }
+    emit('confirm');
   } catch (error) {
     if (error.response && error.response.data) {
       const errorMessage = error.response.data.message || '未知错误';
@@ -313,7 +319,7 @@ async function fetchData(email: string) {
     } else {
       data.status = statusData[1].label;
     }
-    if (data.role !== null) {
+    if (data.role && data.role.length) {
       data.roleIds = data.role[0].id;
       data.roleName = data.role[0].name;
     }
@@ -357,31 +363,25 @@ async function fetchRole() {
     .general-contain {
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
+      justify-content: center;
       min-height: 75%;
-      padding: 30px 0 10px 20px;
-      color: black;
-      background-color: #fff;
-      border-radius: 10px;
+      padding: 30px 0 10px 0;
 
       .tiny-layout {
-        width: 80%;
+        width: 100%;
+        margin-left: 8%;
       }
     }
 
     .general-btn {
       position: relative;
-      left: 160px;
+      margin: 0 auto;
 
       button {
         width: 100px;
         height: 36px;
         border-radius: 4px;
       }
-    }
-
-    .margin-bottom {
-      margin: 15px 0;
     }
 
     .col {

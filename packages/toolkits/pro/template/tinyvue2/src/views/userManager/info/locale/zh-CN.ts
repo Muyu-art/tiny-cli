@@ -1,5 +1,5 @@
 export default {
-  'menu.allUser.info': '所有用户',
+  'menu.allUser.info': '查看用户',
   'userInfo.table.id': 'ID',
   'userInfo.table.name': '名称',
   'userInfo.table.email': '邮箱',
@@ -28,4 +28,6 @@ export default {
   'userInfo.modal.input.confirmNewPassword': '确认新密码',
   'userInfo.modal.message.error': '确认新密码错误',
   'userInfo.modal.message.notNull': '密码不能为空',
+  'userInfo.modal.title.add': '添加用户',
+  'userInfo.modal.title.update': '更新用户',
 };
