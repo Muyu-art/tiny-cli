@@ -152,6 +152,7 @@
         setLoading(false);
         setTreeLoading(false);
       });
+    updateModal.value = false;
   };
   const fetchMenu = async () => {
     const { data } = await getAllMenu();
