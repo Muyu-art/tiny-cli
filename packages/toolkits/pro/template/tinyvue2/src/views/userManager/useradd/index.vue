@@ -12,7 +12,7 @@
             label-position="left"
             size="small"
           >
-            <tiny-row :flex="true" justify="left">
+            <tiny-row :flex="true">
               <tiny-col :span="5" label-width="100px">
                 <tiny-form-item :label="$t('userAdd.email')" prop="email">
                   <tiny-input v-model="state.userData.email"></tiny-input>
@@ -29,7 +29,7 @@
               </tiny-col>
             </tiny-row>
 
-            <tiny-row :flex="true" justify="left">
+            <tiny-row :flex="true">
               <tiny-col :span="5" label-width="100px">
                 <tiny-form-item :label="$t('userAdd.name')" prop="name">
                   <tiny-input v-model="state.userData.name"></tiny-input>
@@ -42,7 +42,7 @@
               </tiny-col>
             </tiny-row>
 
-            <tiny-row :flex="true" justify="left">
+            <tiny-row :flex="true">
               <tiny-col :span="5" label-width="100px">
                 <tiny-form-item
                   :label="$t('userAdd.department')"
@@ -68,7 +68,7 @@
               </tiny-col>
             </tiny-row>
 
-            <tiny-row :flex="true" justify="left">
+            <tiny-row :flex="true">
               <tiny-col :span="5" label-width="100px">
                 <tiny-form-item :label="$t('userAdd.type')" prop="employeeType">
                   <tiny-select
@@ -101,7 +101,7 @@
               </tiny-col>
             </tiny-row>
 
-            <tiny-row :flex="true" justify="left">
+            <tiny-row :flex="true">
               <tiny-col :span="5" label-width="100px">
                 <tiny-form-item
                   :label="$t('userAdd.during')"
@@ -125,7 +125,7 @@
               </tiny-col>
             </tiny-row>
 
-            <tiny-row :flex="true" justify="left">
+            <tiny-row :flex="true">
               <tiny-col :span="5" label-width="100px">
                 <tiny-form-item
                   :label="$t('userAdd.endTime')"

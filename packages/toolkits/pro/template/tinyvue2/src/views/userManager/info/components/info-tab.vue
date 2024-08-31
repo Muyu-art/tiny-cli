@@ -277,14 +277,14 @@
               label-position="left"
               size="small"
             >
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item :label="$t('userInfo.table.email')">
                     <label>{{ state.pwdData.email }}</label>
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item
                     :label="$t('userInfo.modal.input.newPassword')"
@@ -299,7 +299,7 @@
                 </tiny-col>
               </tiny-row>
 
-              <tiny-row :flex="true" justify="left">
+              <tiny-row :flex="true">
                 <tiny-col :span="10" label-width="100px">
                   <tiny-form-item
                     :label="$t('userInfo.modal.input.confirmNewPassword')"

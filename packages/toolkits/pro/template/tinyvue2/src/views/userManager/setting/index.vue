@@ -12,7 +12,7 @@
             label-position="left"
             size="small"
           >
-            <tiny-row :flex="true" justify="left">
+            <tiny-row :flex="true">
               <tiny-col :span="5" label-width="100px">
                 <tiny-form-item :label="$t('userSetting.name')" prop="name">
                   <tiny-input v-model="state.userData.name"></tiny-input>
@@ -28,7 +28,7 @@
               </tiny-col>
             </tiny-row>
 
-            <tiny-row :flex="true" justify="left">
+            <tiny-row :flex="true">
               <tiny-col :span="5" label-width="100px">
                 <tiny-form-item
                   :label="$t('userSetting.department')"
@@ -57,7 +57,7 @@
               </tiny-col>
             </tiny-row>
 
-            <tiny-row :flex="true" justify="left">
+            <tiny-row :flex="true">
               <tiny-col :span="5" label-width="100px">
                 <tiny-form-item
                   :label="$t('userSetting.type')"
@@ -93,7 +93,7 @@
               </tiny-col>
             </tiny-row>
 
-            <tiny-row :flex="true" justify="left">
+            <tiny-row :flex="true">
               <tiny-col :span="5" label-width="100px">
                 <tiny-form-item
                   :label="$t('userSetting.during')"
@@ -117,7 +117,7 @@
               </tiny-col>
             </tiny-row>
 
-            <tiny-row :flex="true" justify="left">
+            <tiny-row :flex="true">
               <tiny-col :span="5" label-width="100px">
                 <tiny-form-item
                   :label="$t('userSetting.endTime')"
