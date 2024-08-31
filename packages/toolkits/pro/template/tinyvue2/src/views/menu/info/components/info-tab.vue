@@ -1,433 +1,241 @@
+<script lang="ts" setup>
+import { createMenu, deleteMenu, getAllMenu, updateMenu } from '@/api/menu';
+import { useI18nMenu } from '@/hooks/useI18nMenu';
+import type { ITreeNodeData } from '@/router/guard/menu';
+import {
+  Button as TinyButton,
+  Modal as TinyModal,
+  Loading,
+} from '@opentiny/vue';
+import { getAllLocalItems } from '@/api/local';
+import type { Local } from '@/api/local';
+import useLoading from '@/hooks/loading';
+import { computed, onMounted, ref } from 'vue';
+import type { ComponentInstance } from 'vue';
+import { useI18n } from 'vue-i18n-composable';
+import { useDeepClone } from '@/hooks/useDeepClone';
+import { useMenuStore } from '@/stores/modules/router';
+import { useRouter } from '@/router';
+import menuTree from './menu-tree.vue';
+import type { Node } from './menu-tree.vue';
+import UpdateForm from './update-form.vue';
+import AddMenu from './add-menu.vue';
+
+const { t } = useI18n();
+const vLoading = Loading.directive;
+const rawMenuData = ref<ITreeNodeData[]>([]);
+const localeData = ref<{ value: string; label: string }[]>([]);
+const i18nMenuData = computed(() => useI18nMenu(rawMenuData.value, t));
+
+const readonly = ref(false);
+const updateModal = ref(false);
+const DEFAULT_NODE = {
+  id: '',
+  label: '',
+  url: '',
+  component: '',
+  customIcon: '',
+  menuType: '',
+  parentId: 0,
+  order: 0,
+  locale: '',
+};
+const activeNode = ref<ITreeNodeData>();
+const form = ref<ComponentInstance<typeof UpdateForm>>();
+const addMenu = ref<ComponentInstance<typeof AddMenu>>();
+const { loading, setLoading } = useLoading(false);
+const { loading: treeLoading, setLoading: setTreeLoading } = useLoading(true);
+const { loading: addLoading, setLoading: setAddLoading } = useLoading();
+const addModal = ref(false);
+const router = useRouter();
+
+const handleAddMenu = () => {
+  addModal.value = true;
+};
+const onAddMenuClose = () => {
+  addModal.value = false;
+};
+const onClickAdd = () => {
+  const menuInfo = addMenu.value.getMenuInfo();
+  setAddLoading(true);
+  createMenu(menuInfo)
+    .then(() => {
+      TinyModal.message({
+        message: t('baseForm.form.submit.success'),
+        status: 'success',
+      });
+      return updateUserMenu();
+    })
+    .then(() => fetchMenu())
+    .catch((error) => {
+      console.log(error);
+      if (error.response && error.response.data) {
+        const errorMessage = error.response.data.message || '未知错误';
+        TinyModal.message({
+          message: errorMessage,
+          status: 'error',
+        });
+      }
+    })
+    .finally(() => {
+      setAddLoading(false);
+      router.go(0);
+    });
+};
+const onClose = () => {
+  activeNode.value = DEFAULT_NODE;
+};
+const onUpdate = ({ data }: Node) => {
+  updateModal.value = true;
+  activeNode.value = data;
+  readonly.value = false;
+};
+const onCheck = ({ data }: Node) => {
+  activeNode.value = data;
+  updateModal.value = true;
+  readonly.value = true;
+};
+const onCancel = () => {
+  activeNode.value = DEFAULT_NODE;
+  updateModal.value = false;
+};
+const onDelete = ({ data }: Node) => {
+  setTreeLoading(true);
+  const node = useDeepClone(data);
+  if (node.parentId === null) {
+    node.parentId = -1;
+  }
+  deleteMenu(Number(node.id.toString()), node.parentId)
+    .then(() => {
+      TinyModal.message({
+        message: '已删除',
+        status: 'success',
+      });
+      return fetchMenu();
+    })
+    .then(() => updateUserMenu())
+    .catch((reason) => {
+      const error = reason;
+      if (error.response && error.response.data) {
+        const errorMessage = error.response.data.message || '未知错误';
+        TinyModal.message({
+          message: errorMessage,
+          status: 'error',
+        });
+      }
+    })
+    .finally(() => {
+      setTreeLoading(false);
+    });
+};
+const onConfirm = () => {
+  setLoading(true);
+  const menuInfo = form.value.getMenuInfo();
+  activeNode.value = {
+    ...DEFAULT_NODE,
+  };
+  if (menuInfo.id === menuInfo.parentId) {
+    TinyModal.message({
+      message: t('menuInfo.modal.message.error'),
+      status: 'error',
+    });
+    return;
+  }
+  updateMenu(menuInfo)
+    .then(() => {
+      TinyModal.message({
+        message: t('baseForm.form.submit.success'),
+        status: 'success',
+      });
+      setTreeLoading(true);
+      return fetchMenu();
+    })
+    .then(() => updateUserMenu())
+    .finally(() => {
+      setLoading(false);
+      setTreeLoading(false);
+    });
+  updateModal.value = false;
+};
+const fetchMenu = async () => {
+  const { data } = await getAllMenu();
+  rawMenuData.value = data;
+};
+const menuStore = useMenuStore();
+const updateUserMenu = () => {
+  menuStore.getMenuList();
+};
+const fetchLocalItems = () => {
+  getAllLocalItems(1, 0, 1).then(({ data }) => {
+    localeData.value = data.items.map((item) => {
+      return {
+        value: item.key,
+        label: t(item.key),
+      };
+    });
+  });
+};
+
+onMounted(() => {
+  Promise.all([fetchMenu(), fetchLocalItems()]).finally(() => {
+    treeLoading.value = false;
+  });
+});
+</script>
+
 <template>
-  <div>
-    <div class="tiny-fullscreen-scroll">
-      <div class="tiny-fullscreen-wrapper">
-        <div class="menu-add-btn">
-          <tiny-button
-            v-permission="'menu::add'"
-            type="primary"
-            @click="handleAddMenu"
-            >{{ $t('menuInfo.modal.title.add') }}</tiny-button
-          >
-        </div>
-        <div class="table">
-          <tiny-tree
-            :data="i18MenuDatas"
-            :indent="18"
-            :show-line="true"
-            default-expand-all
-          >
-            <template #operation="{ node }">
-              <a
-                class="operation-info"
-                @click="handleCheck(node)"
-                v-permission="'menu::query'"
-              >
-                {{ $t('menuInfo.table.operations.info') }}
-              </a>
-              <a
-                class="operation-update"
-                @click="handleUpdate(node)"
-                v-permission="'menu::update'"
-              >
-                {{ $t('menuInfo.table.operations.update') }}
-              </a>
-              &nbsp;
-              <a
-                class="operation-delete"
-                @click="handleDelete(node)"
-                v-permission="'menu::remove'"
-              >
-                {{ $t('menuInfo.table.operations.delete') }}
-              </a>
-            </template>
-          </tiny-tree>
-        </div>
+  <div class="tiny-fullscreen-scroll">
+    <div class="tiny-fullscreen-wrapper">
+      <div class="menu-add-btn">
+        <tiny-button
+          v-permission="'menu::add'"
+          type="primary"
+          @click="handleAddMenu"
+          >{{ $t('menuInfo.modal.title.add') }}</tiny-button
+        >
       </div>
-    </div>
-    <div v-if="state.isMenuInfo">
-      <tiny-modal
-        v-model="state.isMenuInfo"
-        :lock-scroll="true"
-        show-header
-        show-footer
-        :mask-closable="true"
-        height="auto"
-        width="600"
-        :title="$t('menuInfo.modal.title.info')"
-      >
-        <template #default>
-          <tiny-layout>
-            <tiny-form
-              :model="state.menuInfoData"
-              :rules="rules"
-              label-width="150px"
-              :label-align="true"
-              label-position="left"
-              size="small"
-            >
-              <tiny-row :flex="true">
-                <tiny-col :span="10" label-width="100px">
-                  <tiny-form-item :label="$t('menuInfo.table.id')">
-                    <label>{{ state.menuInfoData.id }}</label>
-                  </tiny-form-item>
-                </tiny-col>
-              </tiny-row>
-              <tiny-row :flex="true">
-                <tiny-col :span="10" label-width="100px">
-                  <tiny-form-item :label="$t('menuInfo.table.name')">
-                    <label>{{ state.menuInfoData.label }}</label>
-                  </tiny-form-item>
-                </tiny-col>
-              </tiny-row>
-              <tiny-row :flex="true">
-                <tiny-col :span="10" label-width="100px">
-                  <tiny-form-item :label="$t('menuInfo.table.order')">
-                    <label>{{ state.menuInfoData.order }}</label>
-                  </tiny-form-item>
-                </tiny-col>
-              </tiny-row>
-              <tiny-row :flex="true">
-                <tiny-col :span="10" label-width="100px">
-                  <tiny-form-item :label="$t('menuInfo.table.parentId')">
-                    <label>{{ state.menuInfoData.parentId }}</label>
-                  </tiny-form-item>
-                </tiny-col>
-              </tiny-row>
-              <tiny-row :flex="true">
-                <tiny-col :span="10" label-width="100px">
-                  <tiny-form-item :label="$t('menuInfo.table.menuType')">
-                    <label>{{ state.menuInfoData.menuType }}</label>
-                  </tiny-form-item>
-                </tiny-col>
-              </tiny-row>
-              <tiny-row :flex="true">
-                <tiny-col :span="10" label-width="100px">
-                  <tiny-form-item :label="$t('menuInfo.table.icon')">
-                    <label>{{ state.menuInfoData.customIcon }}</label>
-                  </tiny-form-item>
-                </tiny-col>
-              </tiny-row>
-              <tiny-row :flex="true">
-                <tiny-col :span="10" label-width="100px">
-                  <tiny-form-item :label="$t('menuInfo.table.component')">
-                    <label>{{ state.menuInfoData.component }}</label>
-                  </tiny-form-item>
-                </tiny-col>
-              </tiny-row>
-              <tiny-row :flex="true">
-                <tiny-col :span="10" label-width="100px">
-                  <tiny-form-item :label="$t('menuInfo.table.path')">
-                    <label>{{ state.menuInfoData.url }}</label>
-                  </tiny-form-item>
-                </tiny-col>
-              </tiny-row>
-              <tiny-row :flex="true">
-                <tiny-col :span="10" label-width="100px">
-                  <tiny-form-item :label="$t('menuInfo.table.locale')">
-                    <label>{{ state.menuInfoData.locale }}</label>
-                  </tiny-form-item>
-                </tiny-col>
-              </tiny-row>
-            </tiny-form>
-          </tiny-layout>
-        </template>
+      <menu-tree
+        v-loading="treeLoading"
+        :data="i18nMenuData"
+        @update="onUpdate"
+        @check="onCheck"
+        @delete="onDelete"
+      />
+      <tiny-modal v-model="addModal" show-footer @close="onAddMenuClose">
+        <add-menu
+          v-if="addModal"
+          ref="addMenu"
+          :menus="i18nMenuData"
+          :locales="localeData"
+        />
         <template #footer>
-          <tiny-button @click="handleMenuInfoCancel">{{
-            $t('menu.btn.cancel')
-          }}</tiny-button>
+          <tiny-button
+            type="primary"
+            :loading="addLoading"
+            @click="onClickAdd"
+            >{{ $t('menu.btn.confirm') }}</tiny-button
+          >
         </template>
       </tiny-modal>
-    </div>
-    <div v-if="state.isMenuUpdate">
-      <tiny-modal
-        v-model="state.isMenuUpdate"
-        :lock-scroll="true"
-        show-header
-        show-footer
-        :mask-closable="true"
-        height="auto"
-        width="600"
-        :title="$t('menuInfo.modal.title.update')"
-      >
-        <template #default>
-          <tiny-layout>
-            <tiny-form
-              :model="state.menuUpdData"
-              :rules="rules"
-              label-width="150px"
-              :label-align="true"
-              label-position="left"
-              size="small"
-            >
-              <tiny-row :flex="true">
-                <tiny-col :span="10" label-width="100px">
-                  <tiny-form-item :label="$t('menuInfo.table.id')">
-                    <label>{{ state.menuUpdData.id }}</label>
-                  </tiny-form-item>
-                </tiny-col>
-              </tiny-row>
-              <tiny-row :flex="true">
-                <tiny-col :span="10" label-width="100px">
-                  <tiny-form-item
-                    :label="$t('menuInfo.table.name')"
-                    prop="label"
-                  >
-                    <tiny-input v-model="state.menuUpdData.label"></tiny-input>
-                  </tiny-form-item>
-                </tiny-col>
-              </tiny-row>
-              <tiny-row :flex="true">
-                <tiny-col :span="10" label-width="100px">
-                  <tiny-form-item
-                    :label="$t('menuInfo.table.order')"
-                    prop="order"
-                  >
-                    <tiny-input v-model="state.menuUpdData.order"></tiny-input>
-                  </tiny-form-item>
-                </tiny-col>
-              </tiny-row>
-              <tiny-row :flex="true">
-                <tiny-col :span="10" label-width="100px">
-                  <tiny-form-item
-                    :label="$t('menuInfo.table.parentId')"
-                    prop="parentId"
-                  >
-                    <tiny-select
-                      v-model="state.menuUpdData.parentId"
-                      :placeholder="$t('baseForm.form.label.placeholder')"
-                      value-field="id"
-                      text-field="label"
-                      render-type="tree"
-                      :tree-op="state.menuData"
-                    >
-                    </tiny-select>
-                  </tiny-form-item>
-                </tiny-col>
-              </tiny-row>
-              <tiny-row :flex="true">
-                <tiny-col :span="10" label-width="100px">
-                  <tiny-form-item
-                    :label="$t('menuInfo.table.menuType')"
-                    prop="menuType"
-                  >
-                    <tiny-input
-                      v-model="state.menuUpdData.menuType"
-                    ></tiny-input>
-                  </tiny-form-item>
-                </tiny-col>
-              </tiny-row>
-              <tiny-row :flex="true">
-                <tiny-col :span="10" label-width="100px">
-                  <tiny-form-item
-                    :label="$t('menuInfo.table.icon')"
-                    prop="customIcon"
-                  >
-                    <tiny-select
-                      v-model="state.menuUpdData.customIcon"
-                      :placeholder="$t('baseForm.form.label.placeholder')"
-                      filterable
-                      no-match-text="No Match"
-                    >
-                      <tiny-option
-                        v-for="icon in state.iconData"
-                        :key="icon.value"
-                        :label="icon.label"
-                        :value="icon.value"
-                      ></tiny-option>
-                    </tiny-select>
-                  </tiny-form-item>
-                </tiny-col>
-              </tiny-row>
-              <tiny-row :flex="true">
-                <tiny-col :span="10" label-width="100px">
-                  <tiny-form-item
-                    :label="$t('menuInfo.table.component')"
-                    prop="component"
-                  >
-                    <tiny-input
-                      v-model="state.menuUpdData.component"
-                    ></tiny-input>
-                  </tiny-form-item>
-                </tiny-col>
-              </tiny-row>
-              <tiny-row :flex="true">
-                <tiny-col :span="10" label-width="100px">
-                  <tiny-form-item :label="$t('menuInfo.table.path')" prop="url">
-                    <tiny-input v-model="state.menuUpdData.url"></tiny-input>
-                  </tiny-form-item>
-                </tiny-col>
-              </tiny-row>
-              <tiny-row :flex="true">
-                <tiny-col :span="10" label-width="100px">
-                  <tiny-form-item
-                    :label="$t('menuInfo.table.locale')"
-                    prop="url"
-                  >
-                    <tiny-select
-                      v-model="state.menuUpdData.locale"
-                      :placeholder="$t('baseForm.form.label.placeholder')"
-                      filterable
-                      no-match-text="No Match"
-                      :options="state.localeData"
-                      is-drop-inherit-width
-                      optimization
-                    >
-                    </tiny-select>
-                  </tiny-form-item>
-                </tiny-col>
-              </tiny-row>
-            </tiny-form>
-          </tiny-layout>
-        </template>
+      <tiny-modal v-model="updateModal" show-footer @close="onClose">
+        <update-form
+          v-if="updateModal"
+          ref="form"
+          :node="activeNode"
+          :menus="i18nMenuData"
+          :locale-data="localeData"
+          :readonly="readonly"
+        />
+
         <template #footer>
-          <tiny-button type="primary" @click="handleMenuUpdateSubmit">{{
-            $t('menu.btn.confirm')
-          }}</tiny-button>
-          <tiny-button @click="handleMenuUpdateCancel">{{
-            $t('menu.btn.cancel')
-          }}</tiny-button>
-        </template>
-      </tiny-modal>
-    </div>
-    <div v-if="state.isMenuAdd">
-      <tiny-modal
-        v-model="state.isMenuAdd"
-        :lock-scroll="true"
-        show-header
-        show-footer
-        :mask-closable="true"
-        height="auto"
-        width="600"
-        :title="$t('menuInfo.modal.title.add')"
-      >
-        <template #default>
-          <tiny-layout>
-            <tiny-form
-              :model="state.menuAddData"
-              :rules="rules"
-              label-width="150px"
-              :label-align="true"
-              label-position="left"
-              size="small"
-            >
-              <tiny-row :flex="true">
-                <tiny-col :span="10" label-width="100px">
-                  <tiny-form-item
-                    :label="$t('menuInfo.table.name')"
-                    prop="label"
-                  >
-                    <tiny-input v-model="state.menuAddData.label"></tiny-input>
-                  </tiny-form-item>
-                </tiny-col>
-              </tiny-row>
-              <tiny-row :flex="true">
-                <tiny-col :span="10" label-width="100px">
-                  <tiny-form-item
-                    :label="$t('menuInfo.table.order')"
-                    prop="order"
-                  >
-                    <tiny-input v-model="state.menuAddData.order"></tiny-input>
-                  </tiny-form-item>
-                </tiny-col>
-              </tiny-row>
-              <tiny-row :flex="true">
-                <tiny-col :span="10" label-width="100px">
-                  <tiny-form-item
-                    :label="$t('menuInfo.table.parentId')"
-                    prop="parentId"
-                  >
-                    <tiny-select
-                      v-model="state.menuAddData.parentId"
-                      :placeholder="$t('baseForm.form.label.placeholder')"
-                      value-field="id"
-                      text-field="label"
-                      render-type="tree"
-                      :tree-op="state.menuData"
-                    >
-                    </tiny-select>
-                  </tiny-form-item>
-                </tiny-col>
-              </tiny-row>
-              <tiny-row :flex="true">
-                <tiny-col :span="10" label-width="100px">
-                  <tiny-form-item
-                    :label="$t('menuInfo.table.menuType')"
-                    prop="menuType"
-                  >
-                    <tiny-input
-                      v-model="state.menuAddData.menuType"
-                    ></tiny-input>
-                  </tiny-form-item>
-                </tiny-col>
-              </tiny-row>
-              <tiny-row :flex="true">
-                <tiny-col :span="10" label-width="100px">
-                  <tiny-form-item
-                    :label="$t('menuInfo.table.icon')"
-                    prop="customIcon"
-                  >
-                    <tiny-select
-                      v-model="state.menuAddData.customIcon"
-                      :placeholder="$t('baseForm.form.label.placeholder')"
-                      filterable
-                      no-match-text="No Match"
-                    >
-                      <tiny-option
-                        v-for="icon in state.iconData"
-                        :key="icon.value"
-                        :label="icon.label"
-                        :value="icon.value"
-                      ></tiny-option>
-                    </tiny-select>
-                  </tiny-form-item>
-                </tiny-col>
-              </tiny-row>
-              <tiny-row :flex="true">
-                <tiny-col :span="10" label-width="100px">
-                  <tiny-form-item
-                    :label="$t('menuInfo.table.component')"
-                    prop="component"
-                  >
-                    <tiny-input
-                      v-model="state.menuAddData.component"
-                    ></tiny-input>
-                  </tiny-form-item>
-                </tiny-col>
-              </tiny-row>
-              <tiny-row :flex="true">
-                <tiny-col :span="10" label-width="100px">
-                  <tiny-form-item :label="$t('menuInfo.table.path')" prop="url">
-                    <tiny-input v-model="state.menuAddData.url"></tiny-input>
-                  </tiny-form-item>
-                </tiny-col>
-              </tiny-row>
-              <tiny-row :flex="true">
-                <tiny-col :span="10" label-width="100px">
-                  <tiny-form-item
-                    :label="$t('menuInfo.table.locale')"
-                    prop="locale"
-                  >
-                    <tiny-select
-                      v-model="state.menuAddData.locale"
-                      :placeholder="$t('baseForm.form.label.placeholder')"
-                      filterable
-                      no-match-text="No Match"
-                      :options="state.localeData"
-                      optimization
-                    >
-                    </tiny-select>
-                  </tiny-form-item>
-                </tiny-col>
-              </tiny-row>
-            </tiny-form>
-          </tiny-layout>
-        </template>
-        <template #footer>
-          <tiny-button type="primary" @click="handleMenuAddSubmit">{{
-            $t('menu.btn.confirm')
-          }}</tiny-button>
-          <tiny-button @click="handleMenuAddCancel">{{
+          <tiny-button
+            v-if="!readonly"
+            type="primary"
+            :loading="loading"
+            @click="onConfirm"
+            >{{ $t('menu.btn.confirm') }}</tiny-button
+          >
+          <tiny-button v-if="!readonly" @click="onCancel">{{
             $t('menu.btn.cancel')
           }}</tiny-button>
         </template>
@@ -435,280 +243,6 @@
     </div>
   </div>
 </template>
-
-<script lang="ts" setup>
-import { ref, reactive, onMounted, watch, computed } from 'vue';
-import {
-  Modal as TinyModal,
-  Button as TinyButton,
-  Form as TinyForm,
-  FormItem as TinyFormItem,
-  Row as TinyRow,
-  Col as TinyCol,
-  Input as TinyInput,
-  Modal,
-  BaseSelect as TinyBaseSelect,
-  Select as TinySelect,
-  Option as TinyOption,
-  Tree as TinyTree,
-  Layout as TinyLayout,
-} from '@opentiny/vue';
-import { useUserStore } from '@/stores';
-import { getAllMenu, updateMenu, createMenu, deleteMenu } from '@/api/menu';
-
-import { useI18n } from 'vue-i18n-composable';
-import { useI18nMenu } from '@/hooks/useI18nMenu';
-import { getAllLocalItems } from '@/api/local';
-import useLoading from '@/hooks/loading';
-import * as icons from '@opentiny/vue-icon';
-
-const { t } = useI18n();
-
-// 加载效果
-const state = reactive<{
-  tableData: any;
-  menuData: any;
-  menuUpdData: any;
-  menuAddData: any;
-  menuInfoData: any;
-  isMenuUpdate: boolean;
-  isMenuAdd: boolean;
-  isMenuInfo: boolean;
-  iconData: any;
-  localeData: any;
-}>({
-  tableData: [] as any,
-  menuData: {} as any,
-  menuUpdData: {} as any,
-  menuAddData: {} as any,
-  menuInfoData: {} as any,
-  isMenuAdd: false,
-  isMenuUpdate: false,
-  isMenuInfo: false,
-  iconData: [] as any,
-  localeData: [] as any,
-});
-
-interface ITreeNodeData {
-  // node-key='id' 设置节点的唯一标识
-  id: number | string;
-  // 节点显示文本
-  label: string;
-  // 子节点
-  children?: ITreeNodeData[];
-  // 链接
-  url: string;
-  // 组件
-  component: string;
-  // 图标
-  customIcon: string;
-  // 类型
-  menuType: string;
-  // 父节点
-  parentId: number;
-  // 排序
-  order: number;
-  // 国际化
-  locale: string;
-}
-
-// 变量设置
-const userStore = useUserStore();
-
-// 校验规则
-const rulesType = {
-  required: true,
-  trigger: 'blur',
-};
-const rulesSelect = {
-  required: true,
-  message: '必选',
-  trigger: 'blur',
-};
-const rules = computed(() => {
-  return {
-    label: [rulesType],
-    order: [rulesType],
-    menuType: [rulesType],
-    component: [rulesType],
-    url: [rulesType],
-    locale: [rulesType],
-    customIcon: [rulesType],
-  };
-});
-
-// 初始化请求数据
-onMounted(() => {
-  fetchMenuData();
-  fetchIconData();
-  fetchLocaleData();
-});
-
-const { loading, setLoading } = useLoading();
-const menus = ref<ITreeNodeData[]>([]);
-const i18MenuDatas = computed(() => useI18nMenu(menus.value, t));
-setLoading(true);
-getAllMenu()
-  .then((res) => {
-    menus.value = res.data;
-  })
-  .finally(() => {
-    setLoading(false);
-  });
-
-// 请求数据接口方法
-async function fetchMenuData() {
-  const { data } = await getAllMenu();
-  state.tableData = data;
-}
-
-async function fetchIconData() {
-  state.iconData = Object.keys(icons).map((key) => ({
-    label: key,
-    value: key,
-  }));
-}
-
-async function fetchLocaleData() {
-  getAllLocalItems(1, 0, 1).then(({ data }) => {
-    state.localeData = data.items.map((item) => {
-      return {
-        value: item.key,
-        label: t(item.key),
-      };
-    });
-  });
-}
-
-async function handleDelete(node: any) {
-  if (node.data.parentId === null) {
-    node.data.parentId = -1;
-  }
-  try {
-    await deleteMenu(node.data.id, node.data.parentId);
-    TinyModal.message({
-      message: t('message.delete.success'),
-      status: 'success',
-    });
-    await fetchMenuData();
-  } catch (error) {
-    if (error.response && error.response.data) {
-      const errorMessage = error.response.data.message || '未知错误';
-      Modal.message({
-        message: errorMessage,
-        status: 'error',
-      });
-    }
-  }
-}
-
-const handleUpdate = (node: any) => {
-  state.isMenuUpdate = true;
-  state.menuUpdData = node.data;
-  state.menuData = ref({
-    data: state.tableData,
-  });
-};
-
-const handleMenuUpdateCancel = () => {
-  state.isMenuUpdate = false;
-  state.menuUpdData = {} as any;
-};
-
-const handleCheck = (node: any) => {
-  state.isMenuInfo = true;
-  state.menuInfoData = node.data;
-};
-
-const handleMenuInfoCancel = () => {
-  state.isMenuInfo = false;
-  state.menuInfoData = {} as any;
-};
-
-async function handleMenuUpdateSubmit() {
-  let data = state.menuUpdData;
-  let newTemp = {
-    id: data.id,
-    name: data.label,
-    order: data.order,
-    parentId: data.parentId,
-    menuType: data.menuType,
-    icon: data.icon,
-    component: data.component,
-    path: data.url,
-    locale: data.locale,
-  };
-  if (newTemp.id === newTemp.parentId) {
-    Modal.message({
-      message: t('menuInfo.modal.message.error'),
-      status: 'error',
-    });
-  } else {
-    try {
-      await updateMenu(newTemp);
-      Modal.message({
-        message: t('baseForm.form.submit.success'),
-        status: 'success',
-      });
-      state.isMenuUpdate = false;
-      state.menuUpdData = {} as any;
-      await fetchMenuData();
-    } catch (error) {
-      if (error.response && error.response.data) {
-        const errorMessage = error.response.data.message || '未知错误';
-        Modal.message({
-          message: errorMessage,
-          status: 'error',
-        });
-      }
-    }
-  }
-}
-
-function handleAddMenu() {
-  state.isMenuAdd = true;
-  state.menuData = ref({
-    data: state.tableData,
-  });
-}
-
-async function handleMenuAddSubmit() {
-  let data = state.menuAddData;
-  let newTemp = {
-    name: data.label,
-    order: data.order,
-    parentId: data.parentId,
-    menuType: data.menuType,
-    icon: data.customIcon,
-    component: data.component,
-    path: data.url,
-    locale: data.locale,
-  };
-  try {
-    await createMenu(newTemp);
-    Modal.message({
-      message: t('baseForm.form.submit.success'),
-      status: 'success',
-    });
-    state.isMenuAdd = false;
-    state.menuAddData = {} as any;
-    await fetchMenuData();
-  } catch (error) {
-    if (error.response && error.response.data) {
-      const errorMessage = error.response.data.message || '未知错误';
-      Modal.message({
-        message: errorMessage,
-        status: 'error',
-      });
-    }
-  }
-}
-
-async function handleMenuAddCancel() {
-  state.isMenuAdd = false;
-  state.menuAddData = {} as any;
-}
-</script>
 
 <style scoped lang="less">
 #contain {
@@ -728,8 +262,8 @@ async function handleMenuAddCancel() {
 
 .operation {
   &-delete {
-    color: red;
     padding-right: 10px;
+    color: red;
   }
 
   &-update {
@@ -738,8 +272,8 @@ async function handleMenuAddCancel() {
   }
 
   &-info {
-    color: orange;
     padding-right: 10px;
+    color: orange;
   }
 }
 </style>

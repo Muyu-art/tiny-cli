@@ -20,6 +20,7 @@ import infoTab from './components/info-tab.vue';
   width: 100%;
   height: 100%;
 }
+
 .container-info {
   display: flex;
   flex-direction: column;
@@ -47,14 +48,14 @@ import infoTab from './components/info-tab.vue';
     }
 
     .general-content {
-      height: calc(100% - 198px);
       position: relative;
+      height: calc(100% - 198px);
+      overflow-y: auto;
       color: black;
       font-size: medium;
       background-color: #fff;
       border-radius: 10px;
       box-shadow: 0 0 8px 8px rgba(169, 174, 184, 0.05);
-      overflow-y: auto;
     }
   }
 }
