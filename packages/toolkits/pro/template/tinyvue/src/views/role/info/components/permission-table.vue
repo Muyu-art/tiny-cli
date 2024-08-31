@@ -15,7 +15,7 @@
 <script lang="ts" setup>
   import type { Permission } from '@/api/permission';
   import { Grid, GridColumn } from '@opentiny/vue';
-  import { toRefs } from 'vue';
+  import { toRefs, watch } from 'vue';
 
   const props = defineProps<{
     permission: Permission[];

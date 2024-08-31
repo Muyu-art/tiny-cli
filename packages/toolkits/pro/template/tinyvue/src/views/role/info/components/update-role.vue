@@ -42,12 +42,12 @@
   const onUpdate = () => {
     setLoading(true);
     updateRole(updateData.value)
-      .then(() => {
+      .then(({ data }) => {
         TinyModal.message({
           message: t('baseForm.form.submit.success'),
           status: 'success',
         });
-        emits('confirm', updateData.value);
+        emits('confirm', data);
       })
       .finally(() => {
         setLoading(false);
