@@ -77,7 +77,6 @@ const rules = computed(() => {
   return {
     oldLabel: [rulesType],
     order: [rulesType],
-    parentId: [rulesSelect],
     component: [rulesType],
     path: [rulesType],
     locale: [rulesSelect],
