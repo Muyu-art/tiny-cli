@@ -435,15 +435,11 @@ const onUpdateCancel = () => {
   state.isUserUpdate = false;
 };
 const onUserUpdateConfirm = async () => {
-  // state.isUserUpdate = false;
-  // router.go(0);
   grid.value.handleFetch().then(() => {
     state.isUserUpdate = false;
   });
 };
 const onAddConfirm = async () => {
-  // state.isUserAdd = false;
-  // router.go(0);
   grid.value.handleFetch().then(() => {
     state.isUserAdd = false;
   });
