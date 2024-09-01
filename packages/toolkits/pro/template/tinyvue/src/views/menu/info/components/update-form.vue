@@ -77,7 +77,6 @@
     return {
       oldLabel: [rulesType],
       order: [rulesType],
-      parentId: [rulesSelect],
       component: [rulesType],
       url: [rulesType],
       locale: [rulesSelect],
