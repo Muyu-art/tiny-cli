@@ -76,7 +76,6 @@
       })
       .finally(() => {
         setAddLoading(false);
-        router.go(0);
       });
   };
   const onClose = () => {

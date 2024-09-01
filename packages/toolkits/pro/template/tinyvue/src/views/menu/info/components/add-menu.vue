@@ -18,9 +18,6 @@
       >
       </tiny-select>
     </tiny-form-item>
-    <tiny-form-item :label="$t('menuInfo.table.menuType')" prop="menuType">
-      <tiny-input v-model="menuInfo.menuType"></tiny-input>
-    </tiny-form-item>
     <tiny-form-item :label="$t('menuInfo.table.icon')" prop="icon">
       <tiny-select
         v-model="menuInfo.icon"
@@ -90,8 +87,6 @@
     return {
       name: [rulesType],
       order: [rulesType],
-      parentId: [rulesSelect],
-      menuType: [rulesType],
       icon: [rulesSelect],
       component: [rulesType],
       path: [rulesType],
@@ -135,7 +130,7 @@
     path: '',
     component: '',
     icon: '',
-    menuType: '',
+    menuType: '/',
     parentId: null,
     order: 0,
     locale: '',
