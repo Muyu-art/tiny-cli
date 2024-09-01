@@ -13,6 +13,17 @@ interface LoginData {
 }
 
 export type RoleType = '' | '*' | 'admin' | 'user';
+
+export type Role = {
+  id: number;
+  name: string;
+  permission: {
+    name: string;
+    desc: string;
+    id: number;
+  }[];
+};
+
 export interface User {
   id: string;
   name: string;

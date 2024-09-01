@@ -2,52 +2,17 @@ import { pinia } from '@/stores/pinia';
 import { useUserStore } from '@/stores/user';
 import Vue, { getCurrentInstance } from 'vue';
 import VueRouter from 'vue-router';
-import defaultLayout from '../layout/default-layout.vue';
 import appRoutes from './routes';
 import { getToken } from '@/utils/auth';
 import createRouteGuard from '@/router/guard';
 import { notFound } from './not-found';
+import constant from './constant';
+
 const router = new VueRouter({
   mode: 'history',
   routes: [
     // 本地地址
-    {
-      path: '/',
-      redirect: `${import.meta.env.VITE_CONTEXT}login`,
-    },
-    {
-      path: import.meta.env.VITE_CONTEXT,
-      redirect: { path: `${import.meta.env.VITE_CONTEXT}login` },
-    },
-    {
-      path: import.meta.env.VITE_CONTEXT + 'login',
-      name: 'login',
-      component: () => import('@/views/login/index.vue'),
-      meta: {
-        requiresAuth: false,
-      },
-    },
-    {
-      name: 'root',
-      path: import.meta.env.VITE_CONTEXT,
-      component: defaultLayout,
-      children: [],
-    },
-    {
-      path: import.meta.env.VITE_CONTEXT + 'preview',
-      name: 'preview',
-      component: () => import('@/views/Preview/index.vue'),
-    },
-    // {
-    //   name: 'redirect',
-    //   path: import.meta.env.VITE_CONTEXT + 'redirect',
-    //   component: () => import('@/views/redirect.vue'),
-    // },
-    // {
-    //   path:  import.meta.env.VITE_CONTEXT + '*',
-    //   name: 'notFound',
-    //   component: () => import('@/views/not-found/index.vue'),
-    // },
+    ...constant,
   ],
 });
 
