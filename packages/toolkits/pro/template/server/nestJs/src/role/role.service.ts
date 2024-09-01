@@ -112,7 +112,7 @@ export class RoleService {
         id: id,
       },
     });
-    const user = this.user.find({
+    const user = await this.user.find({
       where: {
         role: {
           id,
@@ -120,7 +120,7 @@ export class RoleService {
       },
       take: 1,
     });
-    if (user) {
+    if (user.length) {
       throw new HttpException(
         '角色下存在用户，请清空用户',
         HttpStatus.CONFLICT

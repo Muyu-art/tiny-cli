@@ -2,9 +2,17 @@
   <div>
     <div class="tiny-fullscreen-scroll">
       <div class="tiny-fullscreen-wrapper">
+        <div class="user-add-btn">
+          <tiny-button
+            v-permission="'role::add'"
+            type="primary"
+            @click="handleAddUser"
+            >{{ $t('userInfo.modal.title.add') }}
+          </tiny-button>
+        </div>
         <div class="table">
           <tiny-grid
-            ref="expandGrid"
+            ref="grid"
             :fetch-data="fetchDataOption"
             :pager="pagerConfig"
             :auto-resize="true"
@@ -106,7 +114,7 @@
             </tiny-grid-column>
             <tiny-grid-column field="type" :title="$t('userInfo.table.job')">
               <template #default="data">
-                <span>{{ $t(`${data.row.role[0].name}`) }}</span>
+                <span>{{ $t(`${data.row.role[0]?.name}`) }}</span>
               </template>
             </tiny-grid-column>
             <tiny-grid-column
@@ -192,24 +200,24 @@
               :title="$t('userInfo.table.operations')"
               align="center"
             >
-              <template v-slot="data">
+              <template #default="data">
                 <a
-                  class="operation-update"
                   v-permission="'user::update'"
+                  class="operation-update"
                   @click="handleUpdate(data.row.email)"
                 >
                   {{ $t('userInfo.table.operations.update') }}
                 </a>
                 <a
-                  class="operation-delete"
                   v-permission="'user::remove'"
+                  class="operation-delete"
                   @click="handleDelete(data.row.email)"
                 >
                   {{ $t('userInfo.table.operations.delete') }}
                 </a>
                 <a
-                  class="operation-pwd-update"
                   v-permission="'user::update'"
+                  class="operation-pwd-update"
                   @click="handlePwdUpdate(data.row.email)"
                 >
                   {{ $t('userInfo.table.operations.pwdUpdate') }}
@@ -219,6 +227,34 @@
           </tiny-grid>
         </div>
       </div>
+    </div>
+    <div v-if="state.isUserAdd">
+      <tiny-modal
+        v-model="state.isUserAdd"
+        :lock-scroll="true"
+        mask-closable="true"
+        height="auto"
+        width="800"
+        :title="$t('userInfo.modal.title.add')"
+      >
+        <UserAdd @confirm="onAddConfirm"></UserAdd>
+      </tiny-modal>
+    </div>
+    <div v-if="state.isUserUpdate">
+      <tiny-modal
+        v-model="state.isUserUpdate"
+        :lock-scroll="true"
+        mask-closable="true"
+        height="auto"
+        width="800"
+        :title="$t('userInfo.modal.title.update')"
+      >
+        <UserSetting
+          :email="state.email"
+          @cancel="onUpdateCancel"
+          @confirm="onUserUpdateConfirm"
+        ></UserSetting>
+      </tiny-modal>
     </div>
     <div v-if="state.isPwdUpdate">
       <tiny-modal
@@ -282,9 +318,11 @@
         </template>
         <template #footer>
           <tiny-button type="primary" @click="handlePwdUpdateSubmit"
-            >确定</tiny-button
-          >
-          <tiny-button @click="handlePwdUpdateCancel">取消</tiny-button>
+            >{{ $t('menu.btn.confirm') }}
+          </tiny-button>
+          <tiny-button @click="handlePwdUpdateCancel"
+            >{{ $t('menu.btn.cancel') }}
+          </tiny-button>
         </template>
       </tiny-modal>
     </div>
@@ -292,12 +330,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, onMounted, watch, computed } from 'vue';
+import { reactive, computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n-composable';
-import { useRouter } from '@/router';
 import {
-  Tabs as TinyTabs,
-  TabItem as TinyTabItem,
   Loading,
   GridColumn as TinyGridColumn,
   Grid as TinyGrid,
@@ -310,41 +345,38 @@ import {
   Col as TinyCol,
   Input as TinyInput,
 } from '@opentiny/vue';
-import { IconChevronDown } from '@opentiny/vue-icon';
 import { useUserStore } from '@/stores';
-import {
-  getAllUser,
-  deleteUser,
-  updatePwdAdmin,
-  registerUser,
-  updatePwdUser,
-} from '@/api/user';
+import { getAllUser, deleteUser, updatePwdAdmin } from '@/api/user';
+import { useRouter } from '@/router';
+import UserAdd from '../../useradd/index.vue';
+import UserSetting from '../../setting/index.vue';
 
-const router = useRouter();
 const { t } = useI18n();
+const router = useRouter();
+const grid = ref();
 // 加载效果
 const state = reactive<{
   loading: any;
   tableData: any;
   pageData: any;
   isPwdUpdate: boolean;
+  isUserAdd: boolean;
+  isUserUpdate: boolean;
   pwdData: any;
+  email: string;
 }>({
   loading: null,
   tableData: [] as any,
   pageData: [] as any,
   isPwdUpdate: false,
+  isUserAdd: false,
+  isUserUpdate: false,
   pwdData: {} as any,
+  email: '',
 });
 
 // 变量设置
 const userStore = useUserStore();
-const ChevronDown = IconChevronDown();
-const activeName = ref('1');
-const Filter = ref(false);
-const Sort = ref(false);
-
-const filterInfo = ref();
 
 const pagerConfig = reactive({
   component: TinyPager,
@@ -399,22 +431,33 @@ const fetchDataOption = reactive({
   },
 });
 
-const handleDelete = (email: string) => {
+const onUpdateCancel = () => {
+  state.isUserUpdate = false;
+};
+const onUserUpdateConfirm = async () => {
+  grid.value.handleFetch().then(() => {
+    state.isUserUpdate = false;
+  });
+};
+const onAddConfirm = async () => {
+  grid.value.handleFetch().then(() => {
+    state.isUserAdd = false;
+  });
+};
+
+const handleDelete = async (email: string) => {
   deleteUser(email).then((res) => {
     TinyModal.message({
-      message: t('message.delete.success'),
+      message: '已删除',
       status: 'success',
     });
+    grid.value.handleFetch();
   });
 };
 
 const handleUpdate = (email: string) => {
-  router.push({
-    name: 'AllSetting',
-    query: {
-      email: email,
-    },
-  });
+  state.isUserUpdate = true;
+  state.email = email;
 };
 
 const handlePwdUpdate = (email: string) => {
@@ -425,6 +468,10 @@ const handlePwdUpdate = (email: string) => {
 const handlePwdUpdateCancel = () => {
   state.isPwdUpdate = false;
   state.pwdData = {} as any;
+};
+
+const handleAddUser = () => {
+  state.isUserAdd = true;
 };
 
 async function handlePwdUpdateSubmit() {
@@ -462,6 +509,10 @@ async function handlePwdUpdateSubmit() {
 </script>
 
 <style scoped lang="less">
+.user-add-btn {
+  padding: 10px 0 10px 10px;
+}
+
 #contain {
   height: 100%;
   padding: 15px;

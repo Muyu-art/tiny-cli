@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { ref, watch } from 'vue';
+  import { nextTick, ref, watch } from 'vue';
   import { Role } from '@/store/modules/user/types';
   import {
     Grid as TinyGrid,
@@ -19,6 +19,7 @@
   const emits = defineEmits<{
     menuUpdate: [ITreeNodeData[], number, Role];
     roleUpdate: [Role];
+    roleDelete: [number];
   }>();
 
   const { t } = useI18n();
@@ -42,6 +43,7 @@
           message: t('message.delete.success'),
           status: 'success',
         });
+        emits('roleDelete', id);
       })
       .catch((error) => {
         if (error.response && error.response.data) {
@@ -56,7 +58,6 @@
         setLoading(false);
       });
   };
-
   watch(
     props,
     () => {

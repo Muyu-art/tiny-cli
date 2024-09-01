@@ -52,16 +52,6 @@
 
   const { reloadMenu } = inject<{ reloadMenu: () => void }>('RELOAD');
 
-  // const stop = watch(
-  //   menuDatas,
-  //   () => {
-  //     selectedId.value = useMenuId(menuDatas.value);
-  //   },
-  //   {
-  //     immediate: true,
-  //   },
-  // );
-  const reloadGrid = ref(false);
   setLoading(true);
   getAllMenu()
     .then((res) => {
@@ -80,7 +70,6 @@
     onClose();
   };
   const onMenuUpdate = (menuTree: ITreeNodeData[], id: number, row) => {
-    // menuDatas.value = menuTree;
     roleId.value = id;
     selectedId.value = useMenuId(row.menus);
     onOpen();
@@ -120,10 +109,6 @@
       .then(() => {
         flushTabs();
         reloadMenu();
-        // reloadGrid.value = true;
-        // nextTick(()=>{
-        //   reloadGrid.value = false;
-        // })
       })
       .finally(() => {
         open.value = false;
@@ -166,6 +151,9 @@
       ...role,
     });
   };
+  const onRoleDelete = (id: number) => {
+    tableData.value = tableData.value.filter((data) => data.id !== id);
+  };
 </script>
 
 <template>
@@ -182,6 +170,7 @@
             :table-data="tableData"
             @menu-update="onMenuUpdate"
             @role-update="onRoleUpdate"
+            @role-delete="onRoleDelete"
           />
         </div>
       </div>

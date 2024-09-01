@@ -11,6 +11,7 @@
       </div>
       <div class="table">
         <tiny-grid
+          ref="grid"
           :fetch-data="fetchDataOption"
           :pager="pagerConfig"
           :auto-resize="true"
@@ -347,6 +348,7 @@
 
   const { t } = useI18n();
   const router = useRouter();
+  const grid = ref();
   // 加载效果
   const state = reactive<{
     loading: any;
@@ -428,12 +430,14 @@
     state.isUserUpdate = false;
   };
   const onUserUpdateConfirm = async () => {
-    state.isUserUpdate = false;
-    router.go(0);
+    grid.value.handleFetch().then(() => {
+      state.isUserUpdate = false;
+    });
   };
   const onAddConfirm = async () => {
-    state.isUserAdd = false;
-    router.go(0);
+    grid.value.handleFetch().then(() => {
+      state.isUserAdd = false;
+    });
   };
 
   const handleDelete = async (email: string) => {
@@ -442,8 +446,8 @@
         message: '已删除',
         status: 'success',
       });
+      grid.value.handleFetch();
     });
-    router.go(0);
   };
 
   const handleUpdate = (email: string) => {
