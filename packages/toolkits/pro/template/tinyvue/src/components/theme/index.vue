@@ -26,7 +26,11 @@
         <div>
           <span>{{ $t('theme.title.light') }}</span>
           <div class="theme-line">
-            <div v-for="item in SwitchlightColor" :key="item.value" class="light">
+            <div
+              v-for="item in SwitchlightColor"
+              :key="item.value"
+              class="light"
+            >
               <div
                 class="theme-block"
                 :style="{ 'background-color': item.color }"
@@ -43,7 +47,11 @@
         <div>
           <span>{{ $t('theme.title.deep') }}</span>
           <div class="theme-line">
-            <div v-for="item in SwitchdarkColor" :key="item.value" class="black">
+            <div
+              v-for="item in SwitchdarkColor"
+              :key="item.value"
+              class="black"
+            >
               <div
                 class="theme-block"
                 :style="{ 'background-color': item.color }"
@@ -63,9 +71,9 @@
 </template>
 
 <script lang="ts" setup>
-  import { onMounted, watch } from 'vue';
+  import { inject, onMounted, watch } from 'vue';
   // eslint-disable-next-line import/extensions
-  import TinyThemeTool from '@opentiny/vue-theme/theme-tool.js';
+  import { tinySmbTheme } from '@opentiny/vue-theme/theme';
   import { IconYes } from '@opentiny/vue-icon';
   import { useAppStore } from '@/store';
   import {
@@ -113,8 +121,7 @@
   ];
   const Yes = IconYes();
   const appStore = useAppStore();
-  let divApp = document.documentElement;
-  let theme = new TinyThemeTool();
+  const theme = inject('THEME');
 
   onMounted(() => {
     if (appStore.themelist === 'none') {
@@ -149,19 +156,10 @@
         break;
       default:
         appStore.updateSettings({ theme: 'light' });
-        theme.changeTheme(DefaultTheme);
+        theme.changeTheme(tinySmbTheme);
         appStore.updateSettings({ themelist: 'default' });
     }
   };
-
-  // 暗黑监听
-  watch(appStore.$state, (newValue, oldValue) => {
-    if (newValue.theme === 'dark') {
-      divApp!.style.filter = 'invert(0.9) hue-rotate(180deg)';
-    } else {
-      divApp!.style.filter = 'invert(0) hue-rotate(0deg)';
-    }
-  });
 
   // 选中自定义
   const choose = (item: {
@@ -181,12 +179,11 @@
   watch(
     appStore.$state,
     (newValue, oldValue) => {
-
       // eslint-disable-next-line default-case
       switch (newValue.themelist) {
         case 'default':
           appStore.updateSettings({ theme: 'light' });
-          theme.changeTheme(DefaultTheme);
+          theme.changeTheme(tinySmbTheme);
           break;
         case 'peaches':
           appStore.updateSettings({ theme: 'light' });
@@ -205,7 +202,7 @@
           break;
       }
     },
-    { immediate: true }
+    { immediate: true },
   );
 </script>
 
