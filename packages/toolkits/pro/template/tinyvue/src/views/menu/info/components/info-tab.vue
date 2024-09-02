@@ -14,6 +14,7 @@
   import { useDeepClone } from '@/hooks/useDeepClone';
   import { useMenuStore } from '@/store/modules/router';
   import { useRouter } from 'vue-router';
+  import { useTabStore } from '@/store';
   import menuTree, { Node } from './menu-tree.vue';
   import UpdateForm from './update-form.vue';
   import AddMenu from './add-menu.vue';
@@ -45,6 +46,7 @@
   const { loading: addLoading, setLoading: setAddLoading } = useLoading();
   const addModal = ref(false);
   const router = useRouter();
+  const tabStore = useTabStore();
 
   const handleAddMenu = () => {
     addModal.value = true;
@@ -109,7 +111,10 @@
         });
         return fetchMenu();
       })
-      .then(() => updateUserMenu())
+      .then(() => {
+        updateUserMenu();
+        tabStore.delByLink(`/vue-pro/${node.url}`);
+      })
       .catch((reason) => {
         const error = reason;
         if (error.response && error.response.data) {
