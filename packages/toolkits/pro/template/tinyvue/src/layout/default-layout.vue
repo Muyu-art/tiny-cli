@@ -87,8 +87,8 @@
   import NavBar from '@/components/navbar/index.vue';
   import Theme from '@/components/theme/index.vue';
   import Menu from '@/components/menu/index.vue';
-  import { DefaultTheme } from '@/components/theme/type';
   import { useRouter } from 'vue-router';
+  import useTheme from '@/hooks/themes';
   import PageLayout from './page-layout.vue';
   // 动态切换
   const router = useRouter();
@@ -146,6 +146,8 @@
   // 主题配置
   const disTheme = ref(false);
   const theme = new TinyThemeTool();
+  useTheme(theme);
+  provide('THEME', theme);
   const themeVisible = () => {
     disTheme.value = !disTheme.value;
   };
@@ -171,11 +173,6 @@
     }
   });
   // 初始化默认主题
-  onMounted(() => {
-    appStore.updateSettings({ theme: 'light' });
-    theme.changeTheme(DefaultTheme);
-    appStore.updateSettings({ themelist: 'default' });
-  });
 </script>
 
 <style scoped lang="less">

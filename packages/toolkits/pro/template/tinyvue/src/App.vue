@@ -9,8 +9,12 @@
   import { provide } from 'vue';
   import * as echarts from 'echarts';
   import GlobalSetting from '@/components/global-setting/index.vue';
+  import TinyThemeTool from '@opentiny/vue-theme/theme-tool';
+  import useThemes from './hooks/themes';
 
   provide('echarts', echarts);
+  const theme = new TinyThemeTool();
+  useThemes(theme);
 </script>
 
 <style lang="less" scoped>
