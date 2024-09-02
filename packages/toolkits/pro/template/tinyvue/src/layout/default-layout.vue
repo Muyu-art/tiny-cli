@@ -88,7 +88,7 @@
   import Theme from '@/components/theme/index.vue';
   import Menu from '@/components/menu/index.vue';
   import { useRouter } from 'vue-router';
-  import useTheme from '@/hooks/themes';
+  import { useTheme } from '@/hooks/useTheme';
   import PageLayout from './page-layout.vue';
   // 动态切换
   const router = useRouter();

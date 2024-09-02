@@ -10,11 +10,11 @@
   import * as echarts from 'echarts';
   import GlobalSetting from '@/components/global-setting/index.vue';
   import TinyThemeTool from '@opentiny/vue-theme/theme-tool';
-  import useThemes from './hooks/themes';
+  import { useTheme } from './hooks/useTheme';
 
   provide('echarts', echarts);
   const theme = new TinyThemeTool();
-  useThemes(theme);
+  useTheme(theme);
 </script>
 
 <style lang="less" scoped>
