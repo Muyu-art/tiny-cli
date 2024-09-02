@@ -123,7 +123,7 @@
         });
         tableData.value.push({
           id: data.id,
-          permission: data.permission.map((p) => p.name),
+          permission: data.permission,
           menus: [],
           name: data.name,
         });
