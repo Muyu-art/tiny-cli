@@ -11,7 +11,7 @@
       <template #aside>
         <tiny-layout class="layout-sider">
           <div class="menu-wrapper">
-            <AsyncComponent />
+            <AsyncComponent v-if="reloadKey !== 'menu'" />
           </div>
         </tiny-layout>
       </template>
@@ -69,7 +69,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, onMounted, computed } from 'vue';
+import { ref, watch, onMounted, computed, provide, nextTick } from 'vue';
 import { useI18n } from 'vue-i18n-composable';
 import {
   Container as TinyContainer,
@@ -102,6 +102,17 @@ const AsyncComponent = () => ({
 
 //页签
 const tabStore = useTabStore();
+
+const reloadKey = ref('');
+const reloadMenu = () => {
+  reloadKey.value = 'menu';
+  nextTick(() => {
+    reloadKey.value = '';
+  });
+};
+provide('RELOAD', {
+  reloadMenu,
+});
 
 const tabsHistory = computed(() => tabStore.data);
 const currentTabName = ref();

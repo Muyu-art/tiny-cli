@@ -91,7 +91,7 @@
         :lock-scroll="true"
         show-header
         show-footer
-        mask-closable="true"
+        :mask-closable="true"
         height="auto"
         width="600"
         :title="$t('roleInfo.modal.title.update')"
@@ -164,7 +164,7 @@
         :lock-scroll="true"
         show-header
         show-footer
-        mask-closable="true"
+        :mask-closable="true"
         height="auto"
         width="600"
         :title="$t('roleInfo.modal.title.add')"
@@ -211,26 +211,6 @@
                   </tiny-form-item>
                 </tiny-col>
               </tiny-row>
-
-              <tiny-row :flex="true">
-                <tiny-col :span="10" label-width="100px">
-                  <tiny-form-item
-                    :label="$t('roleInfo.modal.input.menu')"
-                    prop="menu"
-                  >
-                    <tiny-select
-                      v-model="state.roleAddData.menus"
-                      :placeholder="$t('baseForm.form.label.placeholder')"
-                      multiple
-                      value-field="id"
-                      text-field="label"
-                      render-type="tree"
-                      :tree-op="state.menuOptionData"
-                    >
-                    </tiny-select>
-                  </tiny-form-item>
-                </tiny-col>
-              </tiny-row>
             </tiny-form>
           </tiny-layout>
         </template>
@@ -248,7 +228,15 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, onMounted, computed, watch, onUnmounted } from 'vue';
+import {
+  ref,
+  reactive,
+  onMounted,
+  computed,
+  watch,
+  onUnmounted,
+  inject,
+} from 'vue';
 import {
   Tabs as TinyTabs,
   TabItem as TinyTabItem,
@@ -269,6 +257,7 @@ import {
   Option as TinyOption,
   Tree as TinyTree,
   TinyLoading,
+  Layout as TinyLayout,
 } from '@opentiny/vue';
 import { useUserStore } from '@/stores';
 import {
@@ -287,13 +276,22 @@ import { useI18n } from 'vue-i18n-composable';
 import permissionTable from './permission-table.vue';
 import menuDrawer from './menu-drawer.vue';
 import type { ITreeNodeData } from '@/router/guard/menu';
+import { toRoutes } from '@/router/guard/menu';
 import { useDisclosure } from '@/hooks/useDisclosure';
 import { useI18nMenu } from '@/hooks/useI18nMenu';
 import { useLoading } from '@/hooks';
 import { useMenuId } from '@/hooks/useMenuId';
+import type { Role } from '@/stores/user';
+import constant from '@/router/constant';
+import { useMenuStore } from '@/stores/modules/router';
+import { useTabStore } from '@/stores';
 
 const router = useRouter();
 const { t } = useI18n();
+const { reloadMenu } = inject<{ reloadMenu: () => void }>('RELOAD');
+const menuStore = useMenuStore();
+const tabStore = useTabStore();
+
 // 加载效果
 const state = reactive<{
   tableData: any;
@@ -316,6 +314,7 @@ const state = reactive<{
 });
 
 const userStore = useUserStore();
+const tableData = ref<(Role & { menus: ITreeNodeData[] })[]>([]);
 const menus = ref<ITreeNodeData[]>([]);
 const vLoading = TinyLoading.directive;
 const { loading, setLoading } = useLoading();
@@ -378,13 +377,42 @@ const onMenuUpdate = (data: ITreeNodeData[], roldId: number) => {
   onOpen();
 };
 
+const flushRouter = async () => {
+  router.getRoutes().forEach((route) => router.remove(route));
+  constant.forEach((staticRoute) => router.addRoute(staticRoute));
+  await menuStore.getMenuList();
+  const routes = toRoutes(menuStore.menuList);
+  routes.forEach((route) => {
+    router.addRoute('root', route);
+  });
+};
+const flushTabs = () => {
+  const routePaths = router.getRoutes().map((routeItem) => routeItem.path);
+  const removeTabs = tabStore.data.filter(
+    ({ link }) => !routePaths.includes(link)
+  );
+  removeTabs.forEach(({ link }) => tabStore.delByLink(link));
+};
+
 const onConfirm = (ids: number[]) => {
   updateRole({
     id: roleId.value,
     menuIds: ids,
   })
-    .then(() => {
+    .then(({ data }) => {
       selectedId.value = ids;
+      const itemIdx = tableData.value.findIndex(
+        (item) => item.id === roleId.value
+      );
+      tableData.value.splice(itemIdx, 1, {
+        ...tableData.value[itemIdx],
+        menus: data.menus,
+      });
+      return flushRouter();
+    })
+    .then(() => {
+      flushTabs();
+      reloadMenu();
     })
     .finally(() => {
       open.value = false;

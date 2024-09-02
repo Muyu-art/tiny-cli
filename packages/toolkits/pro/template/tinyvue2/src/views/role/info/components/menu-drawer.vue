@@ -1,6 +1,6 @@
 <template>
   <drawer :visible="visible" @close="() => emits('close')" show-footer>
-    <tree node-key="id" :data="menus" show-checkbox ref="treeRef" />
+    <tree node-key="id" ref="treeRef" :data="menus" show-checkbox />
     <template #footer>
       <tiny-button @click="onConfirm">
         {{ $t('roleInfo.menuUpdate.confirm') }}
