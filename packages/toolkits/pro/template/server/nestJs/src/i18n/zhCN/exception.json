@@ -12,7 +12,7 @@
   "role": {
     "exists": "角色已存在",
     "notExists": "角色不存在",
-    "conflict": "角色下村在用户, 请清空用户"
+    "conflict": "角色下存在用户, 请清空用户"
   },
   "permission":{
     "exists": "权限字段 {name} 已经存在",
