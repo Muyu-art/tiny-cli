@@ -63,6 +63,7 @@
           message: t('baseForm.form.submit.success'),
           status: 'success',
         });
+        addModal.value = false;
         return updateUserMenu();
       })
       .then(() => fetchMenu())
@@ -202,7 +203,12 @@
         @check="onCheck"
         @delete="onDelete"
       />
-      <tiny-modal v-model="addModal" show-footer @close="onAddMenuClose">
+      <tiny-modal
+        v-model="addModal"
+        show-footer
+        :mask-closable="true"
+        @close="onAddMenuClose"
+      >
         <add-menu
           v-if="addModal"
           ref="addMenu"
@@ -218,7 +224,12 @@
           >
         </template>
       </tiny-modal>
-      <tiny-modal v-model="updateModal" show-footer @close="onClose">
+      <tiny-modal
+        v-model="updateModal"
+        show-footer
+        :mask-closable="true"
+        @close="onClose"
+      >
         <update-form
           v-if="updateModal"
           ref="form"
