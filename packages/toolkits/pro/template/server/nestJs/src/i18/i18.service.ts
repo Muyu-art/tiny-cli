@@ -46,7 +46,6 @@ export class I18Service {
     });
     if (!langRecord) {
       throw new HttpException(
-        // `${lang} 不存在`,
         this.i18n.t('exception.lang.notExists', {
           args: { lang },
           lang: I18nContext.current().lang,
