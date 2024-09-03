@@ -441,13 +441,23 @@
   };
 
   const handleDelete = async (email: string) => {
-    deleteUser(email).then((res) => {
-      TinyModal.message({
-        message: '已删除',
-        status: 'success',
+    deleteUser(email)
+      .then((res) => {
+        TinyModal.message({
+          message: '已删除',
+          status: 'success',
+        });
+        grid.value.handleFetch();
+      })
+      .catch((error) => {
+        if (error.response && error.response.data) {
+          const errorMessage = error.response.data.message || '未知错误';
+          TinyModal.message({
+            message: errorMessage,
+            status: 'error',
+          });
+        }
       });
-      grid.value.handleFetch();
-    });
   };
 
   const handleUpdate = (email: string) => {

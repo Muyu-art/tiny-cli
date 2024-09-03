@@ -7,7 +7,8 @@
   },
   "user":{
     "oldPasswordError": "旧密码错误",
-    "userExists": "用户存在"
+    "userExists": "用户存在",
+    "userNumberNull": "当前为最后一个用户，禁止删除"
   },
   "role": {
     "exists": "角色已存在",

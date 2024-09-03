@@ -15,6 +15,7 @@ export type I18nTranslations = {
         "user": {
             "oldPasswordError": string;
             "userExists": string;
+            "userNumberNull": string;
         };
         "role": {
             "exists": string;
