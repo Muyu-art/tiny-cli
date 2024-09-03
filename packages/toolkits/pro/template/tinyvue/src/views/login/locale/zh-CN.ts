@@ -43,4 +43,5 @@ export default {
   'login.tip.mail': "用户名：admin{'@'}no-reply.com，密码 admin",
   'login.tip.right': '请输入正确的用户名密码',
   'login.main.text': 'TinyPro 中后台前端解决方案',
+  'setting.foot.title': 'OpenTiny 出品',
 };

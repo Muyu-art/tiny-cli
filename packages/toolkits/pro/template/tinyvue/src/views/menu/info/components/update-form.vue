@@ -14,7 +14,7 @@
     <tiny-form-item
       prop="oldLabel"
       :label="$t('menuInfo.table.id')"
-      extra="修改菜单ID前, 请确保前端工程师知晓此事"
+      :extra="$t('menuInfo.modal.tips.upd-id')"
     >
       <tiny-input v-model="menuInfo.oldLabel" />
     </tiny-form-item>

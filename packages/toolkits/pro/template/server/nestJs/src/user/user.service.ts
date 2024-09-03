@@ -216,10 +216,19 @@ export class UserService {
   }
 
   async deleteUser(email: string) {
-    const user = await this.userRep.findOne({
-      where: { email },
-    });
-    return this.userRep.remove(user);
+    const allUser = await this.userRep.find();
+    if (allUser.length > 1) {
+      const user = await this.userRep.findOne({
+        where: { email },
+      });
+      return this.userRep.remove(user);
+    }
+    throw new HttpException(
+      this.i18n.translate('exception.user.userNumberNull', {
+        lang: I18nContext.current().lang,
+      }),
+      HttpStatus.BAD_REQUEST
+    );
   }
 
   //修改密码
