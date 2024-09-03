@@ -10,6 +10,8 @@ import { UserService } from '../user/user.service';
 import { Request } from 'express';
 import { User } from '@app/models';
 import { PERMISSION_KEYS } from '../public/permission.decorator';
+import { I18nTranslations } from '../.generate/i18n.generated';
+import { I18nContext } from 'nestjs-i18n';
 
 interface CustomReq extends Request {
   user: User;
@@ -19,6 +21,7 @@ interface CustomReq extends Request {
 export class PermissionGuard implements CanActivate {
   constructor(private reflector: Reflector, private userSerivce: UserService) {}
   async canActivate(ctx: ExecutionContext) {
+    const i18n = I18nContext.current<I18nTranslations>();
     const req: CustomReq = ctx.switchToHttp().getRequest();
     const requiredPermission = this.reflector.getAllAndOverride<string[]>(
       PERMISSION_KEYS,
@@ -39,7 +42,10 @@ export class PermissionGuard implements CanActivate {
       return true;
     }
     if (!isContainedPermission) {
-      throw new HttpException('权限不足', HttpStatus.FORBIDDEN);
+      throw new HttpException(
+        i18n.t('exception.common.unauth', { lang: I18nContext.current().lang }),
+        HttpStatus.FORBIDDEN
+      );
     }
     return true;
   }

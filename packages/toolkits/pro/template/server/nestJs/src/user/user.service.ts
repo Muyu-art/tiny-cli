@@ -11,6 +11,8 @@ import * as crypto from 'crypto';
 import { AuthService } from '../auth/auth.service';
 import { paginate, IPaginationOptions } from 'nestjs-typeorm-paginate';
 import * as process from 'process';
+import { I18nContext, I18nService } from 'nestjs-i18n';
+import { I18nTranslations } from '../.generate/i18n.generated';
 
 @Injectable()
 export class UserService {
@@ -19,7 +21,8 @@ export class UserService {
     private userRep: Repository<User>,
     @InjectRepository(Role)
     private roleRep: Repository<Role>,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly i18n: I18nService<I18nTranslations>
   ) {}
 
   async create(createUserDto: CreateUserDto, isInit: boolean) {
@@ -43,7 +46,12 @@ export class UserService {
       return userInfo;
     }
     if (await userInfo) {
-      throw new HttpException('用户存在', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        this.i18n.translate('exception.user.userExists', {
+          lang: I18nContext.current().lang,
+        }),
+        HttpStatus.BAD_REQUEST
+      );
     }
     const roles = this.roleRep.find({
       where: {
@@ -233,7 +241,12 @@ export class UserService {
           ).salt
         ))
       ) {
-        throw new HttpException('旧密码错误', HttpStatus.BAD_REQUEST);
+        throw new HttpException(
+          this.i18n.translate('exception.user.oldPasswordError', {
+            lang: I18nContext.current().lang,
+          }),
+          HttpStatus.BAD_REQUEST
+        );
       } else {
         (await user).password = await this.encry(
           newPassword,

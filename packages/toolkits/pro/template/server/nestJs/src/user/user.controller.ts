@@ -19,6 +19,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationQueryDto } from './dto/pagination-query.dto';
 import { UpdatePwdAdminDto } from './dto/update-pwd-admin.dto';
 import { UpdatePwdUserDto } from './dto/update-pwd-user.dto';
+import { I18n, I18nContext } from 'nestjs-i18n';
+import { I18nTranslations } from '../.generate/i18n.generated';
 
 @Controller('user')
 export class UserController {
@@ -30,12 +32,16 @@ export class UserController {
   }
   @Get('/info/:email?')
   async getUserInfo(
+    @I18n() i18n: I18nContext<I18nTranslations>,
     @Req() request: Request & RequestUser,
     @Param('email') email?: string
   ) {
     const _email = email ? email : request.user.email;
     if (!_email) {
-      throw new HttpException('未登录', HttpStatus.UNAUTHORIZED);
+      throw new HttpException(
+        i18n.t('exception.common.unauth', { lang: I18nContext.current().lang }),
+        HttpStatus.UNAUTHORIZED
+      );
     }
     return this.userService.getUserInfo(_email, ['role', 'role.permission']);
   }
