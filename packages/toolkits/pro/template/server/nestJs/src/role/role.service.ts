@@ -5,6 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Menu, Permission, Role, User } from '@app/models';
 import { In, Repository } from 'typeorm';
 import { convertToTree } from '../menu/menu.service';
+import { I18nContext, I18nService } from 'nestjs-i18n';
+import { I18nTranslations } from '../.generate/i18n.generated';
 
 @Injectable()
 export class RoleService {
@@ -16,7 +18,8 @@ export class RoleService {
     @InjectRepository(Menu)
     private readonly menu: Repository<Menu>,
     @InjectRepository(User)
-    private readonly user: Repository<User>
+    private readonly user: Repository<User>,
+    private readonly i18n: I18nService<I18nTranslations>
   ) {}
   async create(createRoleDto: CreateRoleDto, isInit: boolean) {
     const { name, permissionIds = [], menuIds = [] } = createRoleDto;
@@ -29,7 +32,12 @@ export class RoleService {
       return roleInfo;
     }
     if (await roleInfo) {
-      throw new HttpException('角色已存在', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        this.i18n.t('exception.role.exists', {
+          lang: I18nContext.current().lang,
+        }),
+        HttpStatus.BAD_REQUEST
+      );
     }
     const permissions = await this.permission.find({
       where: {
@@ -75,7 +83,12 @@ export class RoleService {
       })
       .getOne();
     if (!roleInfo) {
-      throw new HttpException('角色不存在', HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        this.i18n.t('exception.role.notExists', {
+          lang: I18nContext.current().lang,
+        }),
+        HttpStatus.NOT_FOUND
+      );
     }
     return roleInfo;
   }
@@ -98,7 +111,12 @@ export class RoleService {
       },
     });
     if (roleInfo.length === 0) {
-      throw new HttpException('角色不存在', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        this.i18n.t('exception.role.notExists', {
+          lang: I18nContext.current().lang,
+        }),
+        HttpStatus.BAD_REQUEST
+      );
     }
     const role = roleInfo[0];
     role.name = name;
@@ -122,7 +140,9 @@ export class RoleService {
     });
     if (user.length) {
       throw new HttpException(
-        '角色下存在用户，请清空用户',
+        this.i18n.t('exception.role.conflict', {
+          lang: I18nContext.current().lang,
+        }),
         HttpStatus.CONFLICT
       );
     }

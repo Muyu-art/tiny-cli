@@ -27,6 +27,11 @@ import { menuData } from './menu/init/menuData';
 import { I18Module } from './i18/i18.module';
 import { I18LangService } from './i18/lang.service';
 import { I18Service } from './i18/i18.service';
+import {
+  AcceptLanguageResolver,
+  HeaderResolver,
+  I18nModule,
+} from 'nestjs-i18n';
 
 @Module({
   imports: [
@@ -40,6 +45,15 @@ import { I18Service } from './i18/i18.service';
       isGlobal: true,
     }),
     I18Module,
+    I18nModule.forRoot({
+      fallbackLanguage: 'enUS',
+      loaderOptions: {
+        path: join(__dirname, '/i18n/'),
+        watch: true,
+      },
+      resolvers: [new HeaderResolver(['x-lang'])],
+      typesOutputPath: join(__dirname, '../src/.generate/i18n.generated.ts'),
+    }),
   ],
   providers: [
     {

@@ -5,13 +5,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { I18, Lang } from '@app/models';
 import { Repository } from 'typeorm';
 import { paginate } from 'nestjs-typeorm-paginate';
+import { I18nTranslations } from '../.generate/i18n.generated';
+import { I18nContext, I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class I18Service {
   private readonly COUNT_CACHE = 'i18::count::cache';
   constructor(
     @InjectRepository(I18) private readonly i18: Repository<I18>,
-    @InjectRepository(Lang) private readonly lang: Repository<Lang>
+    @InjectRepository(Lang) private readonly lang: Repository<Lang>,
+    private readonly i18n: I18nService<I18nTranslations>
   ) {}
 
   async getFormat(lang: string) {
@@ -42,7 +45,13 @@ export class I18Service {
       },
     });
     if (!langRecord) {
-      throw new HttpException(`${lang} 不存在`, HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        this.i18n.t('exception.lang.notExists', {
+          args: { lang },
+          lang: I18nContext.current().lang,
+        }),
+        HttpStatus.NOT_FOUND
+      );
     }
     const i18Item = await this.i18.findOne({
       where: {
@@ -52,7 +61,12 @@ export class I18Service {
       },
     });
     if (i18Item) {
-      throw new HttpException('国际化词条存在', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        this.i18n.t('exception.i18.notExists', {
+          lang: I18nContext.current().lang,
+        }),
+        HttpStatus.BAD_REQUEST
+      );
     }
     i18.content = content;
     i18.key = key;
@@ -111,7 +125,12 @@ export class I18Service {
       relations: ['lang'],
     });
     if (!item) {
-      throw new HttpException('字段不存在', HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        this.i18n.t('exception.i18.notExists', {
+          lang: I18nContext.current().lang,
+        }),
+        HttpStatus.NOT_FOUND
+      );
     }
     return item;
   }
@@ -126,7 +145,12 @@ export class I18Service {
       },
     });
     if (!lang) {
-      throw new HttpException(`${lang} 不存在`, HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        this.i18n.t('exception.lang.notExists', {
+          lang: I18nContext.current().lang,
+        }),
+        HttpStatus.NOT_FOUND
+      );
     }
     item.lang = lang;
     return await this.i18.save(item);

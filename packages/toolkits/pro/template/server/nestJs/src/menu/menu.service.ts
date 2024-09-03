@@ -4,6 +4,8 @@ import { Menu, User } from '@app/models';
 import { Repository } from 'typeorm';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
+import { I18nTranslations } from '../.generate/i18n.generated';
+import { I18nContext, I18nService } from 'nestjs-i18n';
 
 export interface ITreeNodeData {
   // node-key='id' 设置节点的唯一标识
@@ -72,7 +74,8 @@ export class MenuService {
     @InjectRepository(User)
     private user: Repository<User>,
     @InjectRepository(Menu)
-    private menu: Repository<Menu>
+    private menu: Repository<Menu>,
+    private readonly i18n: I18nService<I18nTranslations>
   ) {}
   async findRoleMenu(email: string) {
     const userInfo = await this.user
@@ -155,7 +158,10 @@ export class MenuService {
     }
     if ((await menuInfo) && isInit == false) {
       throw new HttpException(
-        `菜单字段 ${name} 已经存在`,
+        this.i18n.t('exception.menu.exists', {
+          args: { name },
+          lang: I18nContext.current().lang,
+        }),
         HttpStatus.BAD_REQUEST
       );
     }

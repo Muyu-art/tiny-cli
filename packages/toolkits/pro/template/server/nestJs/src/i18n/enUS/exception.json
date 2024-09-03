@@ -1,0 +1,38 @@
+{
+  "common":{
+    "unauth": "UnAuth",
+    "tokenError": "Token invalid",
+    "tokenExpire": "Token expire",
+    "forbidoen": "Forbidoen"
+  },
+  "user":{
+    "oldPasswordError": "Old password error",
+    "userExists": "User exists"
+  },
+  "role": {
+    "exists": "Role exists",
+    "notExists": "Not found role",
+    "conflict": "There are users under the role, please clear them"
+  },
+  "permission":{
+    "exists": "Permission {name} exists",
+    "notExists": "Not found permission"
+  },
+  "menu":{
+    "exists": "Menu {name} exists",
+    "notExists": "Not found menu"
+  },
+  "lang": {
+    "notExists": "{lang} not found",
+    "exists": "{name} exists",
+    "notExistsCommon": "Not found"
+  },
+  "i18":{
+    "exists": "I18n field exists",
+    "notExists": "Not Found"
+  },
+  "auth":{
+    "userNotExists": "User not found",
+    "passwordOrEmailError": "Password or email invalid"
+  }
+}

@@ -5,6 +5,8 @@ import { encry, User } from '@app/models';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { RedisService } from '../../libs/redis/redis.service';
+import { I18nTranslations } from '../.generate/i18n.generated';
+import { I18nContext, I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class AuthService {
@@ -12,7 +14,8 @@ export class AuthService {
     @InjectRepository(User)
     private user: Repository<User>,
     private jwtService: JwtService,
-    private readonly redisService: RedisService
+    private readonly redisService: RedisService,
+    private readonly i18n: I18nService<I18nTranslations>
   ) {}
 
   async getToken(userId: string): Promise<string | null> {
@@ -31,10 +34,20 @@ export class AuthService {
     const { email, password } = dto;
     const userInfo = await this.user.findOne({ where: { email } });
     if (userInfo === null) {
-      throw new HttpException('该用户不存在', HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        this.i18n.translate('exception.auth.userNotExists', {
+          lang: I18nContext.current().lang,
+        }),
+        HttpStatus.NOT_FOUND
+      );
     }
     if (encry(password, userInfo.salt) !== userInfo.password) {
-      throw new HttpException('密码或邮箱错误', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        this.i18n.translate('exception.auth.passwordOrEmailError', {
+          lang: I18nContext.current().lang,
+        }),
+        HttpStatus.BAD_REQUEST
+      );
     }
     const payload = {
       email,

@@ -1,16 +1,18 @@
 import { IsNotEmpty } from 'class-validator';
+import { i18nValidationMessage } from 'nestjs-i18n';
+import { I18nTranslations } from '../../.generate/i18n.generated';
 
 export class CreateUserDto {
   @IsNotEmpty({
-    message: '用户名不能为空',
+    message: i18nValidationMessage<I18nTranslations>('validation.NOT_EMPTY'),
   })
   name: string;
   @IsNotEmpty({
-    message: '邮箱不能为空',
+    message: i18nValidationMessage<I18nTranslations>('validation.NOT_EMPTY'),
   })
   email: string;
   @IsNotEmpty({
-    message: '密码不能为空',
+    message: i18nValidationMessage<I18nTranslations>('validation.NOT_EMPTY'),
   })
   password: string;
   roleIds: number[] = [];

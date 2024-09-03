@@ -9,6 +9,8 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { AuthService } from './auth.service';
+import { I18nContext } from 'nestjs-i18n';
+import { I18nTranslations } from '../.generate/i18n.generated';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -18,6 +20,7 @@ export class AuthGuard implements CanActivate {
     private readonly authService: AuthService
   ) {}
   async canActivate(ctx: ExecutionContext): Promise<boolean> {
+    const i18n = I18nContext.current<I18nTranslations>();
     const isPublic = this.reflector.getAllAndOverride('isPublic', [
       ctx.getHandler(),
       ctx.getClass(),
@@ -28,7 +31,12 @@ export class AuthGuard implements CanActivate {
     const req = ctx.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(req);
     if (!token) {
-      throw new HttpException('异常Token', HttpStatus.FORBIDDEN);
+      throw new HttpException(
+        i18n.t('exception.common.tokenError', {
+          lang: I18nContext.current().lang,
+        }),
+        HttpStatus.FORBIDDEN
+      );
     }
     try {
       const payload = await this.jwt.decode(token);
@@ -41,7 +49,12 @@ export class AuthGuard implements CanActivate {
         return true;
       });
     } catch (err) {
-      throw new HttpException('登录过期', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        i18n.t('exception.common.tokenExpire', {
+          lang: I18nContext.current().lang,
+        }),
+        HttpStatus.BAD_REQUEST
+      );
     }
   }
   private extractTokenFromHeader(request: Request): string | undefined {

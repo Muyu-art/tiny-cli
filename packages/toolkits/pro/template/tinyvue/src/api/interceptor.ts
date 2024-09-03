@@ -34,6 +34,7 @@ axios.interceptors.request.use(
     }
 
     config.headers = { ...config.headers };
+    config.headers['x-lang'] = localStorage.getItem('tiny-locale') ?? 'zhCN';
 
     return config;
   },

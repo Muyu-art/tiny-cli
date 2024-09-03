@@ -4,12 +4,15 @@ import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Permission } from '@app/models';
 import { Repository } from 'typeorm';
+import { I18nTranslations } from '../.generate/i18n.generated';
+import { I18nContext, I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class PermissionService {
   constructor(
     @InjectRepository(Permission)
-    private permission: Repository<Permission>
+    private permission: Repository<Permission>,
+    private readonly i18n: I18nService<I18nTranslations>
   ) {}
   async create(createPermissionDto: CreatePermissionDto, isInit: boolean) {
     const { name, desc } = createPermissionDto;
@@ -21,7 +24,10 @@ export class PermissionService {
     }
     if ((await permissionInfo) && isInit == false) {
       throw new HttpException(
-        `权限字段 ${name} 已经存在`,
+        this.i18n.t('exception.permission.exists', {
+          args: { name },
+          lang: I18nContext.current().lang,
+        }),
         HttpStatus.BAD_REQUEST
       );
     }
@@ -34,7 +40,12 @@ export class PermissionService {
       where: { id },
     });
     if (!permissionInfo) {
-      throw new HttpException('无法找到权限字段', HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        this.i18n.t('exception.permission.notExists', {
+          lang: I18nContext.current().lang,
+        }),
+        HttpStatus.NOT_FOUND
+      );
     }
     return this.permission.update(id, { name, desc });
   }
