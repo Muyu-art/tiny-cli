@@ -1,6 +1,6 @@
 <template>
   <general-layout :breadcrumb="['menu.systemManager', 'menu.i18n']">
-    <add-locale v-permission="'i18n::add'" />
+    <add-locale v-permission="'i18n::add'" class="locale-add-btn" />
     <locale-table />
   </general-layout>
 </template>
@@ -11,3 +11,9 @@
   import addLocale from './components/add-locale.vue';
   import localeTable from './components/locale-table.vue';
 </script>
+
+<style scoped lang="less">
+  .locale-add-btn {
+    padding: 10px 0 10px 10px;
+  }
+</style>
