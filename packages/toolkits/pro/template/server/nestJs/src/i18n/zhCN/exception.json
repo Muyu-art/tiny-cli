@@ -1,0 +1,38 @@
+{
+  "common":{
+    "unauth": "未登录",
+    "tokenError": "异常token",
+    "tokenExpire": "token过期",
+    "forbidoen": "权限不足"
+  },
+  "user":{
+    "oldPasswordError": "旧密码错误",
+    "userExists": "用户存在"
+  },
+  "role": {
+    "exists": "角色已存在",
+    "notExists": "角色不存在",
+    "conflict": "角色下村在用户, 请清空用户"
+  },
+  "permission":{
+    "exists": "权限字段 {name} 已经存在",
+    "notExists": "无法找到权限字段"
+  },
+  "menu":{
+    "exists": "菜单字段 {name} 已经存在",
+    "notExists": "无法找到权限字段"
+  },
+  "lang": {
+    "notExists": "{lang} 不存在",
+    "exists": "{name} 存在",
+    "notExistsCommon": "语言不存在"
+  },
+  "i18":{
+    "exists": "国际化词条存在",
+    "notExists": "字段不存在"
+  },
+  "auth":{
+    "userNotExists": "用户不存在",
+    "passwordOrEmailError": "密码或邮箱错误"
+  }
+}
