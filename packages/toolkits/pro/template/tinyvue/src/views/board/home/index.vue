@@ -12,6 +12,7 @@
 </template>
 
 <script lang="ts" setup>
+  import transitionFadeDownGroup from '@/components/transition/transition-fade-down-group.vue';
   import Main from './components/main.vue';
   import Curve from './components/curve.vue';
   import Falls from './components/falls.vue';

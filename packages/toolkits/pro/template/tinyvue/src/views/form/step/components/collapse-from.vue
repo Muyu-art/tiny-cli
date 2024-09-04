@@ -1,33 +1,41 @@
 <template>
   <div id="container">
-    <div>
-      <h3>{{ $t('stepForm.collapse.base') }}</h3>
-      <coachfrom
-        ref="coachFormRef"
-        :project-data="projectData"
-        :coach-play="coachPlay"
-      ></coachfrom>
-    </div>
-    <div v-if="directorVis">
-      <h3>{{ $t('stepForm.collapse.supervisor') }}</h3>
-      <directorfrom
-        ref="directorRef"
-        :project-data="projectData"
-        :director-play="directorPlay"
-      ></directorfrom>
-    </div>
-    <div v-if="targetVis" class="targetStyle">
-      <h3>{{ $t('stepForm.collapse.goals') }}</h3>
-      <targetfrom ref="targetRef" :project-data="projectData"></targetfrom>
-    </div>
-    <div v-if="summationVis">
-      <h3>{{ $t('stepForm.collapse.summary') }}</h3>
-      <summationfrom
-        ref="summationRef"
-        :project-data="projectData"
-        :summation-play="summationPlay"
-      ></summationfrom>
-    </div>
+    <transition-fade-down-group>
+      <div>
+        <h3>{{ $t('stepForm.collapse.base') }}</h3>
+        <coachfrom
+          ref="coachFormRef"
+          :project-data="projectData"
+          :coach-play="coachPlay"
+        ></coachfrom>
+      </div>
+      <div v-if="directorVis">
+        <transition-slide-group>
+          <h3>{{ $t('stepForm.collapse.supervisor') }}</h3>
+          <directorfrom
+            ref="directorRef"
+            :project-data="projectData"
+            :director-play="directorPlay"
+          ></directorfrom>
+        </transition-slide-group>
+      </div>
+      <div v-if="targetVis" class="targetStyle">
+        <transition-slide-group>
+          <h3>{{ $t('stepForm.collapse.goals') }}</h3>
+          <targetfrom ref="targetRef" :project-data="projectData"></targetfrom>
+        </transition-slide-group>
+      </div>
+      <div v-if="summationVis">
+        <transition-slide-group>
+          <h3>{{ $t('stepForm.collapse.summary') }}</h3>
+          <summationfrom
+            ref="summationRef"
+            :project-data="projectData"
+            :summation-play="summationPlay"
+          ></summationfrom>
+        </transition-slide-group>
+      </div>
+    </transition-fade-down-group>
   </div>
 </template>
 
@@ -104,7 +112,7 @@
         summationVis.value = true;
       }
     },
-    { immediate: true }
+    { immediate: true },
   );
 
   // 重置操作

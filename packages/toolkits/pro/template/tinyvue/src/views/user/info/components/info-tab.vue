@@ -14,13 +14,15 @@
     </tiny-tabs>
   </div>
   <div class="contentFilter">
-    <div class="left" @click="changeSort">
-      {{ $t('userInfo.filter.sort') }}
-      <ChevronDown></ChevronDown>
-    </div>
-    <div class="right" @click="changeFilter">
-      <img src="@/assets/images/filter.png" />
-    </div>
+    <transition-slide-group>
+      <div class="left" @click="changeSort">
+        {{ $t('userInfo.filter.sort') }}
+        <ChevronDown></ChevronDown>
+      </div>
+      <div class="right" @click="changeFilter">
+        <img src="@/assets/images/filter.png" />
+      </div>
+    </transition-slide-group>
   </div>
   <div v-show="Sort" class="sort">
     <li

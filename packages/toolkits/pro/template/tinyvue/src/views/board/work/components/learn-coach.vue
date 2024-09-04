@@ -1,52 +1,56 @@
 <template>
   <div class="coach-select">
-    <h3>{{ $t('work.index.coach') }}</h3>
-    <tiny-select
-      v-model="state.project"
-      :placeholder="$t('baseForm.form.label.placeholder')"
-      filterable
-    >
-      <tiny-option
-        v-for="item in state.options"
-        :key="item.value"
-        :label="$t(item.label)"
-        :value="item.value"
-      ></tiny-option>
-    </tiny-select>
+    <transition-fade-down-group>
+      <h3>{{ $t('work.index.coach') }}</h3>
+      <tiny-select
+        v-model="state.project"
+        :placeholder="$t('baseForm.form.label.placeholder')"
+        filterable
+      >
+        <tiny-option
+          v-for="item in state.options"
+          :key="item.value"
+          :label="$t(item.label)"
+          :value="item.value"
+        ></tiny-option>
+      </tiny-select>
+    </transition-fade-down-group>
   </div>
   <div>
     <tiny-layout>
       <tiny-row :flex="true" justify="center">
-        <tiny-col :span="8">
-          <div class="col">
-            <div class="left">
-              <div class="left-content">
-                <span class="num">{{ number[0] }}</span>
-                <span>&nbsp;/ {{ $t('work.index.Person') }}</span>
+        <transition-fade-slide-group>
+          <tiny-col :span="8">
+            <div class="col">
+              <div class="left">
+                <div class="left-content">
+                  <span class="num">{{ number[0] }}</span>
+                  <span>&nbsp;/ {{ $t('work.index.Person') }}</span>
+                </div>
+                <div class="left-title">{{ $t('work.index.trainees') }}</div>
               </div>
-              <div class="left-title">{{ $t('work.index.trainees') }}</div>
-            </div>
-            <div class="divider"></div>
-            <div class="right">
-              <img src="@/assets/images/coach-1.png" />
-            </div>
-          </div>
-        </tiny-col>
-        <tiny-col :span="8">
-          <div class="col">
-            <div class="left">
-              <div class="left-content">
-                <span class="num">{{ number[1] }}</span>
-                <span>&nbsp;/ {{ $t('work.index.Person') }}</span>
+              <div class="divider"></div>
+              <div class="right">
+                <img src="@/assets/images/coach-1.png" />
               </div>
-              <div class="left-title">{{ $t('work.index.coachNum') }}</div>
             </div>
-            <div class="divider"></div>
-            <div class="right">
-              <img src="@/assets/images/coach-2.png" />
+          </tiny-col>
+          <tiny-col :span="8">
+            <div class="col">
+              <div class="left">
+                <div class="left-content">
+                  <span class="num">{{ number[1] }}</span>
+                  <span>&nbsp;/ {{ $t('work.index.Person') }}</span>
+                </div>
+                <div class="left-title">{{ $t('work.index.coachNum') }}</div>
+              </div>
+              <div class="divider"></div>
+              <div class="right">
+                <img src="@/assets/images/coach-2.png" />
+              </div>
             </div>
-          </div>
-        </tiny-col>
+          </tiny-col>
+        </transition-fade-slide-group>
       </tiny-row>
     </tiny-layout>
   </div>
@@ -63,6 +67,7 @@
   } from '@opentiny/vue';
   import { reactive, onMounted, watch, ref } from 'vue';
   import { getUserData, getUserChange } from '@/api/board';
+  import transitionFadeSlideGroup from '@/components/transition/transition-fade-slide-group.vue';
 
   // 加载效果
   const state = reactive<{
@@ -108,7 +113,7 @@
     (newValue, oldValue) => {
       fetchSelect(newValue.project);
     },
-    { immediate: true }
+    { immediate: true },
   );
 </script>
 
@@ -131,7 +136,9 @@
     color: #575d6c;
     font-weight: 600;
     font-size: 30px;
-    font-family: PingFang SC, PingFang SC-PingFang SC;
+    font-family:
+      PingFang SC,
+      PingFang SC-PingFang SC;
     line-height: 36px;
     text-align: left;
   }

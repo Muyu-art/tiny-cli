@@ -4,55 +4,62 @@
     <div class="container-form">
       <div class="base-card">
         <tiny-collapse v-model="activeNames" @change="change">
-          <tiny-collapse-item :title="$t('baseForm.form.project')" name="project">
-            <homefrom
-              :project-data="(projectData.Project as [] | any)"
-            ></homefrom>
-          </tiny-collapse-item>
+          <transition-fade-slide-group>
+            <tiny-collapse-item
+              :title="$t('baseForm.form.project')"
+              name="project"
+            >
+              <homefrom :project-data="projectData.Project as any"></homefrom>
+            </tiny-collapse-item>
+            <tiny-collapse-item
+              :title="$t('baseForm.form.label.people')"
+              name="people"
+            >
+              <peoplefrom
+                ref="peopleFormRef"
+                :project-data="projectData"
+                :people-vis="peopleVis"
+              ></peoplefrom>
+            </tiny-collapse-item>
 
-          <tiny-collapse-item
-            :title="$t('baseForm.form.label.people')"
-            name="people"
-          >
-            <peoplefrom
-              ref="peopleFormRef"
-              :project-data="projectData"
-              :people-vis="peopleVis"
-            ></peoplefrom>
-          </tiny-collapse-item>
-
-          <tiny-collapse-item
-            :title="$t('baseForm.form.label.Objectives')"
-            name="objectives"
-          >
-            <objectivefrom ref="objectiveRef"></objectivefrom>
-          </tiny-collapse-item>
-          <tiny-collapse-item :title="$t('baseForm.form.label.plan')" name="plan">
-            <planfrom
-              ref="planFromRef"
-              :project-data="projectData"
-              :plan-vis="planVis"
-            ></planfrom>
-          </tiny-collapse-item>
-          <tiny-collapse-item
-            :title="$t('baseForm.form.label.evaluation')"
-            name="evaluation"
-          >
-            <evaluationfrom ref="evaluationRef"></evaluationfrom>
-          </tiny-collapse-item>
-          <tiny-collapse-item
-            :title="$t('baseForm.form.label.mentortitle')"
-            name="mentortitle"
-          >
-            <mentorfrom ref="mentorRef"></mentorfrom>
-            <div class="card-tip">{{ $t('baseForm.form.label.mentortip') }}</div>
-          </tiny-collapse-item>
-          <tiny-collapse-item
-            :title="$t('baseForm.form.label.remindertitle')"
-            name="remindertitle"
-          >
-            <reminderfrom ref="reminderRef"></reminderfrom>
-          </tiny-collapse-item>
+            <tiny-collapse-item
+              :title="$t('baseForm.form.label.Objectives')"
+              name="objectives"
+            >
+              <objectivefrom ref="objectiveRef"></objectivefrom>
+            </tiny-collapse-item>
+            <tiny-collapse-item
+              :title="$t('baseForm.form.label.plan')"
+              name="plan"
+            >
+              <planfrom
+                ref="planFromRef"
+                :project-data="projectData"
+                :plan-vis="planVis"
+              ></planfrom>
+            </tiny-collapse-item>
+            <tiny-collapse-item
+              :title="$t('baseForm.form.label.evaluation')"
+              name="evaluation"
+            >
+              <evaluationfrom ref="evaluationRef"></evaluationfrom>
+            </tiny-collapse-item>
+            <tiny-collapse-item
+              :title="$t('baseForm.form.label.mentortitle')"
+              name="mentortitle"
+            >
+              <mentorfrom ref="mentorRef"></mentorfrom>
+              <div class="card-tip">{{
+                $t('baseForm.form.label.mentortip')
+              }}</div>
+            </tiny-collapse-item>
+            <tiny-collapse-item
+              :title="$t('baseForm.form.label.remindertitle')"
+              name="remindertitle"
+            >
+              <reminderfrom ref="reminderRef"></reminderfrom>
+            </tiny-collapse-item>
+          </transition-fade-slide-group>
         </tiny-collapse>
         <div class="base-foot">
           <tiny-button
@@ -83,6 +90,7 @@
   } from '@opentiny/vue';
   import { IconInfoCircle } from '@opentiny/vue-icon';
   import { getBaseData } from '@/api/form';
+  import transitionFadeSlideGroup from '@/components/transition/transition-fade-slide-group.vue';
   import peoplefrom from './components/people-from.vue';
   import objectivefrom from './components/objective-from.vue';
   import planfrom from './components/plan-from.vue';
@@ -185,8 +193,10 @@
 
 <style scoped lang="less">
   .container {
+    width: 100%;
     height: 100%;
   }
+
   .container-form {
     display: flex;
     flex-direction: column;
@@ -198,7 +208,6 @@
 
   .base-card {
     flex: 1 1 auto;
-    margin: 8px 10px;
     padding: 22px 20px 60px;
     background: #fff;
     border-radius: 10px;
@@ -206,11 +215,11 @@
 
     .card-tip {
       padding-left: 40px;
-      font-size: 12px;
-      font-weight: normal;
-      text-align: left;
       color: #e37d29;
+      font-weight: normal;
+      font-size: 12px;
       line-height: 18px;
+      text-align: left;
 
       :deep(.tiny-scroll-text) {
         width: 100%;
@@ -236,10 +245,15 @@
     height: 36px;
     border-radius: 4px;
   }
-  :deep(.tiny-collapse-item__arrow.is-active, .tiny-collapse-item__arrow:hover){
+
+  :deep(
+      .tiny-collapse-item__arrow.is-active,
+      .tiny-collapse-item__arrow:hover
+    ) {
     fill: var(--ti-common-color-text-highlight);
   }
-  :deep(.tiny-collapse-item__header svg){
+
+  :deep(.tiny-collapse-item__header svg) {
     fill: var(--ti-common-color-text-highlight);
   }
 </style>

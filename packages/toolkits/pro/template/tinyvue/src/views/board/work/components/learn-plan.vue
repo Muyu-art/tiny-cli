@@ -1,59 +1,62 @@
 <template>
   <tiny-layout>
     <tiny-row :flex="true" justify="center">
-      <tiny-col>
-        <div class="col">
-          <div class="title">
-            <img src="@/assets/images/plan-1.png" />
-            <span>{{ $t('work.index.plans') }}</span>
+      <transition-fade-slide-group>
+        <tiny-col>
+          <div class="col">
+            <div class="title">
+              <img src="@/assets/images/plan-1.png" />
+              <span>{{ $t('work.index.plans') }}</span>
+            </div>
+            <div>
+              <span class="plan-pass">1890</span>
+              <span class="num">&nbsp;/ {{ $t('work.index.Numbers') }}</span>
+            </div>
           </div>
-          <div>
-            <span class="plan-pass">1890</span>
-            <span class="num">&nbsp;/ {{ $t('work.index.Numbers') }}</span>
+        </tiny-col>
+        <tiny-col>
+          <div class="col">
+            <div class="title">
+              <img src="@/assets/images/plan-2.png" />
+              <span>{{ $t('work.index.Unfinished') }}</span>
+            </div>
+            <div>
+              <span class="plan-pass">23</span>
+              <span class="num">&nbsp;/ {{ $t('work.index.Numbers') }}</span>
+            </div>
           </div>
-        </div>
-      </tiny-col>
-      <tiny-col>
-        <div class="col">
-          <div class="title">
-            <img src="@/assets/images/plan-2.png" />
-            <span>{{ $t('work.index.Unfinished') }}</span>
+        </tiny-col>
+        <tiny-col>
+          <div class="col">
+            <div class="title">
+              <img src="@/assets/images/plan-3.png" />
+              <span>{{ $t('work.index.beOverdue') }}</span>
+            </div>
+            <div>
+              <span class="plan-fail">113</span>
+              <span class="num">&nbsp;/ {{ $t('work.index.Numbers') }}</span>
+            </div>
           </div>
-          <div>
-            <span class="plan-pass">23</span>
-            <span class="num">&nbsp;/ {{ $t('work.index.Numbers') }}</span>
+        </tiny-col>
+        <tiny-col>
+          <div class="col">
+            <div class="title">
+              <img src="@/assets/images/plan-4.png" />
+              <span>{{ $t('work.index.Overdue') }}</span>
+            </div>
+            <div>
+              <span class="plan-pass">56</span>
+              <span class="num">&nbsp;/ {{ $t('work.index.Numbers') }}</span>
+            </div>
           </div>
-        </div>
-      </tiny-col>
-      <tiny-col>
-        <div class="col">
-          <div class="title">
-            <img src="@/assets/images/plan-3.png" />
-            <span>{{ $t('work.index.beOverdue') }}</span>
-          </div>
-          <div>
-            <span class="plan-fail">113</span>
-            <span class="num">&nbsp;/ {{ $t('work.index.Numbers') }}</span>
-          </div>
-        </div>
-      </tiny-col>
-      <tiny-col>
-        <div class="col">
-          <div class="title">
-            <img src="@/assets/images/plan-4.png" />
-            <span>{{ $t('work.index.Overdue') }}</span>
-          </div>
-          <div>
-            <span class="plan-pass">56</span>
-            <span class="num">&nbsp;/ {{ $t('work.index.Numbers') }}</span>
-          </div>
-        </div>
-      </tiny-col>
+        </tiny-col>
+      </transition-fade-slide-group>
     </tiny-row>
   </tiny-layout>
 </template>
 
 <script lang="ts" setup>
+  import transitionFadeSlideGroup from '@/components/transition/transition-fade-slide-group.vue';
   import {
     Layout as TinyLayout,
     Row as TinyRow,
