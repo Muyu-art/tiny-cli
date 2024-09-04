@@ -1,15 +1,17 @@
 <template>
   <div class="card">
-    <div v-for="(item, index) in InfoNum" :key="index" class="col">
-      <div>
-        <img :src="item.img" />
-        <span>{{ $t(item.text) }}</span>
+    <transition-slide-group>
+      <div v-for="(item, index) in InfoNum" :key="index" class="col">
+        <div>
+          <img :src="item.img" />
+          <span>{{ $t(item.text) }}</span>
+        </div>
+        <div>
+          <span :class="item.class">{{ item.value }}</span>
+          <span>&nbsp;/ {{ $t('work.index.Numbers') }}</span>
+        </div>
       </div>
-      <div>
-        <span :class="item.class">{{ item.value }}</span>
-        <span>&nbsp;/ {{ $t('work.index.Numbers') }}</span>
-      </div>
-    </div>
+    </transition-slide-group>
   </div>
 </template>
 
@@ -94,7 +96,9 @@
     .font {
       font-weight: 600;
       font-size: 48px;
-      font-family: PingFang SC, PingFang SC-PingFang SC;
+      font-family:
+        PingFang SC,
+        PingFang SC-PingFang SC;
       line-height: 36px;
       text-align: left;
     }

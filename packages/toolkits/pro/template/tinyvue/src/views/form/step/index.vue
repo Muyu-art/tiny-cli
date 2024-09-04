@@ -2,43 +2,45 @@
   <div class="container-step">
     <Breadcrumb :items="['menu.form', 'menu.form.step']" />
     <div class="general-card">
-      <div class="general-top">
-        <headtop></headtop>
-      </div>
-      <div class="general-contain">
-        <div>{{ $t('stepForm.coaching.process') }}</div>
-        <div>
-          <tiny-time-line
-            :data="[
-              { name: t('stepForm.start.coaching') },
-              { name: t('stepForm.immediate.supervisor') },
-              { name: t('stepForm.overall.goals') },
-              { name: t('stepForm.overall.summary') },
-              { name: t('stepForm.overall.end') },
-            ]"
-            :active="normalActive"
-            type="normal"
-          ></tiny-time-line>
+      <transition-fade-slide-group>
+        <div class="general-top">
+          <headtop></headtop>
         </div>
-      </div>
-      <div class="general-foot">
-        <collapsefrom ref="collapseRef"></collapsefrom>
-        <div class="general-btn">
-          <tiny-button
-            v-if="normalActive !== 4"
-            type="primary"
-            native-type="submit"
-            @click="handleSubmit"
-            >{{ $t('stepForm.button.submit') }}</tiny-button
-          >
-          <tiny-button v-if="normalActive !== 4" @click="handleFormReset">{{
-            $t('stepForm.button.cancel')
-          }}</tiny-button>
-          <tiny-button v-if="normalActive === 4" @click="handleFormRestore">{{
-            $t('stepForm.button.restore')
-          }}</tiny-button>
+        <div class="general-contain">
+          <div>{{ $t('stepForm.coaching.process') }}</div>
+          <div>
+            <tiny-time-line
+              :data="[
+                { name: t('stepForm.start.coaching') },
+                { name: t('stepForm.immediate.supervisor') },
+                { name: t('stepForm.overall.goals') },
+                { name: t('stepForm.overall.summary') },
+                { name: t('stepForm.overall.end') },
+              ]"
+              :active="normalActive"
+              type="normal"
+            ></tiny-time-line>
+          </div>
         </div>
-      </div>
+        <div class="general-foot">
+          <collapsefrom ref="collapseRef"></collapsefrom>
+          <div class="general-btn">
+            <tiny-button
+              v-if="normalActive !== 4"
+              type="primary"
+              native-type="submit"
+              @click="handleSubmit"
+              >{{ $t('stepForm.button.submit') }}</tiny-button
+            >
+            <tiny-button v-if="normalActive !== 4" @click="handleFormReset">{{
+              $t('stepForm.button.cancel')
+            }}</tiny-button>
+            <tiny-button v-if="normalActive === 4" @click="handleFormRestore">{{
+              $t('stepForm.button.restore')
+            }}</tiny-button>
+          </div>
+        </div>
+      </transition-fade-slide-group>
     </div>
   </div>
 </template>
@@ -51,6 +53,7 @@
     Button as TinyButton,
   } from '@opentiny/vue';
   import { useAppStore } from '@/store';
+  import transitionFadeSlideGroup from '@/components/transition/transition-fade-slide-group.vue';
   import collapsefrom from './components/collapse-from.vue';
   import headtop from './components/head.vue';
 
@@ -79,8 +82,8 @@
     flex-direction: column;
     align-content: center;
     justify-content: center;
-    width: 98%;
-    height: inherit;
+    width: 100%;
+    height: calc(100% - 48px);
     margin: 0 auto;
     overflow: auto;
     word-break: break-all;

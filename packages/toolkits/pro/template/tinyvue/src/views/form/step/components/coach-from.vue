@@ -10,97 +10,106 @@
       size="small"
     >
       <tiny-row :flex="true" justify="left">
-        <tiny-col :span="4" label-width="100px">
-          <tiny-form-item :label="$t('stepForm.coach.culture')" prop="sector">
-            <tiny-input
-              v-model="state.filterOptions.sector"
-              :disabled="disabled"
-              :placeholder="$t('searchTable.form.input')"
-            ></tiny-input>
-          </tiny-form-item>
-        </tiny-col>
-        <tiny-col :span="4" label-width="100px">
-          <tiny-form-item
-            :label="$t('stepForm.coach.position')"
-            prop="position"
-          >
-            <tiny-select
-              v-model="state.filterOptions.position"
-              :disabled="disabled"
-              :placeholder="$t('baseForm.form.label.placeholder')"
-              multiple
+        <transition-fade-down-group>
+          <tiny-col :span="4" label-width="100px">
+            <tiny-form-item :label="$t('stepForm.coach.culture')" prop="sector">
+              <tiny-input
+                v-model="state.filterOptions.sector"
+                :disabled="disabled"
+                :placeholder="$t('searchTable.form.input')"
+              ></tiny-input>
+            </tiny-form-item>
+          </tiny-col>
+          <tiny-col :span="4" label-width="100px">
+            <tiny-form-item
+              :label="$t('stepForm.coach.position')"
+              prop="position"
             >
-              <tiny-option
-                v-for="item in (projectData?.position as any)"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></tiny-option>
-            </tiny-select>
-          </tiny-form-item>
-        </tiny-col>
+              <tiny-select
+                v-model="state.filterOptions.position"
+                :disabled="disabled"
+                :placeholder="$t('baseForm.form.label.placeholder')"
+                multiple
+              >
+                <tiny-option
+                  v-for="item in projectData?.position as any"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></tiny-option>
+              </tiny-select>
+            </tiny-form-item>
+          </tiny-col>
+        </transition-fade-down-group>
       </tiny-row>
 
       <tiny-row :flex="true" justify="left">
-        <tiny-col :span="4" label-width="100px">
-          <tiny-form-item label="HR" prop="hr">
-            <tiny-select
-              v-model="state.filterOptions.hr"
-              :disabled="disabled"
-              :placeholder="$t('baseForm.form.label.placeholder')"
-              multiple
-            >
-              <tiny-option
-                v-for="item in (projectData?.HR as any)"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></tiny-option>
-            </tiny-select>
-          </tiny-form-item>
-        </tiny-col>
-        <tiny-col :span="4" label-width="100px">
-          <tiny-form-item :label="$t('stepForm.coach.mentor')" prop="teacher">
-            <tiny-select
-              v-model="state.filterOptions.teacher"
-              :disabled="disabled"
-              :placeholder="$t('baseForm.form.label.placeholder')"
-              multiple
-            >
-              <tiny-option
-                v-for="item in (projectData?.mentor as any)"
-                :key="item"
-                :label="item"
-                :value="item"
-              ></tiny-option>
-            </tiny-select>
-          </tiny-form-item>
-        </tiny-col>
+        <transition-fade-down-group>
+          <tiny-col :span="4" label-width="100px">
+            <tiny-form-item label="HR" prop="hr">
+              <tiny-select
+                v-model="state.filterOptions.hr"
+                :disabled="disabled"
+                :placeholder="$t('baseForm.form.label.placeholder')"
+                multiple
+              >
+                <tiny-option
+                  v-for="item in projectData?.HR as any"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></tiny-option>
+              </tiny-select>
+            </tiny-form-item>
+          </tiny-col>
+          <tiny-col :span="4" label-width="100px">
+            <tiny-form-item :label="$t('stepForm.coach.mentor')" prop="teacher">
+              <tiny-select
+                v-model="state.filterOptions.teacher"
+                :disabled="disabled"
+                :placeholder="$t('baseForm.form.label.placeholder')"
+                multiple
+              >
+                <tiny-option
+                  v-for="item in projectData?.mentor as any"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                ></tiny-option>
+              </tiny-select>
+            </tiny-form-item>
+          </tiny-col>
+        </transition-fade-down-group>
       </tiny-row>
 
       <tiny-row :flex="true" justify="left">
-        <tiny-col :span="4" label-width="100px">
-          <tiny-form-item
-            :label="$t('stepForm.coach.startTime')"
-            prop="startTime"
-          >
-            <tiny-date-picker
-              v-model="state.filterOptions.startTime"
-              :disabled="disabled"
-              :placeholder="$t('searchTable.form.input')"
-            ></tiny-date-picker>
-          </tiny-form-item>
-        </tiny-col>
-        <tiny-col :span="4" label-width="100px">
-          <tiny-form-item :label="$t('stepForm.coach.endTime')" prop="endTime">
-            <tiny-date-picker
-              v-model="state.filterOptions.endTime"
-              :disabled="disabled"
-              :placeholder="$t('searchTable.form.input')"
-              @blur="handleBlur"
-            ></tiny-date-picker>
-          </tiny-form-item>
-        </tiny-col>
+        <transition-fade-down-group>
+          <tiny-col :span="4" label-width="100px">
+            <tiny-form-item
+              :label="$t('stepForm.coach.startTime')"
+              prop="startTime"
+            >
+              <tiny-date-picker
+                v-model="state.filterOptions.startTime"
+                :disabled="disabled"
+                :placeholder="$t('searchTable.form.input')"
+              ></tiny-date-picker>
+            </tiny-form-item>
+          </tiny-col>
+          <tiny-col :span="4" label-width="100px">
+            <tiny-form-item
+              :label="$t('stepForm.coach.endTime')"
+              prop="endTime"
+            >
+              <tiny-date-picker
+                v-model="state.filterOptions.endTime"
+                :disabled="disabled"
+                :placeholder="$t('searchTable.form.input')"
+                @blur="handleBlur"
+              ></tiny-date-picker>
+            </tiny-form-item>
+          </tiny-col>
+        </transition-fade-down-group>
       </tiny-row>
     </tiny-form>
   </tiny-layout>
@@ -160,10 +169,10 @@
 
   const handleBlur = () => {
     const start = new Date(
-      JSON.parse(JSON.stringify(state.filterOptions.startTime))
+      JSON.parse(JSON.stringify(state.filterOptions.startTime)),
     ).getTime();
     const end = new Date(
-      JSON.parse(JSON.stringify(state.filterOptions.endTime))
+      JSON.parse(JSON.stringify(state.filterOptions.endTime)),
     ).getTime();
     if (end < start) {
       state.filterOptions.endTime = '';

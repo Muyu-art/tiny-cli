@@ -2,7 +2,9 @@
   <div class="container-work">
     <Breadcrumb :items="['menu.board', 'menu.work']" />
     <div class="work-image">
-      <img src="@/assets/images/woker.png" alt="403" class="user-image" />
+      <transition-slide>
+        <img src="@/assets/images/woker.png" alt="403" class="user-image" />
+      </transition-slide>
     </div>
     <div class="content">
       <div class="left">
@@ -37,16 +39,18 @@
       <div class="right">
         <h3>{{ $t('work.index.Inquiry') }}</h3>
         <div class="card more">
-          <dl v-for="item in Inquiry" :key="(item as any)">
-            <dt>{{ $t(item.label) }}</dt>
-            <dd>
-              <a href="javascript:;">{{ $t(item.value) }}</a>
-            </dd>
-          </dl>
+          <transition-fade-down-group>
+            <dl v-for="item in Inquiry" :key="item as any">
+              <dt>{{ $t(item.label) }}</dt>
+              <dd>
+                <a href="javascript:;">{{ $t(item.value) }}</a>
+              </dd>
+            </dl>
+          </transition-fade-down-group>
         </div>
         <h3>{{ $t('work.index.Home') }}</h3>
         <div class="card more">
-          <dl v-for="item in Home" :key="(item as any)">
+          <dl v-for="item in Home" :key="item as any">
             <dt>{{ $t(item.label) }}</dt>
             <dd>
               <a href="javascript:;">{{ $t(item.value) }}</a>
@@ -65,6 +69,7 @@
 </template>
 
 <script lang="ts" setup>
+  import transitionFadeDownGroup from '@/components/transition/transition-fade-down-group.vue';
   import learnplan from './components/learn-plan.vue';
   import learncoach from './components/learn-coach.vue';
   import learnprobation from './components/learn-probation.vue';
@@ -91,7 +96,7 @@
 <style scoped lang="less">
   .container-work {
     width: 98%;
-    height: inherit;
+    height: calc(100% - 48px);
     margin: 0 auto;
     overflow: auto;
     background: #f6f8f9;
@@ -165,7 +170,9 @@
             margin-left: 10px;
             font-weight: bolder;
             font-size: 16px;
-            font-family: PingFang SC, PingFang SC-PingFang SC;
+            font-family:
+              PingFang SC,
+              PingFang SC-PingFang SC;
             line-height: 15px;
             text-align: left;
           }

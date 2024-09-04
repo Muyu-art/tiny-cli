@@ -8,37 +8,39 @@
     >
       <h4>{{ $t(item.title) }}</h4>
       <div v-if="item.value === 1">
-        <div
-          v-for="itemson in item.list"
-          :key="itemson.sort"
-          :value="itemson.type"
-        >
-          <div v-if="itemson.len === 1" class="cardold" :class="itemson.pid">
-            <div class="cardtip">
-              <span class="cardType">{{ $t(itemson.type) }}</span>
-              <img v-if="itemson.pid === 'A'" :src="tip1" />
-              <img v-if="itemson.pid === 'B'" :src="tip2" />
-              <img v-if="itemson.pid === 'C'" :src="tip3" />
-              <img v-if="itemson.pid === 'D'" :src="tip4" />
-              <span class="cardStatus">{{ $t(itemson.status) }}</span>
-            </div>
-          </div>
+        <transition-slide-group>
           <div
-            v-if="itemson.len !== 1"
-            class="cardnew"
-            :class="itemson.pid"
-            :style="{ width: `${itemson.len * 199}px` }"
+            v-for="itemson in item.list"
+            :key="itemson.sort"
+            :value="itemson.type"
           >
-            <div class="cardtip">
-              <span class="cardType">{{ $t(itemson.type) }}</span>
-              <img v-if="itemson.pid === 'A'" :src="tip1" />
-              <img v-if="itemson.pid === 'B'" :src="tip2" />
-              <img v-if="itemson.pid === 'C'" :src="tip3" />
-              <img v-if="itemson.pid === 'D'" :src="tip4" />
-              <span class="cardStatus">{{ $t(itemson.status) }}</span>
+            <div v-if="itemson.len === 1" class="cardold" :class="itemson.pid">
+              <div class="cardtip">
+                <span class="cardType">{{ $t(itemson.type) }}</span>
+                <img v-if="itemson.pid === 'A'" :src="tip1" />
+                <img v-if="itemson.pid === 'B'" :src="tip2" />
+                <img v-if="itemson.pid === 'C'" :src="tip3" />
+                <img v-if="itemson.pid === 'D'" :src="tip4" />
+                <span class="cardStatus">{{ $t(itemson.status) }}</span>
+              </div>
+            </div>
+            <div
+              v-if="itemson.len !== 1"
+              class="cardnew"
+              :class="itemson.pid"
+              :style="{ width: `${itemson.len * 199}px` }"
+            >
+              <div class="cardtip">
+                <span class="cardType">{{ $t(itemson.type) }}</span>
+                <img v-if="itemson.pid === 'A'" :src="tip1" />
+                <img v-if="itemson.pid === 'B'" :src="tip2" />
+                <img v-if="itemson.pid === 'C'" :src="tip3" />
+                <img v-if="itemson.pid === 'D'" :src="tip4" />
+                <span class="cardStatus">{{ $t(itemson.status) }}</span>
+              </div>
             </div>
           </div>
-        </div>
+        </transition-slide-group>
       </div>
     </div>
   </div>

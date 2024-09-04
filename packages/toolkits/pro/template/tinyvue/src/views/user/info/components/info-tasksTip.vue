@@ -1,9 +1,11 @@
 <template>
   <div class="card">
-    <div v-for="(item, index) in InfoNum" :key="index" class="col">
-      <img :src="item.img" />
-      <span>{{ $t(item.text) }}/{{ item.value }}</span>
-    </div>
+    <transition-fade-down-group>
+      <div v-for="(item, index) in InfoNum" :key="index" class="col">
+        <img :src="item.img" />
+        <span>{{ $t(item.text) }}/{{ item.value }}</span>
+      </div>
+    </transition-fade-down-group>
   </div>
 </template>
 

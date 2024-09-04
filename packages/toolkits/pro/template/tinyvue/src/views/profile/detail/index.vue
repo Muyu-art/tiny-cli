@@ -4,59 +4,68 @@
     <div id="container">
       <div class="detail-contain">
         <tiny-collapse v-model="state.activeNames">
-          <tiny-collapse-item :title="$t('baseForm.form.label.type')" name="1">
-            <tiny-row :flex="true" justify="left" class="margin-bottom">
-              <tiny-col :span="9">
-                <div class="col">
-                  {{ $t('baseForm.form.label.type') }}
-                  <span>:</span>
-                  <tiny-select
-                    v-model="state.project"
-                    :placeholder="$t('baseForm.form.label.placeholder')"
-                    filterable
-                  >
-                    <tiny-option
-                      v-for="item in state.Project"
-                      :key="item"
-                      :label="$t(item as any)"
-                      :value="item"
-                    ></tiny-option>
-                  </tiny-select>
-                </div>
-              </tiny-col>
-            </tiny-row>
-          </tiny-collapse-item>
+          <transition-fade-down-group>
+            <tiny-collapse-item
+              :title="$t('baseForm.form.label.type')"
+              name="1"
+            >
+              <tiny-row :flex="true" justify="left" class="margin-bottom">
+                <tiny-col :span="9">
+                  <div class="col">
+                    {{ $t('baseForm.form.label.type') }}
+                    <span>:</span>
+                    <tiny-select
+                      v-model="state.project"
+                      :placeholder="$t('baseForm.form.label.placeholder')"
+                      filterable
+                    >
+                      <tiny-option
+                        v-for="item in state.Project"
+                        :key="item"
+                        :label="$t(item as any)"
+                        :value="item"
+                      ></tiny-option>
+                    </tiny-select>
+                  </div>
+                </tiny-col>
+              </tiny-row>
+            </tiny-collapse-item>
 
-          <tiny-collapse-item :title="$t('baseForm.form.label.people')" name="2">
-            <planDetail></planDetail>
-          </tiny-collapse-item>
+            <tiny-collapse-item
+              :title="$t('baseForm.form.label.people')"
+              name="2"
+            >
+              <planDetail></planDetail>
+            </tiny-collapse-item>
 
-          <tiny-collapse-item
-            :title="$t('baseForm.form.label.Objectives')"
-            name="3"
-          >
-            <targetDetail></targetDetail>
-          </tiny-collapse-item>
-          <tiny-collapse-item :title="$t('baseForm.form.label.plan')" name="4">
-            <evaluationDetail></evaluationDetail>
-          </tiny-collapse-item>
-          <tiny-collapse-item
-            :title="$t('baseForm.form.label.evaluation')"
-            name="5"
-          >
-            <wholeDetail></wholeDetail>
-          </tiny-collapse-item>
-          <tiny-collapse-item
-            :title="$t('baseForm.form.label.mentortitle')"
-            name="6"
-          >
-            <mentor></mentor>
-          </tiny-collapse-item>
-          <tiny-collapse-item :title="$t('baseForm.form.record')" name="7">
-            <recordDetail
-              :table-data="(state.tableData as [] | any)"
-            ></recordDetail>
-          </tiny-collapse-item>
+            <tiny-collapse-item
+              :title="$t('baseForm.form.label.Objectives')"
+              name="3"
+            >
+              <targetDetail></targetDetail>
+            </tiny-collapse-item>
+            <tiny-collapse-item
+              :title="$t('baseForm.form.label.plan')"
+              name="4"
+            >
+              <evaluationDetail></evaluationDetail>
+            </tiny-collapse-item>
+            <tiny-collapse-item
+              :title="$t('baseForm.form.label.evaluation')"
+              name="5"
+            >
+              <wholeDetail></wholeDetail>
+            </tiny-collapse-item>
+            <tiny-collapse-item
+              :title="$t('baseForm.form.label.mentortitle')"
+              name="6"
+            >
+              <mentor></mentor>
+            </tiny-collapse-item>
+            <tiny-collapse-item :title="$t('baseForm.form.record')" name="7">
+              <recordDetail :table-data="state.tableData as any"></recordDetail>
+            </tiny-collapse-item>
+          </transition-fade-down-group>
         </tiny-collapse>
       </div>
     </div>
@@ -125,6 +134,7 @@
   .detail-page {
     height: 100%;
   }
+
   #container {
     display: flex;
     flex-direction: column;
@@ -161,10 +171,15 @@
   .col > span {
     padding: 0 10px;
   }
-  :deep(.tiny-collapse-item__arrow.is-active, .tiny-collapse-item__arrow:hover){
+
+  :deep(
+      .tiny-collapse-item__arrow.is-active,
+      .tiny-collapse-item__arrow:hover
+    ) {
     fill: var(--ti-common-color-text-highlight);
   }
-  :deep(.tiny-collapse-item__header svg){
+
+  :deep(.tiny-collapse-item__header svg) {
     fill: var(--ti-common-color-text-highlight);
   }
 </style>

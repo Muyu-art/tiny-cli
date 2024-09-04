@@ -8,6 +8,7 @@
       wrap
       :default-expanded-keys="expandeArr"
       only-check-children
+      check-strictly
       @current-change="currentChange"
     >
       <template #default="slotScope">
@@ -116,7 +117,6 @@
     }
     return -1;
   };
-
   const tree = ref();
   const expandeArr = ref<(string | number)[]>([]);
   const tabStore = useTabStore();
@@ -125,10 +125,11 @@
       () => tabStore.current,
       () => {
         const key = findId(tabStore.current.name, tabStore.current.link);
-        if (!expandeArr.value.includes(key)) {
-          expandeArr.value.push(key);
-        }
         tree.value.setCurrentKey(key);
+        const { parentId = null } = tree.value.getCurrentNode();
+        if (parentId) {
+          expandeArr.value = expandeArr.value.concat(parentId);
+        }
       },
       { deep: true, immediate: true },
     );
