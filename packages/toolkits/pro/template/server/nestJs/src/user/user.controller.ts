@@ -1,11 +1,15 @@
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   HttpException,
   HttpStatus,
   Param,
+  ParseArrayPipe,
+  ParseEnumPipe,
+  ParseIntPipe,
   Patch,
   Post,
   Put,
@@ -57,8 +61,13 @@ export class UserController {
   }
   @Get()
   @Permission('user::query')
-  async getAllUser(@Query() paginationQuery: PaginationQueryDto) {
-    return this.userService.getAllUser(paginationQuery);
+  async getAllUser(
+    @Query() paginationQuery: PaginationQueryDto,
+    @Query('name') name?: string,
+    @Query('role', new DefaultValuePipe([]), ParseArrayPipe) role?: number[],
+    @Query('email') email?: string
+  ) {
+    return this.userService.getAllUser(paginationQuery, name, role, email);
   }
 
   @Patch('/admin/updatePwd')

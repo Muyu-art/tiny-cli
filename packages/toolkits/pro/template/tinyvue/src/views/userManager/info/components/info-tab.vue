@@ -15,6 +15,7 @@
           :fetch-data="fetchDataOption"
           :pager="pagerConfig"
           :auto-resize="true"
+          remote-filter
         >
           <tiny-grid-column type="index" width="60"></tiny-grid-column>
           <tiny-grid-column type="expand" width="60">
@@ -76,23 +77,31 @@
               </ul>
             </template>
           </tiny-grid-column>
-          <tiny-grid-column field="name" :title="$t('userInfo.table.id')">
+          <tiny-grid-column field="id" :title="$t('userInfo.table.id')">
             <template #default="data">
               <span>{{ $t(`${data.row.id}`) }}</span>
             </template>
           </tiny-grid-column>
-          <tiny-grid-column field="time" :title="$t('userInfo.table.name')">
+          <tiny-grid-column
+            field="name"
+            :filter="inputFilter"
+            :title="$t('userInfo.table.name')"
+          >
             <template #default="data">
               <span>{{ $t(`${data.row.name}`) }}</span>
             </template>
           </tiny-grid-column>
-          <tiny-grid-column field="type" :title="$t('userInfo.table.email')">
+          <tiny-grid-column
+            field="email"
+            :filter="inputFilter"
+            :title="$t('userInfo.table.email')"
+          >
             <template #default="data">
               <span>{{ $t(`${data.row.email}`) }}</span>
             </template>
           </tiny-grid-column>
           <tiny-grid-column
-            field="type"
+            field="department"
             :title="$t('userInfo.table.department')"
           >
             <template #default="data">
@@ -102,7 +111,7 @@
             </template>
           </tiny-grid-column>
           <tiny-grid-column
-            field="type"
+            field="employeeType"
             :title="$t('userInfo.table.employeeType')"
           >
             <template #default="data">
@@ -111,13 +120,17 @@
               }}</span>
             </template>
           </tiny-grid-column>
-          <tiny-grid-column field="type" :title="$t('userInfo.table.job')">
+          <tiny-grid-column
+            field="role"
+            :filter="jobFilter"
+            :title="$t('userInfo.table.job')"
+          >
             <template #default="data">
               <span>{{ $t(`${data.row.role[0]?.name}`) }}</span>
             </template>
           </tiny-grid-column>
           <tiny-grid-column
-            field="type"
+            field="probationStart"
             :title="$t('userInfo.table.probationStart')"
           >
             <template #default="data">
@@ -127,7 +140,7 @@
             </template>
           </tiny-grid-column>
           <tiny-grid-column
-            field="type"
+            field="probationEnd"
             :title="$t('userInfo.table.probationEnd')"
           >
             <template #default="data">
@@ -137,7 +150,7 @@
             </template>
           </tiny-grid-column>
           <tiny-grid-column
-            field="type"
+            field="probationDuration"
             :title="$t('userInfo.table.probationDuration')"
           >
             <template #default="data">
@@ -148,7 +161,7 @@
             </template>
           </tiny-grid-column>
           <tiny-grid-column
-            field="type"
+            field="protocolStart"
             :title="$t('userInfo.table.protocolStart')"
           >
             <template #default="data">
@@ -158,7 +171,7 @@
             </template>
           </tiny-grid-column>
           <tiny-grid-column
-            field="type"
+            field="protocolEnd"
             :title="$t('userInfo.table.protocolEnd')"
           >
             <template #default="data">
@@ -167,14 +180,17 @@
               }}</span>
             </template>
           </tiny-grid-column>
-          <tiny-grid-column field="type" :title="$t('userInfo.table.address')">
+          <tiny-grid-column
+            field="address"
+            :title="$t('userInfo.table.address')"
+          >
             <template #default="data">
               <span v-if="data.row.address !== null">{{
                 $t(`${data.row.address}`)
               }}</span>
             </template>
           </tiny-grid-column>
-          <tiny-grid-column field="type" :title="$t('userInfo.table.status')">
+          <tiny-grid-column field="status" :title="$t('userInfo.table.status')">
             <template #default="data">
               <div v-if="data.row.status == 1">
                 <img
@@ -343,6 +359,8 @@
   import { useUserStore } from '@/store';
   import { getAllUser, deleteUser, updatePwdAdmin } from '@/api/user';
   import { useRouter } from 'vue-router';
+  import { getAllRole } from '@/api/role';
+  import { FilterType } from '@/types/global';
   import UserAdd from '../../useradd/index.vue';
   import UserSetting from '../../setting/index.vue';
 
@@ -373,6 +391,21 @@
   // 变量设置
   const userStore = useUserStore();
 
+  const inputFilter = {
+    inputFilter: true,
+  };
+
+  const jobFilter = ref({
+    multi: true,
+    enumable: true,
+    values: (await getAllRole()).data.map((item) => {
+      return {
+        label: item.name,
+        value: item.id,
+      };
+    }),
+  });
+
   const pagerConfig = reactive({
     component: TinyPager,
     attrs: {
@@ -397,7 +430,10 @@
   });
 
   // 请求数据接口方法
-  const fetchData = async (params: { pageIndex: 1; pageSize: 10 }) => {
+  const fetchData = async (
+    params: { pageIndex: 1; pageSize: 10 },
+    filters: FilterType,
+  ) => {
     userStore.setInfo({ reset: false, submit: false });
     state.loading = Loading.service({
       text: 'loading...',
@@ -405,7 +441,11 @@
       background: 'rgba(0, 0, 0, 0.7)',
     });
     try {
-      const { data } = await getAllUser(params.pageIndex, params.pageSize);
+      const { data } = await getAllUser(
+        params.pageIndex,
+        params.pageSize,
+        filters,
+      );
       const total = data.meta.totalItems;
       return {
         result: data.items,
@@ -417,13 +457,17 @@
   };
 
   const fetchDataOption = reactive({
-    api: ({ page }: any) => {
+    api: ({ page, filters }: any) => {
       const { currentPage, pageSize } = page;
-      return fetchData({
-        pageIndex: currentPage,
-        pageSize,
-      });
+      return fetchData(
+        {
+          pageIndex: currentPage,
+          pageSize,
+        },
+        filters,
+      );
     },
+    filter: true,
   });
 
   const onUpdateCancel = () => {
