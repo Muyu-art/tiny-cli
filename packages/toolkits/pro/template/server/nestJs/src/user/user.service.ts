@@ -6,7 +6,7 @@ import { UpdatePwdAdminDto } from './dto/update-pwd-admin.dto';
 import { UpdatePwdUserDto } from './dto/update-pwd-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Role, User } from '@app/models';
-import { In, Repository } from 'typeorm';
+import { In, Like, Repository } from 'typeorm';
 import * as crypto from 'crypto';
 import { AuthService } from '../auth/auth.service';
 import { paginate, IPaginationOptions } from 'nestjs-typeorm-paginate';
@@ -84,7 +84,12 @@ export class UserService {
   }
 
   //获取所有用户信息
-  async getAllUser(paginationQuery: PaginationQueryDto): Promise<any> {
+  async getAllUser(
+    paginationQuery: PaginationQueryDto,
+    name?: string,
+    role?: number[],
+    email?: string
+  ): Promise<any> {
     const { page, limit } = paginationQuery; // 从DTO获取分页参数
     const relations = ['role', 'role.permission'];
     const result = await paginate<User>(
@@ -109,6 +114,16 @@ export class UserService {
           'status',
         ],
         relations,
+        where: {
+          name: name ? Like(name) : undefined,
+          role:
+            role && role.length
+              ? {
+                  id: In(role),
+                }
+              : undefined,
+          email: email ? Like(email) : undefined,
+        },
       }
     );
     for (const user of result.items) {

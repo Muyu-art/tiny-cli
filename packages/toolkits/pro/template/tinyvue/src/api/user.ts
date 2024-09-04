@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { UserInfo } from '@/store/modules/user/types';
+import { FilterType } from '@/types/global';
 
 export interface LoginData {
   email: string;
@@ -50,8 +51,25 @@ export function logout(data: LogoutData) {
 }
 
 // 获取全部用户
-export function getAllUser(page?: number, limit?: number) {
-  return axios.get<UserInfo>(`/api/user?page=${page}&limit=${limit}`);
+export function getAllUser(page?: number, limit?: number, filter?: FilterType) {
+  const keys = Object.keys(filter ?? {});
+  const params = new URLSearchParams();
+  params.set('page', page.toString());
+  params.set('limit', limit.toString());
+  for (let i = 0; i < keys.length; i += 1) {
+    const key = keys[i];
+    const value = filter[key];
+    if (value.type === 'enum') {
+      if (Array.isArray(value.value) && value.value.length) {
+        params.set(key, value.value.toString());
+      }
+    }
+    if (value.type === 'input' && !Array.isArray(value.value)) {
+      let sql = `${value.value.relation === 'startwith' || value.value.relation === 'contains' ? '%' : ''}${value.value.text}${value.value.relation === 'contains' ? '%' : ''}`;
+      params.set(key, sql);
+    }
+  }
+  return axios.get<UserInfo>(`/api/user?${params.toString()}`);
 }
 
 // 获取单个用户

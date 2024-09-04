@@ -1,3 +1,15 @@
+export type FilterType = {
+  [key: string]: {
+    type: string;
+    value:
+      | {
+          text: string;
+          relation: string;
+        }
+      | number[];
+  };
+};
+
 export interface AnyObject {
   [key: string]: unknown;
 }

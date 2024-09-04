@@ -5,6 +5,8 @@
 
 <template>
   <general-layout :breadcrumb="['menu.systemManager', 'menu.userManager.info']">
-    <info-tab />
+    <suspense>
+      <info-tab />
+    </suspense>
   </general-layout>
 </template>
