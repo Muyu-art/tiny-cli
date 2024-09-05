@@ -7,7 +7,7 @@ export interface CliOption {
 }
 
 export enum VueVersion {
-  Vue2 = 'tinyvue2',
+  // Vue2 = 'tinyvue2',
   Vue3 = 'tinyvue',
 }
 
