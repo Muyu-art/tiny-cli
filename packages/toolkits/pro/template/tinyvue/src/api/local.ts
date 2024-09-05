@@ -45,8 +45,13 @@ export const getAllLocalItems = (
   page?: number,
   limit?: number,
   all?: number,
+  filters?: {
+    [x: string]: number[] | string;
+  },
 ) => {
-  return axios.get<Locals>('/api/i18', { params: { page, limit, all } });
+  return axios.get<Locals>('/api/i18', {
+    params: { page, limit, all, ...filters },
+  });
 };
 
 export const createLocalItem = (data: CreateLocal) => {

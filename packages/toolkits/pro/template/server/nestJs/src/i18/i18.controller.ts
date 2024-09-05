@@ -9,21 +9,17 @@ import {
   Query,
   ParseIntPipe,
   DefaultValuePipe,
-  ParseBoolPipe,
+  ParseArrayPipe,
 } from '@nestjs/common';
 import { I18Service } from './i18.service';
 import { CreateI18Dto } from './dto/create-i18.dto';
 import { UpdateI18Dto } from './dto/update-i18.dto';
-import { CreateLang } from './dto/create-lang.dto';
 import { I18LangService } from './lang.service';
 import { Permission } from '../public/permission.decorator';
 
 @Controller('i18')
 export class I18Controller {
-  constructor(
-    private readonly i18Service: I18Service,
-    private readonly langService: I18LangService
-  ) {}
+  constructor(private readonly i18Service: I18Service) {}
 
   @Permission('i18n::add')
   @Post()
@@ -41,9 +37,19 @@ export class I18Controller {
   findAll(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page?: number,
     @Query('limit', new DefaultValuePipe(0), ParseIntPipe) limit?: number,
-    @Query('all', ParseIntPipe) all?: number
+    @Query('all', ParseIntPipe) all?: number,
+    @Query('lang', new DefaultValuePipe([]), ParseArrayPipe) lang?: number[],
+    @Query('key') key?: string,
+    @Query('content') content?: string
   ) {
-    return this.i18Service.findAll(page, limit, Boolean(all));
+    return this.i18Service.findAll(
+      page,
+      limit,
+      Boolean(all),
+      lang,
+      content,
+      key
+    );
   }
 
   @Permission('i18n::query')

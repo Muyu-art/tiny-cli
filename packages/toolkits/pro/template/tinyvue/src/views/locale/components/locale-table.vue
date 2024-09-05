@@ -5,6 +5,7 @@
     :fetch-data="fetchData"
     :edit-config="{ trigger: 'click', mode: 'cell', showStatus: true }"
     :loading="loading"
+    remote-filter
     @edit-closed="onEditClosed"
   >
     <tiny-grid-column field="id" title="id" width="60"></tiny-grid-column>
@@ -12,16 +13,19 @@
       field="key"
       title="key"
       :editor="{ component: 'input', autoselect: true }"
+      :filter="keyFilter"
     ></tiny-grid-column>
     <tiny-grid-column
       field="content"
       title="content"
       :editor="{ component: 'input' }"
+      :filter="contentFilter"
     ></tiny-grid-column>
     <tiny-grid-column
       field="lang"
       title="lang"
       :editor="{ component: 'select', options }"
+      :filter="langFilter"
     ></tiny-grid-column>
     <tiny-grid-column>
       <template #default="data">
@@ -45,6 +49,7 @@
   } from '@/api/local';
   import useLoading from '@/hooks/loading';
   import { useLocales } from '@/store/modules/locales';
+  import { FilterType, InputFilterValue } from '@/types/global';
   import {
     Notify,
     Grid as TinyGrid,
@@ -53,11 +58,29 @@
   } from '@opentiny/vue';
   import { computed, ref } from 'vue';
 
+  const grid = ref();
+  const localeStore = useLocales();
+
   export type LocalTableData = {
     id: number;
     key: string;
     content: string;
     lang: string;
+  };
+
+  const keyFilter = {
+    inputFilter: true,
+  };
+  const contentFilter = {
+    inputFilter: true,
+  };
+  const langFilter = {
+    enumable: true,
+    multi: true,
+    values: localeStore.lang.map((language) => ({
+      label: language.name,
+      value: language.id,
+    })),
   };
 
   const pagerConfig = ref({
@@ -73,9 +96,6 @@
     },
   });
 
-  const grid = ref();
-  const items = ref<LocalTableData[]>([]);
-  const localeStore = useLocales();
   const options = computed(() =>
     localeStore.lang.map((language) => ({
       label: language.name,
@@ -88,33 +108,51 @@
   }
 
   let currentPage = 0;
+
+  const filterInputValue2String = (value: InputFilterValue) => {
+    let str = '';
+    if (value.relation === 'contains') {
+      str += '%';
+    }
+    str += value.text;
+    if (value.relation === 'startwith' || value.relation === 'contains') {
+      str += '%';
+    }
+    return str;
+  };
+
   const getData = ({
     page,
+    filters,
   }: {
     page: { pageSize: number; currentPage: number };
+    filters: FilterType;
   }) => {
+    const key = filters.key
+      ? filterInputValue2String(filters.key.value as InputFilterValue)
+      : undefined;
+    const content = filters.content
+      ? filterInputValue2String(filters.content.value as InputFilterValue)
+      : undefined;
+    const lang =
+      filters.lang && (filters.lang.value as number[]).length
+        ? (filters.lang.value as number[]).toString()
+        : undefined;
     const { pageSize } = page;
     currentPage = page.currentPage;
     setLoading(true);
     return new Promise((resolve) => {
-      getAllLocalItems(currentPage, pageSize, 0)
+      getAllLocalItems(currentPage, pageSize, 0, { key, content, lang })
         .then(({ data }) => {
-          if (items.value.length !== data.meta.totalItems) {
-            items.value = Array.from({ length: data.meta.totalItems }).fill({});
-          }
-          const offset = (currentPage - 1) * pageSize;
-          const l = offset;
-          for (let i = 0; i < data.items.length; i += 1) {
-            const item = data.items[i];
-            items.value[l + i] = {
-              id: item.id,
-              key: item.key,
-              content: item.content,
-              lang: item.lang.name,
-            };
-          }
           resolve({
-            result: items.value.slice(offset, offset + pageSize),
+            result: data.items.map((item) => {
+              return {
+                id: item.id,
+                key: item.key,
+                content: item.content,
+                lang: item.lang.name,
+              };
+            }),
             page: {
               total: data.meta.totalItems,
             },
@@ -154,7 +192,6 @@
         localeStore.$patch({
           locales: localeStore.locales.filter((locale) => locale.id !== row.id),
         });
-        items.value = items.value.filter((item) => item.id !== row.id);
         return deleteLocale(row.id);
       })
       .catch(() => {
@@ -167,5 +204,6 @@
 
   const fetchData = ref({
     api: getData,
+    filter: true,
   });
 </script>
