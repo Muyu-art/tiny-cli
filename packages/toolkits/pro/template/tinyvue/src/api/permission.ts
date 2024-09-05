@@ -6,8 +6,10 @@ export type Permission = {
   name: string;
 };
 
-export function getAllPermission() {
-  return axios.get(`/api/permission`);
+export function getAllPermission(page?: number, limit?: number, name?: string) {
+  return axios.get(`/api/permission`, {
+    params: { page, limit, name },
+  });
 }
 
 export function updatePermission(data: any) {

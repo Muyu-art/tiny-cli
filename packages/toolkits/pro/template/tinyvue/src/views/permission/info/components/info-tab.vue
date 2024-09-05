@@ -10,26 +10,33 @@
         >
       </div>
       <div class="table">
-        <tiny-grid ref="expandGrid" :data="state.tableData" :auto-resize="true">
-          <tiny-grid-column field="name" :title="$t('permissionInfo.table.id')">
+        <tiny-grid
+          ref="roleGrid"
+          :auto-resize="true"
+          :fetch-data="fetchOption"
+          :pager="pagerConfig"
+          remote-filter
+        >
+          <tiny-grid-column field="id" :title="$t('permissionInfo.table.id')">
             <template #default="data">
               <span>{{ $t(`${data.row.id}`) }}</span>
             </template>
           </tiny-grid-column>
           <tiny-grid-column
-            field="time"
+            field="name"
+            :title="$t('permissionInfo.table.name')"
+            :filter="filter"
+          >
+            <template #default="data">
+              <span>{{ $t(`${data.row.name}`) }}</span>
+            </template>
+          </tiny-grid-column>
+          <tiny-grid-column
+            field="desc"
             :title="$t('permissionInfo.table.desc')"
           >
             <template #default="data">
               <span>{{ $t(`${data.row.desc}`) }}</span>
-            </template>
-          </tiny-grid-column>
-          <tiny-grid-column
-            field="type"
-            :title="$t('permissionInfo.table.name')"
-          >
-            <template #default="data">
-              <span>{{ $t(`${data.row.name}`) }}</span>
             </template>
           </tiny-grid-column>
           <tiny-grid-column
@@ -40,14 +47,14 @@
               <a
                 v-permission="'menu::update'"
                 class="operation-update"
-                @click="handleUpdate(data.row.id)"
+                @click="handleUpdate(data.row)"
               >
                 {{ $t('permissionInfo.table.operations.update') }}
               </a>
               <a
                 v-permission="'menu::remove'"
                 class="operation-delete"
-                @click="handleDelete(data.row.id)"
+                @click="handleDelete(data.row)"
               >
                 {{ $t('permissionInfo.table.operations.delete') }}
               </a>
@@ -211,12 +218,20 @@
     updatePermission,
     createPermission,
     deletePermission,
+    Permission,
   } from '@/api/permission';
   import { useRouter } from 'vue-router';
   import { getSimpleDate } from '@/utils/time';
   import { updateUserInfo } from '@/api/user';
+  import {
+    FilterType,
+    InputFilterValue,
+    IPaginationMeta,
+    Pager,
+  } from '@/types/global';
 
   const router = useRouter();
+  const roleGrid = ref();
 
   const { t } = useI18n();
 
@@ -250,27 +265,69 @@
     };
   });
 
-  // 初始化请求数据
-  onMounted(() => {
-    fetchData();
+  const filter = {
+    inputFilter: true,
+  };
+
+  const pagerConfig = reactive({
+    component: TinyPager,
+    attrs: {
+      currentPage: 1,
+      pageSize: 10,
+      pageSizes: [5, 10, 15, 20],
+      total: 10,
+      layout: 'total, prev, pager, next, jumper, sizes',
+    },
   });
 
+  const fetchOption = {
+    api: ({ page, filters }: { page: Pager; filters: FilterType }) => {
+      const { name } = filters;
+      let exp = '';
+      if (name) {
+        const value = name.value as InputFilterValue;
+        if (value.relation === 'contains') {
+          exp += '%';
+        }
+        exp += value.text;
+        if (value.relation === 'startwith' || value.relation === 'contains') {
+          exp += '%';
+        }
+      }
+      return fetchData(page.currentPage, page.pageSize, exp).then(
+        ({ items, meta }) => {
+          return {
+            result: items,
+            page: {
+              total: meta.totalItems,
+            },
+          };
+        },
+      );
+    },
+    filiter: true,
+  };
+
   // 请求数据接口方法
-  async function fetchData() {
-    const { data } = await getAllPermission();
-    state.tableData = data;
+  async function fetchData(page: number, size: number, name?: string) {
+    const { data } = await getAllPermission(page, size, name);
+    const { items, meta } = data as {
+      items: Permission[];
+      meta: IPaginationMeta;
+    };
+    return { items, meta };
   }
 
-  async function handleDelete(id: string) {
+  async function handleDelete(permission: Permission) {
     try {
-      await deletePermission(id);
+      await deletePermission(permission.id);
       TinyModal.message({
         message: '已删除',
         status: 'success',
       });
       state.isPermissionUpdate = false;
       state.permissionUpdData = {} as any;
-      await fetchData();
+      roleGrid.value.handleFetch();
     } catch (error) {
       if (error.response && error.response.data) {
         const errorMessage = error.response.data.message || '未知错误';
@@ -282,15 +339,9 @@
     }
   }
 
-  const handleUpdate = (id: string) => {
+  const handleUpdate = (permission: Permission) => {
+    state.permissionUpdData = permission;
     state.isPermissionUpdate = true;
-    let tmpData = {} as any;
-    for (let i = 0; i < state.tableData.length; i += 1) {
-      if (state.tableData[i].id === id) {
-        tmpData = state.tableData[i];
-      }
-    }
-    state.permissionUpdData = tmpData;
   };
 
   const handlePermissionUpdateCancel = () => {
@@ -313,7 +364,7 @@
       });
       state.isPermissionUpdate = false;
       state.permissionUpdData = {} as any;
-      await fetchData();
+      roleGrid.value.handleFetch();
     } catch (error) {
       if (error.response && error.response.data) {
         const errorMessage = error.response.data.message || '未知错误';
@@ -343,7 +394,7 @@
       });
       state.isPermissionAdd = false;
       state.permissionAddData = {} as any;
-      await fetchData();
+      roleGrid.value.handleFetch();
     } catch (error) {
       if (error.response && error.response.data) {
         const errorMessage = error.response.data.message || '未知错误';
