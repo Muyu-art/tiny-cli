@@ -1,11 +1,14 @@
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
-  Post
+  Post,
+  Query,
 } from '@nestjs/common';
 import { PermissionService } from './permission.service';
 import { CreatePermissionDto } from './dto/create-permission.dto';
@@ -30,8 +33,12 @@ export class PermissionController {
 
   @Get()
   @Permission('permission::get')
-  find() {
-    return this.permissionService.findPermission();
+  find(
+    @Query('page', new DefaultValuePipe('1'), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe('0'), ParseIntPipe) limit: number,
+    @Query('name') name?: string
+  ) {
+    return this.permissionService.findPermission(page, limit, name);
   }
 
   @Delete('/:id')

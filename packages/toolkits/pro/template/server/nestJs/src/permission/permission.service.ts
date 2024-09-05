@@ -3,9 +3,10 @@ import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Permission } from '@app/models';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { I18nTranslations } from '../.generate/i18n.generated';
 import { I18nContext, I18nService } from 'nestjs-i18n';
+import { paginate } from 'nestjs-typeorm-paginate';
 
 @Injectable()
 export class PermissionService {
@@ -49,8 +50,23 @@ export class PermissionService {
     }
     return this.permission.update(id, { name, desc });
   }
-  async findPermission() {
-    return this.permission.find();
+  async findPermission(page?: number, limit?: number, name?: string) {
+    if (!limit) {
+      return this.permission.find();
+    }
+    const count = await this.permission.count();
+    return paginate(
+      this.permission,
+      {
+        limit: limit ? limit : count,
+        page,
+      },
+      {
+        where: {
+          name: name ? Like(name) : undefined,
+        },
+      }
+    );
   }
   async delPermission(id: number) {
     const permissionInfo = await this.permission.findOne({
