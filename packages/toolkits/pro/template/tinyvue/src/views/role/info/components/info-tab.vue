@@ -1,10 +1,11 @@
 <script lang="ts" setup>
   import { useI18n } from 'vue-i18n';
-  import { computed, inject, nextTick, ref, watch } from 'vue';
+  import { computed, inject, ref } from 'vue';
   import {
     Button as TinyButton,
     Loading as TinyLoading,
     Modal,
+    Pager as TinyPager,
   } from '@opentiny/vue';
   import { Role } from '@/store/modules/user/types';
   import { createRole, getAllRoleDetail, updateRole } from '@/api/role';
@@ -19,13 +20,14 @@
   import { useMenuStore } from '@/store/modules/router';
   import { getAllPermission, Permission } from '@/api/permission';
   import { useTabStore } from '@/store';
+  import { FilterType, InputFilterValue, Pager } from '@/types/global';
   import roleTable from './role-table.vue';
   import menuDrawer from './menu-drawer.vue';
   import addRole, { RoleAddData } from './add-role.vue';
   import UpdateRole, { UpdateRoleData } from './update-role.vue';
 
   const { t } = useI18n();
-  const tableData = ref<(Role & { menus: ITreeNodeData[] })[]>([]);
+  const tableData = ref<any[]>([]);
   const menuDatas = ref<ITreeNodeData[]>([]);
   const menus = ref<ITreeNodeData[]>([]);
   const { open, onOpen, onClose } = useDisclosure();
@@ -63,9 +65,57 @@
   getAllPermission().then(({ data }) => {
     permissions.value = data;
   });
-  getAllRoleDetail().then(({ data }) => {
-    tableData.value = data.roleInfo;
+  const pagerConfig = ref<{
+    component: any;
+    attrs: Pager;
+  }>({
+    component: TinyPager,
+    attrs: {
+      currentPage: 1,
+      pageSize: 5,
+      pageSizes: [
+        5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90,
+        95, 100,
+      ],
+      total: 0,
+      layout: 'total, prev, pager, next, jumper, sizes',
+    },
   });
+  const roleTableRef = ref();
+  const allFilter = {
+    inputFilter: {
+      inputFilter: true,
+    },
+  };
+  const fetchOption = {
+    filter: true,
+    api: ({ page, filters }: { page: Pager; filters: FilterType }) => {
+      let str = '';
+      if (filters.name) {
+        const condition = (filters.name.value as InputFilterValue).relation;
+        if (condition === 'contains') {
+          str += '%';
+        }
+        str += (filters.name.value as InputFilterValue).text;
+        if (condition === 'startwith' || condition === 'contains') {
+          str += '%';
+        }
+      }
+      return new Promise((resolve) => {
+        getAllRoleDetail(page.currentPage, page.pageSize, str).then(
+          ({ data }) => {
+            tableData.value = data.roleInfo.items;
+            resolve({
+              result: data.roleInfo.items,
+              page: {
+                total: data.roleInfo.meta.totalItems,
+              },
+            });
+          },
+        );
+      });
+    },
+  };
   const onMenuDrawerClose = () => {
     onClose();
   };
@@ -107,6 +157,7 @@
         return flushRouter();
       })
       .then(() => {
+        roleTableRef.value.reload();
         flushTabs();
         reloadMenu();
       })
@@ -127,6 +178,7 @@
           menus: [],
           name: data.name,
         });
+        roleTableRef.value.reload();
       })
       .finally(() => {
         onAddHide();
@@ -141,18 +193,10 @@
     showUpdateRole();
   };
   const onRoleUpdateSuccess = (role: UpdateRoleData) => {
-    const idx = tableData.value.findIndex((data) => data.id === role.id);
-    if (idx === -1) {
-      return;
-    }
-    const data = tableData.value[idx];
-    tableData.value.splice(idx, 1, {
-      ...data,
-      ...role,
-    });
+    roleTableRef.value.reload();
   };
   const onRoleDelete = (id: number) => {
-    tableData.value = tableData.value.filter((data) => data.id !== id);
+    roleTableRef.value.reload();
   };
 </script>
 
@@ -167,7 +211,11 @@
         </div>
         <div class="table">
           <role-table
+            ref="roleTableRef"
             :table-data="tableData"
+            :fetch-option="fetchOption"
+            :pager-config="pagerConfig"
+            :filter="allFilter"
             @menu-update="onMenuUpdate"
             @role-update="onRoleUpdate"
             @role-delete="onRoleDelete"

@@ -68,7 +68,6 @@
       })
       .then(() => fetchMenu())
       .catch((error) => {
-        console.log(error);
         if (error.response && error.response.data) {
           const errorMessage = error.response.data.message || '未知错误';
           TinyModal.message({

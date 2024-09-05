@@ -3,10 +3,11 @@ import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Menu, Permission, Role, User } from '@app/models';
-import { In, Repository } from 'typeorm';
+import { In, Like, Repository } from 'typeorm';
 import { convertToTree } from '../menu/menu.service';
 import { I18nContext, I18nService } from 'nestjs-i18n';
 import { I18nTranslations } from '../.generate/i18n.generated';
+import { paginate } from 'nestjs-typeorm-paginate';
 
 @Injectable()
 export class RoleService {
@@ -55,21 +56,27 @@ export class RoleService {
     return this.role.find();
   }
 
-  async findAllDetail() {
-    const roleInfo = await this.role
-      .createQueryBuilder('role')
-      .leftJoinAndSelect('role.menus', 'menus')
-      .leftJoinAndSelect('role.permission', 'permission')
-      .getMany();
-    const menuTree = [] as any;
-    for (const item of roleInfo) {
-      const temp = convertToTree(item.menus);
-      menuTree.push(temp);
+  async findAllDetail(page?: number, limit?: number, name?: string) {
+    const roleInfo = await paginate(
+      this.role,
+      {
+        page,
+        limit,
+      },
+      {
+        where: {
+          name: name ? Like(name) : undefined,
+        },
+        relations: ['permission', 'menus'],
+      }
+    );
+    const menuTree = [];
+    for (const item of roleInfo.items) {
+      menuTree.push(convertToTree(item.menus));
     }
-
     return {
-      roleInfo: roleInfo,
-      menuTree: menuTree,
+      roleInfo,
+      menuTree,
     };
   }
 
@@ -120,8 +127,12 @@ export class RoleService {
     }
     const role = roleInfo[0];
     role.name = name;
-    role.permission = permission.length ? permission : undefined;
-    role.menus = menus.length ? menus : undefined;
+    if (data.permissionIds) {
+      role.permission = permission;
+    }
+    if (data.menuIds) {
+      role.menus = menus;
+    }
     return this.role.save(role);
   }
   async delete(id: number) {

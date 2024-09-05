@@ -10,10 +10,19 @@
   import { ITreeNodeData } from '@/router/guard/menu';
   import { useI18n } from 'vue-i18n';
   import useLoading from '@/hooks/loading';
+  import { Pager } from '@/types/global';
   import permissionTable from './permission-table.vue';
 
   const props = defineProps<{
     tableData: (Role & { menus: ITreeNodeData[] })[];
+    fetchOption: {
+      api: (args: { page: Pager }) => any;
+    };
+    pagerConfig: {
+      component: any;
+      attrs: Pager;
+    };
+    filter: any;
   }>();
 
   const emits = defineEmits<{
@@ -58,17 +67,22 @@
         setLoading(false);
       });
   };
-  watch(
-    props,
-    () => {
-      grid.value.loadData(props.tableData);
+  defineExpose({
+    reload: () => {
+      grid.value.handleFetch();
     },
-    { deep: true },
-  );
+  });
 </script>
 
 <template>
-  <tiny-grid ref="grid" :data="props.tableData" auto-resize :loading="loading">
+  <tiny-grid
+    ref="grid"
+    :fetch-data="props.fetchOption"
+    auto-resize
+    :loading="loading"
+    :pager="props.pagerConfig"
+    remote-filter
+  >
     <tiny-grid-column type="expand">
       <template #default="data">
         <permission-table :permission="data.row.permission" />
@@ -81,6 +95,7 @@
     <tiny-grid-column
       field="name"
       :title="$t('roleInfo.table.name')"
+      :filter="props.filter.inputFilter"
     ></tiny-grid-column>
     <tiny-grid-column field="type" :title="$t('roleInfo.table.menu')">
       <template #default="data">

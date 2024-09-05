@@ -7,6 +7,7 @@ export type Role = {
     desc: string;
     id: number;
   }[];
+  menus: { id: number; name: string }[];
 };
 export interface UserInfo {
   id: string;
