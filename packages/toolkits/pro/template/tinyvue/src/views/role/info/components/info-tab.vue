@@ -90,8 +90,6 @@
   const fetchOption = {
     filter: true,
     api: ({ page, filters }: { page: Pager; filters: FilterType }) => {
-      console.log(filters);
-
       let str = '';
       if (filters.name) {
         const condition = (filters.name.value as InputFilterValue).relation;
@@ -102,7 +100,6 @@
         if (condition === 'startwith' || condition === 'contains') {
           str += '%';
         }
-        console.log(str);
       }
       return new Promise((resolve) => {
         getAllRoleDetail(page.currentPage, page.pageSize, str).then(
@@ -188,7 +185,6 @@
       });
   };
   const onRoleUpdate = (row: Role) => {
-    console.log(row);
     activeRole.value = {
       id: row.id,
       name: row.name,
