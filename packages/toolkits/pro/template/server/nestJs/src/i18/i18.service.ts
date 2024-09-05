@@ -3,7 +3,7 @@ import { CreateI18Dto } from './dto/create-i18.dto';
 import { UpdateI18Dto } from './dto/update-i18.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { I18, Lang } from '@app/models';
-import { Repository } from 'typeorm';
+import { In, Like, Repository } from 'typeorm';
 import { paginate } from 'nestjs-typeorm-paginate';
 import { I18nTranslations } from '../.generate/i18n.generated';
 import { I18nContext, I18nService } from 'nestjs-i18n';
@@ -84,11 +84,23 @@ export class I18Service {
       },
     });
   }
-  async findAll(page?: number, limit?: number, all?: boolean) {
+  async findAll(
+    page?: number,
+    limit?: number,
+    all?: boolean,
+    lang?: number[],
+    content?: string,
+    key?: string
+  ) {
     let count = 0;
     if (all) {
       count = await this.i18.count();
     }
+    const where = {
+      lang: lang && lang.length ? { id: In(lang) } : undefined,
+      content: content ? Like(content) : undefined,
+      key: key ? Like(key) : undefined,
+    };
     if (page && limit) {
       return paginate<I18>(
         this.i18,
@@ -99,6 +111,7 @@ export class I18Service {
         {
           relations: ['lang'],
           loadEagerRelations: true,
+          where,
         }
       );
     } else {
@@ -111,6 +124,7 @@ export class I18Service {
         {
           relations: ['lang'],
           loadEagerRelations: true,
+          where,
         }
       );
     }
