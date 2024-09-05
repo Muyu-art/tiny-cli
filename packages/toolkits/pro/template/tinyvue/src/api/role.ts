@@ -1,13 +1,31 @@
-import axios from "axios";
+import { IPaginationMeta } from '@/types/global';
+import axios from 'axios';
 
-
+export type Role = {
+  id: number;
+  name: string;
+  permission: {
+    name: string;
+    desc: string;
+    id: number;
+  }[];
+};
+export type GetAllRoleDetailRet = {
+  roleInfo: {
+    meta: IPaginationMeta;
+    items: Role[];
+  };
+  menuTree: any[];
+};
 
 export function getAllRole() {
   return axios.get('/api/role');
 }
 
-export function getAllRoleDetail() {
-  return axios.get('/api/role/detail');
+export function getAllRoleDetail(page = 1, limit = 10, name?: string) {
+  return axios.get<GetAllRoleDetailRet>('/api/role/detail', {
+    params: { page, limit, name },
+  });
 }
 
 export function updateRole(data: any) {

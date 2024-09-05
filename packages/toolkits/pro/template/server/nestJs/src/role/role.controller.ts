@@ -6,6 +6,9 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
+  ParseIntPipe,
+  DefaultValuePipe,
 } from '@nestjs/common';
 import { RoleService } from './role.service';
 import { CreateRoleDto } from './dto/create-role.dto';
@@ -30,8 +33,17 @@ export class RoleController {
 
   @Permission('role::query')
   @Get('/detail')
-  getAllRoleDetail() {
-    return this.roleService.findAllDetail();
+  getAllRoleDetail(
+    @Query('page', new DefaultValuePipe('1'), ParseIntPipe) page?: number,
+    @Query(
+      'limit',
+      new DefaultValuePipe(process.env.PAGINATION_LIMIT),
+      ParseIntPipe
+    )
+    limit?: number,
+    @Query('name') name?: string
+  ) {
+    return this.roleService.findAllDetail(page, limit, name);
   }
 
   @Patch()

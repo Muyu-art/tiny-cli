@@ -65,7 +65,7 @@ export function getAllUser(page?: number, limit?: number, filter?: FilterType) {
       }
     }
     if (value.type === 'input' && !Array.isArray(value.value)) {
-      let sql = `${value.value.relation === 'startwith' || value.value.relation === 'contains' ? '%' : ''}${value.value.text}${value.value.relation === 'contains' ? '%' : ''}`;
+      let sql = `${value.value.relation === 'contains' ? '%' : ''}${value.value.text}${value.value.relation === 'startwith' || value.value.relation === 'contains' ? '%' : ''}`;
       params.set(key, sql);
     }
   }
