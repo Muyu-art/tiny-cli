@@ -57,18 +57,6 @@ const getProjectInfo = (): Promise<ProjectInfo> => {
       default: VUE_TEMPLATE_PATH,
       prefix: '*',
     },
-    // {
-    //   type: 'list',
-    //   name: 'vueVersion',
-    //   message: '请选择你需要创建的Vue版本: ',
-    //   choices: [
-    //     { name: 'Vue 2', value: VueVersion.Vue2 },
-    //     { name: 'Vue 3', value: VueVersion.Vue3 },
-    //   ],
-    //   default: VueVersion.Vue3,
-    //   prefix: '*',
-    //   when: (answer) => answer.framework === VUE_TEMPLATE_PATH,
-    // },
     {
       type: 'list',
       name: 'serverFramework',
