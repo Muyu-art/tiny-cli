@@ -59,18 +59,6 @@ const getProjectInfo = (): Promise<ProjectInfo> => {
     },
     {
       type: 'list',
-      name: 'vueVersion',
-      message: '请选择你需要创建的Vue版本: ',
-      choices: [
-        { name: 'Vue 2', value: VueVersion.Vue2 },
-        { name: 'Vue 3', value: VueVersion.Vue3 },
-      ],
-      default: VueVersion.Vue3,
-      prefix: '*',
-      when: (answer) => answer.framework === VUE_TEMPLATE_PATH,
-    },
-    {
-      type: 'list',
       name: 'serverFramework',
       message: '请选择您希望使用的服务端技术栈：',
       choices: [
@@ -302,10 +290,9 @@ const packageJsonProcess = (
  * @dbAnswers  询问服务端配置的选择值
  */
 const createProjectSync = (answers: ProjectInfo) => {
-  const { framework, description, name, serverConfirm, buildTool, vueVersion } =
-    answers;
+  const { framework, description, name, serverConfirm, buildTool } = answers;
   const templatePath =
-    framework === VUE_TEMPLATE_PATH ? vueVersion : NG_TEMPLATE_PATH;
+    framework === VUE_TEMPLATE_PATH ? VueVersion.Vue3 : NG_TEMPLATE_PATH;
   // 模板来源目录
   const from = utils.getTemplatePath(templatePath);
   // 复制模板的目标目录
