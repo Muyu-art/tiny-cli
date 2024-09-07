@@ -4,7 +4,7 @@
 
 ## 项目启动
 ###vite
-`npm run dev`
+`npm run start`
 ###rspack
 `npm run dev:rp`
 ###webpack
