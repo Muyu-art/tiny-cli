@@ -38,7 +38,7 @@
     "test": "run-s build test:*",
     "test:lint": "tslint --project . && prettier \"src/**/*.ts\" --list-different",
     "test:unit": "nyc --silent ava",
-    "watch": "run-s clean build:main && run-p \"build:main -- -w\" \"test:unit -- --watch\"",
+    "watch": "run-s clean build:main && run-p \"build:main -- -w\"  ",
     "cov": "run-s build test:unit cov:html && open-cli coverage/index.html",
     "cov:html": "nyc report --reporter=html",
     "cov:send": "nyc report --reporter=lcov && codecov",
@@ -66,13 +66,13 @@
   "engines": {
     "node": ">=8.9"
   },
-  "dependencies": {    
+  "dependencies": {
   },
   "devDependencies": {
     "@opentiny/cli-devkit": "^1.0.1",
     "@opentiny/eslint-config": "^1.0.0",
     "chalk": "^2.4.2",
-    "inquirer": "^6.5.1",    
+    "inquirer": "^6.5.1",
     "@bitjson/npm-scripts-info": "1.0.0",
     "@types/node": "12.6.8",
     "ava": "2.2.0",
