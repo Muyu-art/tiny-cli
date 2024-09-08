@@ -76,8 +76,15 @@ export const devDependencies = {
     'core-js',
     'babel-loader',
   ],
-  rspack: [/@vitejs\/.*/, /vite-.*/, 'vite'],
-  webpack: [/@vitejs\/.*/, /vite-.*/, 'vite'],
+  rspack: [
+    /@vitejs\/.*/,
+    /vite-.*/,
+    'vite',
+    'webpack',
+    'webpack-cli',
+    'webpack-dev-server',
+  ],
+  webpack: [/@vitejs\/.*/, /vite-.*/, 'vite', '@rspack/cli', '@rspack/core'],
 };
 
 /**
