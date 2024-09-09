@@ -242,7 +242,6 @@
         </template>
       </tiny-modal>
       <tiny-modal
-        v-if="!readonly"
         v-model="updateModal"
         show-footer
         :mask-closable="true"
@@ -260,10 +259,14 @@
         />
 
         <template #footer>
-          <tiny-button type="primary" :loading="loading" @click="onConfirm">{{
-            $t('menu.btn.confirm')
-          }}</tiny-button>
-          <tiny-button @click="onCancel">{{
+          <tiny-button
+            v-if="!readonly"
+            type="primary"
+            :loading="loading"
+            @click="onConfirm"
+            >{{ $t('menu.btn.confirm') }}</tiny-button
+          >
+          <tiny-button v-if="!readonly" @click="onCancel">{{
             $t('menu.btn.cancel')
           }}</tiny-button>
         </template>
