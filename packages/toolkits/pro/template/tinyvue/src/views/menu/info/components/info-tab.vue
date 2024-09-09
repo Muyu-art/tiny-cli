@@ -223,6 +223,7 @@
         show-footer
         :mask-closable="true"
         resize
+        :title="$t('menuInfo.modal.title.add')"
         @close="onAddMenuClose"
       >
         <add-menu
@@ -241,10 +242,12 @@
         </template>
       </tiny-modal>
       <tiny-modal
+        v-if="!readonly"
         v-model="updateModal"
         show-footer
         :mask-closable="true"
         resize
+        :title="$t('menuInfo.modal.title.update')"
         @close="onClose"
       >
         <update-form
@@ -257,17 +260,31 @@
         />
 
         <template #footer>
-          <tiny-button
-            v-if="!readonly"
-            type="primary"
-            :loading="loading"
-            @click="onConfirm"
-            >{{ $t('menu.btn.confirm') }}</tiny-button
-          >
-          <tiny-button v-if="!readonly" @click="onCancel">{{
+          <tiny-button type="primary" :loading="loading" @click="onConfirm">{{
+            $t('menu.btn.confirm')
+          }}</tiny-button>
+          <tiny-button @click="onCancel">{{
             $t('menu.btn.cancel')
           }}</tiny-button>
         </template>
+      </tiny-modal>
+      <tiny-modal
+        v-if="readonly"
+        v-model="updateModal"
+        show-footer
+        :mask-closable="true"
+        resize
+        :title="$t('menuInfo.modal.title.info')"
+        @close="onClose"
+      >
+        <update-form
+          v-if="updateModal"
+          ref="form"
+          :node="activeNode"
+          :menus="i18nMenuData"
+          :locale-data="localeData"
+          :readonly="readonly"
+        />
       </tiny-modal>
     </div>
   </div>
