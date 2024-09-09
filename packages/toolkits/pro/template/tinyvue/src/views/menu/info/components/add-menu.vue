@@ -1,5 +1,10 @@
 <template>
-  <tiny-form :rules="rules" :model="menuInfo">
+  <tiny-form
+    ref="menuForm"
+    :rules="rules"
+    :model="menuInfo"
+    label-position="top"
+  >
     <tiny-form-item :label="$t('menuInfo.table.name')" prop="name">
       <tiny-input v-model="menuInfo.name"></tiny-input>
     </tiny-form-item>
@@ -72,6 +77,8 @@
     id: number;
     children: TreeSelectMenu[];
   };
+
+  const menuForm = ref();
 
   // 校验规则
   const rulesType = {
@@ -146,6 +153,9 @@
             ? null
             : Number(menuInfo.parentId),
       };
+    },
+    valid: async () => {
+      return menuForm.value.validate();
     },
   });
 </script>

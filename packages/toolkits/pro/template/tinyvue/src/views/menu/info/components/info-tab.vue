@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   import { createMenu, deleteMenu, getAllMenu, updateMenu } from '@/api/menu';
   import { useI18nMenu } from '@/hooks/useI18nMenu';
-  import { ITreeNodeData } from '@/router/guard/menu';
+  import { flushRouter, ITreeNodeData, toRoutes } from '@/router/guard/menu';
   import {
     Button as TinyButton,
     Modal as TinyModal,
@@ -9,7 +9,7 @@
   } from '@opentiny/vue';
   import { getAllLocalItems, Local } from '@/api/local';
   import useLoading from '@/hooks/loading';
-  import { ComponentInstance, computed, onMounted, ref } from 'vue';
+  import { ComponentInstance, computed, inject, onMounted, ref } from 'vue';
   import { useI18n } from 'vue-i18n';
   import { useDeepClone } from '@/hooks/useDeepClone';
   import { useMenuStore } from '@/store/modules/router';
@@ -55,30 +55,35 @@
     addModal.value = false;
   };
   const onClickAdd = () => {
-    const menuInfo = addMenu.value.getMenuInfo();
-    setAddLoading(true);
-    createMenu(menuInfo)
+    addMenu.value
+      .valid()
       .then(() => {
-        TinyModal.message({
-          message: t('baseForm.form.submit.success'),
-          status: 'success',
-        });
-        addModal.value = false;
-        return updateUserMenu();
-      })
-      .then(() => fetchMenu())
-      .catch((error) => {
-        if (error.response && error.response.data) {
-          const errorMessage = error.response.data.message || '未知错误';
-          TinyModal.message({
-            message: errorMessage,
-            status: 'error',
+        const menuInfo = addMenu.value.getMenuInfo();
+        setAddLoading(true);
+        createMenu(menuInfo)
+          .then(() => {
+            TinyModal.message({
+              message: t('baseForm.form.submit.success'),
+              status: 'success',
+            });
+            addModal.value = false;
+            return updateUserMenu();
+          })
+          .then(() => fetchMenu())
+          .catch((error) => {
+            if (error.response && error.response.data) {
+              const errorMessage = error.response.data.message || '未知错误';
+              TinyModal.message({
+                message: errorMessage,
+                status: 'error',
+              });
+            }
+          })
+          .finally(() => {
+            setAddLoading(false);
           });
-        }
       })
-      .finally(() => {
-        setAddLoading(false);
-      });
+      .catch(() => {});
   };
   const onClose = () => {
     activeNode.value = DEFAULT_NODE;
@@ -113,7 +118,7 @@
       })
       .then(() => {
         updateUserMenu();
-        tabStore.delByLink(`/vue-pro/${node.url}`);
+        tabStore.delByLink(node.url, true);
       })
       .catch((reason) => {
         const error = reason;
@@ -131,39 +136,50 @@
   };
   const onConfirm = () => {
     setLoading(true);
-    const menuInfo = form.value.getMenuInfo();
-    activeNode.value = {
-      ...DEFAULT_NODE,
-    };
-    if (menuInfo.id === menuInfo.parentId) {
-      TinyModal.message({
-        message: t('menuInfo.modal.message.error'),
-        status: 'error',
-      });
-      return;
-    }
-    updateMenu(menuInfo)
+    form.value
+      .valid()
       .then(() => {
-        TinyModal.message({
-          message: t('baseForm.form.submit.success'),
-          status: 'success',
-        });
-        setTreeLoading(true);
-        return fetchMenu();
+        const menuInfo = form.value.getMenuInfo();
+        activeNode.value = {
+          ...DEFAULT_NODE,
+        };
+        if (menuInfo.id === menuInfo.parentId) {
+          TinyModal.message({
+            message: t('menuInfo.modal.message.error'),
+            status: 'error',
+          });
+          return;
+        }
+        updateMenu(menuInfo)
+          .then(() => {
+            TinyModal.message({
+              message: t('baseForm.form.submit.success'),
+              status: 'success',
+            });
+            setTreeLoading(true);
+            return fetchMenu();
+          })
+          .then(() => updateUserMenu())
+          .finally(() => {
+            setLoading(false);
+            setTreeLoading(false);
+          });
+        updateModal.value = false;
       })
-      .then(() => updateUserMenu())
+      .catch(() => {})
       .finally(() => {
         setLoading(false);
-        setTreeLoading(false);
       });
-    updateModal.value = false;
   };
   const fetchMenu = async () => {
     const { data } = await getAllMenu();
     rawMenuData.value = data;
   };
   const menuStore = useMenuStore();
+  const { reloadMenu } = inject<{ reloadMenu: () => void }>('RELOAD');
   const updateUserMenu = () => {
+    flushRouter(router);
+    reloadMenu();
     menuStore.getMenuList();
   };
   const fetchLocalItems = () => {
@@ -206,6 +222,8 @@
         v-model="addModal"
         show-footer
         :mask-closable="true"
+        resize
+        :title="$t('menuInfo.modal.title.add')"
         @close="onAddMenuClose"
       >
         <add-menu
@@ -227,6 +245,8 @@
         v-model="updateModal"
         show-footer
         :mask-closable="true"
+        resize
+        :title="$t('menuInfo.modal.title.update')"
         @close="onClose"
       >
         <update-form
@@ -250,6 +270,24 @@
             $t('menu.btn.cancel')
           }}</tiny-button>
         </template>
+      </tiny-modal>
+      <tiny-modal
+        v-if="readonly"
+        v-model="updateModal"
+        show-footer
+        :mask-closable="true"
+        resize
+        :title="$t('menuInfo.modal.title.info')"
+        @close="onClose"
+      >
+        <update-form
+          v-if="updateModal"
+          ref="form"
+          :node="activeNode"
+          :menus="i18nMenuData"
+          :locale-data="localeData"
+          :readonly="readonly"
+        />
       </tiny-modal>
     </div>
   </div>

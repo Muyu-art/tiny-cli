@@ -4,14 +4,19 @@
       {{ $t('locale.add.btn') }}
     </tiny-button>
     <tiny-dialog-box v-model:visible="open" :title="$t('locale.add.title')">
-      <tiny-form>
-        <tiny-form-item :label="$t('locale.add.key')">
+      <tiny-form
+        ref="localeForm"
+        :model="locale"
+        :rules="rules"
+        label-position="top"
+      >
+        <tiny-form-item :label="$t('locale.add.key')" prop="key">
           <tiny-input v-model="locale.key" />
         </tiny-form-item>
-        <tiny-form-item :label="$t('locale.add.content')">
+        <tiny-form-item :label="$t('locale.add.content')" prop="content">
           <tiny-input v-model="locale.content" />
         </tiny-form-item>
-        <tiny-form-item :label="$t('locale.add.lang')">
+        <tiny-form-item :label="$t('locale.add.lang')" prop="lang">
           <tiny-select v-model="locale.lang">
             <tiny-option
               v-for="item of langes"
@@ -22,8 +27,8 @@
           </tiny-select>
           <tiny-popover>
             <div>
-              <tiny-form>
-                <tiny-form-item :label="$t('lang.add.title')">
+              <tiny-form ref="langForm" :model="lang" :rules="langRule">
+                <tiny-form-item :label="$t('lang.add.title')" prop="name">
                   <tiny-input v-model="lang.name" />
                 </tiny-form-item>
                 <tiny-button @click="addLang">
@@ -79,12 +84,14 @@
     Option as TinyOption,
     Popover as TinyPopover,
   } from '@opentiny/vue';
-  import { computed, reactive } from 'vue';
+  import { computed, reactive, ref } from 'vue';
   import { useI18n } from 'vue-i18n';
   import langTable from './lang-table.vue';
 
   const { open, onOpen, onClose } = useDisclosure();
   const { open: langTableOPen, onOpen: setLangTableOpen } = useDisclosure();
+  const localeForm = ref();
+  const langForm = ref();
   const locales = useLocales();
   const langes = computed(() => locales.lang);
   const locale = reactive<CreateLocal>({
@@ -94,44 +101,83 @@
   });
   const lang = reactive({ name: '' });
 
+  const rules = {
+    key: [
+      {
+        required: true,
+        trigger: 'blur',
+      },
+    ],
+    content: [
+      {
+        required: true,
+        trigger: 'blur',
+      },
+    ],
+    lang: [
+      {
+        required: true,
+        trigger: 'blur',
+      },
+    ],
+  };
+  const langRule = {
+    name: [
+      {
+        required: true,
+        trigger: 'blur',
+      },
+    ],
+  };
+
   const addLang = () => {
-    createLang({ name: lang.name })
-      .then(({ data }) => {
-        locales.pushLang(data);
+    langForm.value
+      .validate()
+      .then(() => {
+        createLang({ name: lang.name })
+          .then(({ data }) => {
+            locales.pushLang(data);
+          })
+          .catch((reason) => {
+            Notify({
+              type: 'error',
+              message: reason.response.data.message,
+            });
+          })
+          .finally(() => {
+            lang.name = '';
+            onClose();
+          });
       })
-      .catch((reason) => {
-        Notify({
-          type: 'error',
-          message: reason.data.message,
-        });
-      })
-      .finally(() => {
-        lang.name = '';
-        onClose();
-      });
+      .catch(() => {});
   };
 
   const i18 = useI18n();
 
   const addLocale = () => {
-    createLocalItem(locale)
-      .then(({ data }) => {
-        locale.key = '';
-        locale.content = '';
-        locale.lang = '' as any;
-        locales.pushLocale(data);
-        i18.mergeLocaleMessage(data.lang.name, {
-          [data.key]: data.content,
-        });
+    localeForm.value
+      .validate()
+      .then(() => {
+        createLocalItem(locale)
+          .then(({ data }) => {
+            locale.key = '';
+            locale.content = '';
+            locale.lang = '' as any;
+            locales.pushLocale(data);
+            i18.mergeLocaleMessage(data.lang.name, {
+              [data.key]: data.content,
+            });
+          })
+          .catch((reason) => {
+            Notify({
+              type: 'error',
+              message: reason.response.data.message,
+            });
+          })
+          .finally(() => {
+            onClose();
+          });
       })
-      .catch((reason) => {
-        Notify({
-          type: 'error',
-          message: reason.response.data.message[0],
-        });
-      })
-      .finally(() => {
-        onClose();
-      });
+      .catch(() => {});
   };
 </script>

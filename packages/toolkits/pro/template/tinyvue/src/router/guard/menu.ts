@@ -1,8 +1,8 @@
 import { useMenuStore } from '@/store/modules/router';
 import { nextTick } from 'vue';
 import { Router, RouteRecordRaw } from 'vue-router';
-import Demo from '@/views/menu/demo/index.vue';
 import NotFound from '@/views/not-found/404/index.vue';
+import constant from '../constant';
 
 export interface ITreeNodeData {
   // node-key='id' 设置节点的唯一标识
@@ -38,6 +38,18 @@ if (BUILD_TOOLS === 'VITE' || BUILD_TOOLS === 'WEBPACK') {
     }
   });
 }
+
+export const flushRouter = async (router: Router) => {
+  const menuStore = useMenuStore();
+  router.clearRoutes();
+  constant.forEach((staticRoute) => router.addRoute(staticRoute));
+  await menuStore.getMenuList();
+  const routes = toRoutes(menuStore.menuList);
+  routes.forEach((route) => {
+    router.addRoute('root', route);
+  });
+};
+
 export const toRoutes = (menus: ITreeNodeData[]) => {
   const router: RouteRecordRaw[] = [];
   for (let i = 0; i < menus.length; i += 1) {
