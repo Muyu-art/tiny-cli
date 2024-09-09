@@ -73,7 +73,7 @@
     height="auto"
     :title="$t('roleInfo.modal.title.add')"
   >
-    <tiny-form ref="form" :model="data" :rules="rules">
+    <tiny-form ref="form" :model="data" :rules="rules" label-position="top">
       <tiny-form-item :label="$t('roleInfo.modal.input.name')" prop="name">
         <tiny-input v-model="data.name" />
       </tiny-form-item>

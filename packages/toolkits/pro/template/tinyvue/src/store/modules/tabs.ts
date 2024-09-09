@@ -66,12 +66,14 @@ export const useTabStore = defineStore('tabs', {
     getByLink(link: string) {
       return this.data.filter((tab) => tab.link === link);
     },
-    delByLink(link: string) {
+    delByLink(link: string, endsWith = false) {
       let curName = '';
       if (this.data.length === 1) {
         return '';
       }
-      const idx = this.data.findIndex((tab) => tab.link === link);
+      const idx = this.data.findIndex((tab) =>
+        endsWith ? tab.link.endsWith(link) : tab.link === link,
+      );
       if (idx === -1) {
         return '';
       }

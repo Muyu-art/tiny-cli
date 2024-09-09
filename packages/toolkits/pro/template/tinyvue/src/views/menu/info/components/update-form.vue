@@ -1,5 +1,11 @@
 <template>
-  <tiny-form :display-only="props.readonly" :rules="rules" :model="menuInfo">
+  <tiny-form
+    ref="updateForm"
+    :display-only="props.readonly"
+    :rules="rules"
+    :model="menuInfo"
+    label-position="top"
+  >
     <tiny-form-item :label="$t('menuInfo.table.name')" prop="locale">
       <tiny-select
         v-model="menuInfo.locale"
@@ -43,17 +49,13 @@
 
 <script lang="ts" setup>
   import {
-    Button as TinyButton,
     Form as TinyForm,
-    Row as TinyRow,
-    Col as TinyCol,
     FormItem as TinyFormItem,
     Input as TinyInput,
-    TreeSelect as TinyTreeSelect,
     Select as TinySelect,
   } from '@opentiny/vue';
   import { ITreeNodeData } from '@/router/guard/menu';
-  import { computed, reactive, unref, watch } from 'vue';
+  import { computed, reactive, ref, unref } from 'vue';
   import { useDeepClone } from '@/hooks/useDeepClone';
 
   const props = defineProps<{
@@ -101,7 +103,7 @@
   };
 
   const treeOp = computed(() => ({ data: props.menus }));
-
+  const updateForm = ref();
   const menuInfo = reactive<ITreeNodeData>({
     id: props.node.id,
     label: props.node.label,
@@ -127,6 +129,7 @@
   };
   defineExpose({
     getMenuInfo,
+    valid: async () => updateForm.value.validate(),
   });
 </script>
 

@@ -71,7 +71,7 @@
     :title="$t('roleInfo.modal.title.update')"
     @close="() => emits('close')"
   >
-    <tiny-form :model="updateData">
+    <tiny-form :model="updateData" label-position="top">
       <tiny-form-item :label="$t('roleInfo.modal.input.id')">
         <label>{{ updateData.id }}</label>
       </tiny-form-item>

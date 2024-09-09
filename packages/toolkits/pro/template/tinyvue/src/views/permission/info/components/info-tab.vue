@@ -78,6 +78,7 @@
       <template #default>
         <tiny-layout>
           <tiny-form
+            ref="updateForm"
             :model="state.permissionUpdData"
             :rules="rules"
             label-width="150px"
@@ -144,6 +145,7 @@
       <template #default>
         <tiny-layout>
           <tiny-form
+            ref="addForm"
             :model="state.permissionAddData"
             :rules="rules"
             label-width="150px"
@@ -192,12 +194,9 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, reactive, onMounted, watch, computed } from 'vue';
+  import { ref, reactive, computed, unref } from 'vue';
   import { useI18n } from 'vue-i18n';
   import {
-    Tabs as TinyTabs,
-    TabItem as TinyTabItem,
-    Loading,
     GridColumn as TinyGridColumn,
     Grid as TinyGrid,
     Pager as TinyPager,
@@ -211,7 +210,6 @@
     Modal,
     Layout as TinyLayout,
   } from '@opentiny/vue';
-  import { IconChevronDown } from '@opentiny/vue-icon';
   import { useUserStore } from '@/store';
   import {
     getAllPermission,
@@ -221,8 +219,6 @@
     Permission,
   } from '@/api/permission';
   import { useRouter } from 'vue-router';
-  import { getSimpleDate } from '@/utils/time';
-  import { updateUserInfo } from '@/api/user';
   import {
     FilterType,
     InputFilterValue,
@@ -230,8 +226,9 @@
     Pager,
   } from '@/types/global';
 
-  const router = useRouter();
   const roleGrid = ref();
+  const updateForm = ref();
+  const addForm = ref();
 
   const { t } = useI18n();
 
@@ -249,9 +246,6 @@
     isPermissionAdd: false,
     isPermissionUpdate: false,
   });
-
-  // 变量设置
-  const userStore = useUserStore();
 
   // 校验规则
   const rulesType = {
@@ -340,7 +334,7 @@
   }
 
   const handleUpdate = (permission: Permission) => {
-    state.permissionUpdData = permission;
+    state.permissionUpdData = JSON.parse(JSON.stringify(permission));
     state.isPermissionUpdate = true;
   };
 
@@ -350,30 +344,35 @@
   };
 
   async function handlePermissionUpdateSubmit() {
-    let data = state.permissionUpdData;
-    let newTemp = {
-      id: data.id,
-      name: data.name,
-      desc: data.desc,
-    };
-    try {
-      await updatePermission(newTemp);
-      Modal.message({
-        message: t('baseForm.form.submit.success'),
-        status: 'success',
-      });
-      state.isPermissionUpdate = false;
-      state.permissionUpdData = {} as any;
-      roleGrid.value.handleFetch();
-    } catch (error) {
-      if (error.response && error.response.data) {
-        const errorMessage = error.response.data.message || '未知错误';
-        Modal.message({
-          message: errorMessage,
-          status: 'error',
-        });
-      }
-    }
+    updateForm.value
+      .validate()
+      .then(async () => {
+        let data = state.permissionUpdData;
+        let newTemp = {
+          id: data.id,
+          name: data.name,
+          desc: data.desc,
+        };
+        try {
+          await updatePermission(newTemp);
+          Modal.message({
+            message: t('baseForm.form.submit.success'),
+            status: 'success',
+          });
+          state.isPermissionUpdate = false;
+          state.permissionUpdData = {} as any;
+          roleGrid.value.handleFetch();
+        } catch (error) {
+          if (error.response && error.response.data) {
+            const errorMessage = error.response.data.message || '未知错误';
+            Modal.message({
+              message: errorMessage,
+              status: 'error',
+            });
+          }
+        }
+      })
+      .catch(() => {});
   }
 
   function handleAddPermission() {
@@ -381,29 +380,34 @@
   }
 
   async function handlePermissionAddSubmit() {
-    let data = state.permissionAddData;
-    let newTemp = {
-      name: data.name,
-      desc: data.desc,
-    };
-    try {
-      await createPermission(newTemp);
-      Modal.message({
-        message: t('baseForm.form.submit.success'),
-        status: 'success',
-      });
-      state.isPermissionAdd = false;
-      state.permissionAddData = {} as any;
-      roleGrid.value.handleFetch();
-    } catch (error) {
-      if (error.response && error.response.data) {
-        const errorMessage = error.response.data.message || '未知错误';
-        Modal.message({
-          message: errorMessage,
-          status: 'error',
-        });
-      }
-    }
+    addForm.value
+      .validate()
+      .then(async () => {
+        let data = state.permissionAddData;
+        let newTemp = {
+          name: data.name,
+          desc: data.desc,
+        };
+        try {
+          await createPermission(newTemp);
+          Modal.message({
+            message: t('baseForm.form.submit.success'),
+            status: 'success',
+          });
+          state.isPermissionAdd = false;
+          state.permissionAddData = {} as any;
+          roleGrid.value.handleFetch();
+        } catch (error) {
+          if (error.response && error.response.data) {
+            const errorMessage = error.response.data.message || '未知错误';
+            Modal.message({
+              message: errorMessage,
+              status: 'error',
+            });
+          }
+        }
+      })
+      .catch(() => {});
   }
 
   async function handlePermissionAddCancel() {

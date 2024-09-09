@@ -171,7 +171,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, onMounted, reactive } from 'vue';
+  import { computed, onMounted, reactive, ref } from 'vue';
   import { useI18n } from 'vue-i18n';
   import {
     Select as TinySelect,
@@ -205,6 +205,8 @@
     userData: {} as any,
     roleData: [] as any,
   });
+
+  const setFormRef = ref();
 
   const emit = defineEmits<{
     confirm: [];
@@ -265,45 +267,50 @@
   });
 
   async function handleSubmit() {
-    let data = state.userData;
-    if (data.status === 'Active') {
-      data.status = 1;
-    } else {
-      data.status = 2;
-    }
-    let newTemp = {
-      email: data.email,
-      password: data.password,
-      name: data.name,
-      address: data.address,
-      department: data.department,
-      roleIds: [data.roleIds],
-      employeeType: data.employeeType,
-      probationStart: getSimpleDate(data.probationDate[0]),
-      probationEnd: getSimpleDate(data.probationDate[1]),
-      probationDuration: data.probationDuration,
-      protocolStart: getSimpleDate(data.protocolStart),
-      protocolEnd: getSimpleDate(data.protocolEnd),
-      status: data.status,
-    };
+    setFormRef.value
+      .validate()
+      .then(async () => {
+        let data = state.userData;
+        if (data.status === 'Active') {
+          data.status = 1;
+        } else {
+          data.status = 2;
+        }
+        let newTemp = {
+          email: data.email,
+          password: data.password,
+          name: data.name,
+          address: data.address,
+          department: data.department,
+          roleIds: [data.roleIds],
+          employeeType: data.employeeType,
+          probationStart: getSimpleDate(data.probationDate[0]),
+          probationEnd: getSimpleDate(data.probationDate[1]),
+          probationDuration: data.probationDuration,
+          protocolStart: getSimpleDate(data.protocolStart),
+          protocolEnd: getSimpleDate(data.protocolEnd),
+          status: data.status,
+        };
 
-    try {
-      await registerUser(newTemp);
-      Modal.message({
-        message: t('baseForm.form.submit.success'),
-        status: 'success',
-      });
-      state.userData = {} as any;
-      emit('confirm');
-    } catch (error) {
-      if (error.response && error.response.data) {
-        const errorMessage = error.response.data.message || '未知错误';
-        Modal.message({
-          message: errorMessage[0],
-          status: 'error',
-        });
-      }
-    }
+        try {
+          await registerUser(newTemp);
+          Modal.message({
+            message: t('baseForm.form.submit.success'),
+            status: 'success',
+          });
+          state.userData = {} as any;
+          emit('confirm');
+        } catch (error) {
+          if (error.response && error.response.data) {
+            const errorMessage = error.response.data.message || '未知错误';
+            Modal.message({
+              message: errorMessage,
+              status: 'error',
+            });
+          }
+        }
+      })
+      .catch(() => {});
   }
 
   async function fetchRole() {

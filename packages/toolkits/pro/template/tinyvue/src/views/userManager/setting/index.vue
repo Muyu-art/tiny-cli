@@ -304,7 +304,7 @@
       if (error.response && error.response.data) {
         const errorMessage = error.response.data.message || '未知错误';
         Modal.message({
-          message: errorMessage[0],
+          message: errorMessage,
           status: 'error',
         });
       }

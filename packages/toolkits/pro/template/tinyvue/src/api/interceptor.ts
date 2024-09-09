@@ -68,6 +68,9 @@ axios.interceptors.response.use(
         status: 'error',
       });
     }
+    if (status === 400) {
+      data.message = error.response.data.errors[0] ?? data.message;
+    }
 
     return Promise.reject(error);
   },

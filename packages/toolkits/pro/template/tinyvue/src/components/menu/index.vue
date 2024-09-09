@@ -24,15 +24,7 @@
 </template>
 
 <script lang="ts" setup>
-  import {
-    ref,
-    onMounted,
-    watch,
-    computed,
-    reactive,
-    unref,
-    getCurrentInstance,
-  } from 'vue';
+  import { ref, onMounted, watch, computed, unref } from 'vue';
   import { TreeMenu as tinyTreeMenu } from '@opentiny/vue';
   import { useMenuStore } from '@/store/modules/router';
   import router from '@/router';
@@ -127,7 +119,7 @@
         const key = findId(tabStore.current.name, tabStore.current.link);
         tree.value.setCurrentKey(key);
         const { parentId = null } = tree.value.getCurrentNode();
-        if (parentId) {
+        if (parentId && !expandeArr.value.includes(parentId)) {
           expandeArr.value = expandeArr.value.concat(parentId);
         }
       },
