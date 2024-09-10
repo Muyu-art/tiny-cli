@@ -297,7 +297,6 @@ const createProjectSync = (answers: ProjectInfo) => {
   const from = utils.getTemplatePath(templatePath);
   // 复制模板的目标目录
   const to = utils.getDistPath(serverConfirm ? `${name}/web` : name);
-  console.log(from, to);
   fs.copyTpl(from, to);
   // 将项目名称、描述写入 package.json中
   try {
