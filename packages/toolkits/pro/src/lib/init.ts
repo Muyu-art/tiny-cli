@@ -179,11 +179,7 @@ const createServerSync = (answers: ProjectInfo) => {
     PAGINATION_LIMIT: 10,
   };
   const envStr = objToEnv(config);
-  copySync(serverFrom, serverTo, {
-    filter: (src) => {
-      return !src.includes('node_modules');
-    },
-  });
+  copySync(serverFrom, serverTo);
   writeFileSync(path.join(serverTo, '.env'), envStr);
 };
 

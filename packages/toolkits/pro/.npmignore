@@ -18,3 +18,4 @@ coverage
 !template/**/tsconfig.json
 !template/**/tsconfig.module.json
 !template/**/tslint.json
+node_modules
