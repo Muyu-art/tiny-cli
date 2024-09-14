@@ -9,7 +9,14 @@
   } from '@opentiny/vue';
   import { getAllLocalItems, Local } from '@/api/local';
   import useLoading from '@/hooks/loading';
-  import { ComponentInstance, computed, inject, onMounted, ref } from 'vue';
+  import {
+    ComponentInstance,
+    computed,
+    inject,
+    onMounted,
+    ref,
+    watch,
+  } from 'vue';
   import { useI18n } from 'vue-i18n';
   import { useDeepClone } from '@/hooks/useDeepClone';
   import { useMenuStore } from '@/store/modules/router';
@@ -192,6 +199,11 @@
       });
     });
   };
+
+  const { locale } = useI18n();
+  watch(locale, () => {
+    fetchLocalItems();
+  });
 
   onMounted(() => {
     Promise.all([fetchMenu(), fetchLocalItems()]).finally(() => {

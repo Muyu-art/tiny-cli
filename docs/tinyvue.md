@@ -1,5 +1,9 @@
 # TinyPro of vue3
 
+## 视频教程
+
+[OpenTiny社区](https://space.bilibili.com/15284299)
+
 ## 环境准备
 
 请确保您安装了`nodejs`, `npm`, `tiny-cli`
@@ -27,14 +31,14 @@ https://www.opentiny.design/tiny-cli/docs/toolkits/pro#database）：
 * 请输入密码： [hidden]
 ```
 
+## 启动后端服务
+
+请阅读[后端指南](./tiny-nest.md)
+
+## 启动前端服务
+
 ```bash
-# terminal 1
-cd web
-npm i
-npm run start
-# terminal 2
-cd nestJs
-npm i
+# npm i
 npm run start
 ```
 
@@ -61,7 +65,6 @@ npm run start
     ├─config
     │  ├─plugin
     │  └─utils
-    ├─docs                (文档)
     ├─public
     └─src
         ├─api             (api管理)
@@ -150,3 +153,21 @@ interface ITreeNodeData {
 ### 打包构建
 
 目前`tiny-pro`支持`vite`, `webpack`, `rspack`三种打包方案（在初始化阶段任选其一）。只需要运行`npm run build`即可
+
+## 遇到困难?
+
+加官方小助手微信 opentiny-official，加入技术交流群
+
+## 常见问题
+
+### 跨域问题如何解决
+
+对于开发环境来说，可以直接修改`dev-server`的`proxy`. 例如`vite`工具的`server.proxy`
+
+### 代码无法提交
+
+您可以选择移除husky或根据[Angular 规范](https://zj-git-guide.readthedocs.io/zh-cn/latest/message/Angular%E6%8F%90%E4%BA%A4%E4%BF%A1%E6%81%AF%E8%A7%84%E8%8C%83/)书写commit信息
+
+### 页面部署后刷新404
+
+请移步[Vue Router服务器部署指南](https://router.vuejs.org/guide/essentials/history-mode.html#Example-Server-Configurations)

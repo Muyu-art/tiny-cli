@@ -179,11 +179,7 @@ const createServerSync = (answers: ProjectInfo) => {
     PAGINATION_LIMIT: 10,
   };
   const envStr = objToEnv(config);
-  copySync(serverFrom, serverTo, {
-    filter: (src) => {
-      return !src.includes('node_modules');
-    },
-  });
+  copySync(serverFrom, serverTo);
   writeFileSync(path.join(serverTo, '.env'), envStr);
 };
 
@@ -440,10 +436,5 @@ export default async () => {
   // 初始化不应该在cli做，而是在后端
 
   // 安装依赖
-  try {
-    // installDependencies(projectInfo);
-  } catch (e) {
-    log.error('npm 依赖安装失败');
-    log.info('请手动执行 tiny i 或 npm i');
-  }
+  log.info('初始化成功，请运行npm i或tiny i 安装依赖');
 };
