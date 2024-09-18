@@ -102,6 +102,8 @@ export interface ProjectInfo {
   database?: string;
   username?: string;
   password?: string;
+  redisHost?: string;
+  redisPort?: number;
   buildTool: BuildTool;
   vueVersion: VueVersion;
 }

@@ -98,6 +98,20 @@ const getProjectInfo = (): Promise<ProjectInfo> => {
         answers.serverFramework !== ServerFrameworks.Skip,
     },
     {
+      type: 'input',
+      name: 'redisHost',
+      message: '请输入Redis地址：',
+      default: 'localhost',
+      prefix: '*',
+    },
+    {
+      type: 'input',
+      name: 'redisPort',
+      message: '请输入Redis端口：',
+      default: 6379,
+      prefix: '*',
+    },
+    {
       type: 'list',
       name: 'dialect',
       message: '请选择数据库类型：',
@@ -164,7 +178,7 @@ const createServerSync = (answers: ProjectInfo) => {
   const serverTo = utils.getDistPath(`${name}/${serverFramework}`);
   const config = {
     DATABASE_HOST: answers.host ?? 'localhost',
-    DATABASE_PORT: 3306,
+    DATABASE_PORT: Number(answers.port ?? 3306),
     DATABASE_USERNAME: answers.username ?? 'root',
     DATABASE_PASSWORD: answers.password ?? 'root',
     DATABASE_NAME: answers.database,
@@ -172,8 +186,8 @@ const createServerSync = (answers: ProjectInfo) => {
     DATABASE_AUTOLOADENTITIES: true,
     AUTH_SECRET: 'secret',
     REDIS_SECONDS: 7200,
-    REDIS_HOST: 'localhost',
-    REDIS_PORT: 6379,
+    REDIS_HOST: answers.redisHost ?? 'localhost',
+    REDIS_PORT: Number(answers.redisPort ?? 6379),
     EXPIRES_IN: '2h',
     PAGINATION_PAGE: 1,
     PAGINATION_LIMIT: 10,
@@ -428,6 +442,7 @@ export default async () => {
     projectInfo = await getProjectInfo();
     createProjectSync(projectInfo);
   } catch (e) {
+    console.log(e);
     log.error('项目模板创建失败');
     return;
   }
