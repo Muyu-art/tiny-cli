@@ -442,7 +442,6 @@ export default async () => {
     projectInfo = await getProjectInfo();
     createProjectSync(projectInfo);
   } catch (e) {
-    console.log(e);
     log.error('项目模板创建失败');
     return;
   }
