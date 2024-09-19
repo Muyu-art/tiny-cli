@@ -103,6 +103,7 @@ const getProjectInfo = (): Promise<ProjectInfo> => {
       message: '请输入Redis地址：',
       default: 'localhost',
       prefix: '*',
+      when: (answers) => answers.serverConfirm,
     },
     {
       type: 'input',
@@ -110,6 +111,7 @@ const getProjectInfo = (): Promise<ProjectInfo> => {
       message: '请输入Redis端口：',
       default: 6379,
       prefix: '*',
+      when: (answers) => answers.serverConfirm,
     },
     {
       type: 'list',
