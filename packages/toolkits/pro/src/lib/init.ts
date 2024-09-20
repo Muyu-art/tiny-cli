@@ -179,11 +179,11 @@ const createServerSync = (answers: ProjectInfo) => {
   const serverFrom = utils.getTemplatePath(`server/${serverFramework}`);
   const serverTo = utils.getDistPath(`${name}/${serverFramework}`);
   const config = {
-    DATABASE_HOST: answers.host ?? 'localhost',
-    DATABASE_PORT: Number(answers.port ?? 3306),
-    DATABASE_USERNAME: answers.username ?? 'root',
-    DATABASE_PASSWORD: answers.password ?? 'root',
-    DATABASE_NAME: answers.database,
+    DATABASE_HOST: answers.dialect && (answers.host ?? 'localhost'),
+    DATABASE_PORT: answers.dialect && Number(answers.port ?? 3306),
+    DATABASE_USERNAME: answers.dialect && (answers.username ?? 'root'),
+    DATABASE_PASSWORD: answers.dialect && (answers.password ?? 'root'),
+    DATABASE_NAME: answers.dialect && answers.database,
     DATABASE_SYNCHRONIZE: false,
     DATABASE_AUTOLOADENTITIES: true,
     AUTH_SECRET: 'secret',
