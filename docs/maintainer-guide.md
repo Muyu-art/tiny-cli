@@ -101,3 +101,8 @@ template
 ### 开发指南
 
 请参考[tiny-pro前端开发](./tinyvue.md)与[tiny-pro后端开发](./tiny-nest.md)
+
+### 更多帮助
+
+- 添加官方小助手微信 opentiny-official，加入技术交流群
+- 加入邮件列表 opentiny@googlegroups.com

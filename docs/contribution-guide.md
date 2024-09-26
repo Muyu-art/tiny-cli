@@ -47,7 +47,7 @@ lerna success - @opentiny/cli
 npm run publish --access=public
 ```
 
-批量替换完成后，我们可以直接进行版本发布，因为所有的子包都会存在一个`prepublish`生命周期钩子，该钩子会在`prepublish`前强制执行一次构建操作，所以无需再次构建。
+批量替换完成后，我们可以直接进行版本发布，因为所有的子包都会存在一个`prepublish`生命周期钩子，该钩子会在`publish`前强制执行一次构建操作，所以无需再次构建。
 
 ## tiny-pro 套件开发
 
@@ -86,7 +86,13 @@ template
 
 #### Nest.js
 
-请确保您的机器中安装了`mysql`, `redis`两个必要服务后，您可以直接进入`template > server > nestJs`下执行 `npm i`。等待安装完成后请将`.env`文件中的内容修改为您的数据库与redis信息。
+请确保您的机器中安装了`mysql`, `redis`两个必要服务后，您可以直接进入`template > server > nestJs`下执行 `npm i`。
+
+等待安装完成后请将`.env`文件中的内容修改为您的数据库与redis信息。
+
+**请确保`.env`文件中`DATABASE_NAME`对应的数据库存在, 且为空**
+
+**请确保`.env`文件中`DATABASE_SYNCHRONIZE`为`true`**
 
 修改完成后运行`npm run start:dev`如果出现`Application is running on: http://[::1]:3000`即代表后端启动成功
 
