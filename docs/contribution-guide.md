@@ -28,26 +28,25 @@ npm run dev
 ```
 
 即表示开发编译完成，此时您需要开启一个新的`bash`环境运行
-```
+
+```bash
 npm run link
 ```
 
 当出现终端出现下述文本，则表示开发环境搭建成功
 
-```
+```bash
 lerna success run Ran npm script 'link' in 1 package in 10.6s:
 lerna success - @opentiny/cli
 ```
 
 ### 打包分发
 
-有时我们需要进行打包来测试构建产物是否正常，这个时候需要批量的进行替换`@opentiny`前缀，并改为自己的私有前缀。您可以手动替换或使用IDE进行辅助替换
+有时我们需要进行打包来测试构建产物是否正常，这个时候需要批量的进行替换`@opentiny`前缀，并改为自己的私有前缀。您可以手动替换或使用IDE进行辅助替换。批量替换完成后，我们可以直接进行版本发布，因为所有的子包都会存在一个`prepublish`生命周期钩子，该钩子会在`publish`前强制执行一次构建操作，所以无需再次构建。
 
 ```bash
 npm run publish --access=public
 ```
-
-批量替换完成后，我们可以直接进行版本发布，因为所有的子包都会存在一个`prepublish`生命周期钩子，该钩子会在`publish`前强制执行一次构建操作，所以无需再次构建。
 
 ## tiny-pro 套件开发
 
@@ -70,40 +69,29 @@ template
     tinyvue2
 ```
 
-其中`template`是模板文件，如果您只需要开发`tiny-pro`前端或后端项目，可以使用IDE单独打开该文件，并进入相应的技术栈文件夹中安装目录。如果您需要开发`cli`命令，可以直接进入`src > lib`文件夹下，一个文件对应的便是一个命令。
+其中`template`是模板文件夹，如果您只需要开发`tiny-pro`前端或后端项目，可以使用IDE单独打开该文件夹，并进入相应的技术栈文件夹中安装依赖。如果您需要开发套件对应的命令，可以直接进入`packages\toolkits\pro\src`文件夹下，一个文件对应的便是一个命令。
 
-### 线上调试
+### 发布测试包
 
-有时我们需要线上调试`tiny-pro`套件。
+> 执行此步骤前，请您悉知如何修改环境变量
+> Linux如何修改环境变量: https://wiki.archlinuxcn.org/wiki/%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F
+> Windows如何修改环境变量: https://support.esri.com/zh-cn/knowledge-base/edit-an-environment-variable-1462478594981-000002146
+> Macos如何修改环境变量: https://support.apple.com/zh-cn/guide/terminal/apd382cc5fa-4f58-4449-b20a-41c53c006f8f/mac
 
-1. 替换packages.json中`@opentiny/tiny-toolkit-pro` 为 `@<您的私有scope>/tiny-toolkit-pro`
+**在修改环境变量后请重新启动终端**
+
+有时我们需要发布`tiny-pro`套件测试包，您可以跟随下列步骤
+
+1. 替换`packages\toolkits\pro\package.json`中`@opentiny/tiny-toolkit-pro` 为 `@<您的私有scope>/tiny-toolkit-pro`
 2. 运行`npm publish --access=public`
 3. 修改环境变量`TINY_SCOPE=<第一步骤中您填写的私有scope>`
 4. 安装`npm i -g @opentiny/cli` (如果您安装完成可忽略该步骤)
-5. **新启用一个bash**并执行`tiny init pro`
+5. `rm -rf ~/.tiny`
+6. **新启用一个bash**并执行`tiny init pro`
 
 ### 本地开发
 
-#### Nest.js
+您可以使用IDE打开`packages\toolkits\pro\templates`下，并进入对应的技术栈后安装依赖，之后跟随开发指南进行开发
 
-请确保您的机器中安装了`mysql`, `redis`两个必要服务后，您可以直接进入`template > server > nestJs`下执行 `npm i`。
-
-等待安装完成后请将`.env`文件中的内容修改为您的数据库与redis信息。
-
-**请确保`.env`文件中`DATABASE_NAME`对应的数据库存在, 且为空**
-
-**请确保`.env`文件中`DATABASE_SYNCHRONIZE`为`true`**
-
-修改完成后运行`npm run start:dev`如果出现`Application is running on: http://[::1]:3000`即代表后端启动成功
-
-#### 前端
-
-您可以直接进入`template > tinyvue`下执行`npm i`。依赖安装完成后运行`npm run start`，等待浏览器自动打开，即代表前端启动成功。
-
-### 新功能追加
-
-在追加新功能前, 我们建议您开启一个[Issue](https://github.com/opentiny/tiny-cli/issues/new?assignees=&labels=%E2%9C%A8+feature&projects=&template=feature-request.yml&title=%E2%9C%A8+%5BFeature%5D%3A+)
-
-### 开发指南
-
-请参考[tiny-pro前端开发](./tinyvue.md)与[tiny-pro后端开发](./tiny-nest.md)
+- [前端开发指南](./tinyvue.md)
+- [后端开发指南](./tiny-nest.md)

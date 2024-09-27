@@ -1,5 +1,18 @@
 # TinyPro 后端部署指南
 
+## 后端推荐开发流程
+
+```mermaid
+flowchart
+  API设计 --> 表设计
+  表设计 --> 接口开发
+  API设计 --> 权限设计
+  权限设计 --> 接口开发
+  设计国际化词条 --> 接口开发
+  接口开发 <--> 测试
+  测试 --> 打包上线
+```
+
 ## 视频教程
 
 [OpenTiny社区](https://space.bilibili.com/15284299)
@@ -29,7 +42,7 @@
 
 ## 环境准备
 
-请确保您安装了`nodejs`, `npm`, `tiny-cli`
+请确保您安装了`nodejs`, `npm`, `tiny-cli`, `mysql`, `redis`
 
 ```bash
 tiny init pro
@@ -53,6 +66,51 @@ https://www.opentiny.design/tiny-cli/docs/toolkits/pro#database）：
 * 请输入登录用户名： root
 * 请输入密码： [hidden]
 ```
+
+### 使用docker搭建mysql, redis
+
+**请先确保本机没有运行mysql与redis服务**
+
+使用下列代码替换掉`docker-compose.yaml`中的内容
+
+```yaml
+version: "3"
+
+services:
+  mysql:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ospp-nest
+    ports:
+      - "3306:3306"
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+```
+
+将`.env`文件替换为
+
+```properties
+DATABASE_HOST = 'mysql'
+DATABASE_PORT = 3306
+DATABASE_USERNAME = 'root'
+DATABASE_PASSWORD = 'root'
+DATABASE_NAME = 'ospp-nest'
+DATABASE_SYNCHRONIZE = true
+DATABASE_AUTOLOADENTITIES = true
+AUTH_SECRET = 'secret'
+REDIS_SECONDS = 7200
+REDIS_HOST = 'redis'
+REDIS_PORT = 6379
+EXPIRES_IN = '2h'
+PAGINATION_PAGE = 1
+PAGINATION_LIMIT = 10
+```
+
+运行`docker compose up -d`后即可成功启动`mysql`, `redis`服务
 
 ## 目录结构
 
@@ -120,7 +178,7 @@ PAGINATION_LIMIT = 10
 ### Docker
 
 ```bash
-# 该compose文件会启动三个服务
+# 默认compose文件会启动三个服务
 # 1. mysql
 # 2. redis
 # 3. 业务服务器
@@ -152,7 +210,48 @@ npm run start
 
 - `nestJs/src/permission/permission.guard.ts`
 
-默认存在超级权限`(*)`, 该权限可以在登陆后访问任何接口
+默认存在超级权限`(*)`, 该权限可以在登陆后访问任何接口.
+
+例如
+
+```ts
+@Controller('/policy')
+export class PolicyController {
+  @Get('/list')
+  async getPolicy(){}
+}
+```
+
+上述代码中`GET /policy/list`是一个不公开，不受保护的接口。我们可以使用`Permission`修饰器对他进行权限认证，当且仅当用户角色存在`policy::get::list`权限时才放行
+
+```ts
+@Controller('/policy')
+export class PolicyController {
+  @Get('/list')
+  @Permission('policy::get::list')
+  async getPolicy(){}
+}
+```
+
+这样一来`GET /policy/list`就只允许拥有`policy::get::list`权限的角色访问，其余角色访问则会返回一个403错误
+
+但有些时候我们需要一个接口允许未登陆的用户访问。例如我们在登陆的时候经常需要获取免责声明，那么我们就可以写一个`GET /policy`接口，用于获取一个免责声明的法律条文。
+
+所以我们可以添加如下
+
+```ts
+@Controller('/policy')
+export class PolicyController {
+  @Get('/list')
+  @Permission('policy::get::list')
+  async getPolicies(){}
+  @Get('/')
+  @Public()
+  async getPolicy(){}
+}
+```
+
+这样一来`GET /policy/list`接口只允许**登录**且**拥有policy::get::list**权限的角色访问。`GET /policy`接口则允许**未登陆**的**所有角色**进行访问。
 
 ## 新增接口
 
@@ -178,7 +277,7 @@ i18n
 
 ## 打包构建
 
-> 这里只阐述tiny-pro后端打包, 如果您进行了二次开发，请自行检查dockerfile
+> 这里只阐述tiny-pro默认后端打包, 如果您进行了二次开发，请自行检查dockerfile
 
 ### docker打包
 
@@ -209,3 +308,12 @@ npm run build
 ### 打包速度慢
 
 请阅读[SWC](https://docs.nestjs.com/recipes/swc)
+
+### docker部署出现IO timeout
+
+您可以手动执行下面两条命令
+
+```bash
+docker pull node:alpine
+docker pull node:lts
+```

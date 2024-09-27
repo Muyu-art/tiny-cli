@@ -46,6 +46,15 @@ npm run start
 
 ![](./images/tiny-pro-show.png)
 
+## 开发流程
+
+```mermaid
+flowchart LR
+  设计页面 --> 页面开发
+  国际化小组创建词条 --> 绑定菜单
+  绑定菜单 <--> 页面开发
+```
+
 ## 结构
 
 ```
@@ -170,4 +179,4 @@ interface ITreeNodeData {
 
 ### 页面部署后刷新404
 
-请移步[Vue Router服务器部署指南](https://router.vuejs.org/guide/essentials/history-mode.html#Example-Server-Configurations)
+请移步[Vue Router服务器部署指南](https://router.vuejs.org/guide/essentials/history-mode.html#Example-Server-Configurations)
