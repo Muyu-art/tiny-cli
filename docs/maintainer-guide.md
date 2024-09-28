@@ -57,9 +57,33 @@ npm run link
 5. `rm -rf ~/.tiny`
 6. `tiny init pro`
 
+### 发布测试包前检查清单
+
+- [ ] lerna已被安装
+- [ ] `npm run init`已被执行
+- [ ] `npm run build`已被执行
+- [ ] 需要发布的测试包`package.json`文件中`version`自增
+- [ ] 需要发布的测试包`package.json`文件中`@opentiny`被替换为`@xxx`
+- [ ] `npm publish --access=public`已被执行
+- [ ] 环境变量`TINY_SCOPE=xxx`已修改
+- [ ] 终端已重启
+- [ ] `npm i -g @opentiny/cli`已被执行
+- [ ] `rm -rf ~/.tiny`已被执行
+
 ## 发布正式包
 
 与发布测试包相同，只是不需要替换`@opentiny`前缀
+
+### 发布正式包前检查清单
+
+- [ ] lerna已被安装
+- [ ] `npm run init`已被执行
+- [ ] `npm run build`已被执行
+- [ ] 需要发布的正式包`package.json`文件中`version`自增
+- [ ] `npm publish --access=public`已被执行
+- [ ] 终端已重启
+- [ ] `npm i -g @opentiny/cli`已被执行
+- [ ] `rm -rf ~/.tiny`已被执行
 
 ## 遇到困难?
 
