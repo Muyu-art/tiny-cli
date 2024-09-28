@@ -95,8 +95,6 @@ npm i
 
 #### 环境准备
 
-请确保您的机器已经安装了`Mysql`与`Redis`服务。接下来，我们需要配置`.env`环境变量文件
-
 #### 安装MySQL
 
 请参考[MySQL 8.0安装](https://dev.mysql.com/doc/mysql-installation-excerpt/8.0/en/windows-installation.html)
@@ -104,6 +102,8 @@ npm i
 #### 安装Redis服务
 
 请参考[Redis 官方手册](https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/install-redis-on-windows/)
+
+请确保您的机器已经安装了`Mysql`与`Redis`服务。接下来，我们需要配置`.env`环境变量文件。`.env`文件示例如下
 
 ```properties
 # 数据库IP
