@@ -42,7 +42,9 @@ npm run link
 
 
 **!!!在修改环境变量后请重新启动终端(Bash)!!!**
+
 **!!!在修改环境变量后请重新启动终端(Bash)!!!**
+
 **!!!在修改环境变量后请重新启动终端(Bash)!!!**
 
 有时我们会需要发布一些测试包来测试构建产物是否能够正常使用，您可以根据下列指引来进行测试. 这里使用的是`@opentiny/tiny-toolkit-pro
@@ -63,9 +65,9 @@ npm run link
 - [ ] `npm run init`已被执行
 - [ ] `npm run build`已被执行
 - [ ] 需要发布的测试包`package.json`文件中`version`自增
-- [ ] 需要发布的测试包`package.json`文件中`@opentiny`被替换为`@xxx`
+- [ ] 需要发布的测试包`package.json`文件中`@opentiny`被替换为`@<您的npm账号名>`
 - [ ] `npm publish --access=public`已被执行
-- [ ] 环境变量`TINY_SCOPE=xxx`已修改
+- [ ] 环境变量`TINY_SCOPE`已修改为您的npm账号名
 - [ ] 终端已重启
 - [ ] `npm i -g @opentiny/cli`已被执行
 - [ ] `rm -rf ~/.tiny`已被执行
