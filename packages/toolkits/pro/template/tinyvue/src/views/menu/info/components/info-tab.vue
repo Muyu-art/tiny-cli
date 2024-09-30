@@ -254,6 +254,7 @@
         </template>
       </tiny-modal>
       <tiny-modal
+        v-if="!readonly"
         v-model="updateModal"
         show-footer
         :mask-closable="true"
