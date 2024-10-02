@@ -77,6 +77,7 @@
   import { useMenuStore } from '@/store/modules/router';
   import { useLocales } from '@/store/modules/locales';
   import { toRoutes } from '@/router/guard/menu';
+  import { AxiosError } from 'axios';
 
   const router = useRouter();
   const { t, mergeLocaleMessage } = useI18n();
@@ -182,10 +183,18 @@
 
         router.replace({ name: redirectTo });
       } catch (err) {
+        let title = t('login.tip.right');
+        let message = t('login.tip.mail');
+        if (err instanceof AxiosError) {
+          if (err.status === 500) {
+            message = t('http.error.InternalError');
+            title = undefined;
+          }
+        }
         Notify({
           type: 'error',
-          title: t('login.tip.right'),
-          message: t('login.tip.mail'),
+          title,
+          message,
           position: 'top-right',
           duration: 2000,
           customClass: 'my-custom-cls',
