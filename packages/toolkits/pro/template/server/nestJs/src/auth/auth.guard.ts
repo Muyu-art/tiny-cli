@@ -35,7 +35,7 @@ export class AuthGuard implements CanActivate {
         i18n.t('exception.common.tokenError', {
           lang: I18nContext.current().lang,
         }),
-        HttpStatus.FORBIDDEN
+        HttpStatus.UNAUTHORIZED
       );
     }
     try {
@@ -53,7 +53,7 @@ export class AuthGuard implements CanActivate {
         i18n.t('exception.common.tokenExpire', {
           lang: I18nContext.current().lang,
         }),
-        HttpStatus.BAD_REQUEST
+        HttpStatus.UNAUTHORIZED
       );
     }
   }

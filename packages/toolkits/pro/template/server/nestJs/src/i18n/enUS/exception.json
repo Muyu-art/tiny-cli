@@ -3,7 +3,7 @@
     "unauth": "UnAuth",
     "tokenError": "Token invalid",
     "tokenExpire": "Token expire",
-    "forbidoen": "Forbidoen"
+    "forbidden": "Forbidden"
   },
   "user":{
     "oldPasswordError": "Old password error",

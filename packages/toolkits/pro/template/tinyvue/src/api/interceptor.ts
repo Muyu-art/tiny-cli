@@ -55,12 +55,12 @@ axios.interceptors.response.use(
   (error) => {
     const { status, data } = error.response;
     if (status === 401) {
-      clearToken();
-      router.replace({ name: 'login' });
       Modal.message({
         message: locale.t('http.error.TokenExpire'),
         status: 'error',
       });
+      clearToken();
+      router.replace({ name: 'login' });
     }
     if (status === 403) {
       Modal.message({

@@ -1,7 +1,9 @@
 import type { Router, LocationQueryRaw } from 'vue-router';
 import NProgress from 'nprogress'; // progress bar
-import { useUserStore } from '@/store';
 import { isLogin } from '@/utils/auth';
+import { Modal } from '@opentiny/vue';
+import { nextTick } from 'vue';
+import { t } from '@opentiny/vue-locale';
 
 export default function setupPermissionGuard(router: Router) {
   router.beforeEach(async (to, from, next) => {
@@ -12,6 +14,12 @@ export default function setupPermissionGuard(router: Router) {
         NProgress.done();
         return;
       }
+      await nextTick();
+      Modal.message({
+        message: t('http.error.TokenExpire'),
+        status: 'error',
+      });
+      await nextTick();
       next({
         name: 'login',
         query: {

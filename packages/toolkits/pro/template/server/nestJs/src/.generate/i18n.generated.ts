@@ -10,7 +10,7 @@ export type I18nTranslations = {
             "unauth": string;
             "tokenError": string;
             "tokenExpire": string;
-            "forbidoen": string;
+            "forbidden": string;
         };
         "user": {
             "oldPasswordError": string;

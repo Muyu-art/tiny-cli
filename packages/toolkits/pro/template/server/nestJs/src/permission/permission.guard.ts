@@ -43,7 +43,9 @@ export class PermissionGuard implements CanActivate {
     }
     if (!isContainedPermission) {
       throw new HttpException(
-        i18n.t('exception.common.unauth', { lang: I18nContext.current().lang }),
+        i18n.t('exception.common.forbidden', {
+          lang: I18nContext.current().lang,
+        }),
         HttpStatus.FORBIDDEN
       );
     }
