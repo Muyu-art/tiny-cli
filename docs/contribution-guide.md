@@ -207,6 +207,22 @@ packages
 - [前端二次开发指南](./tiny-pro-front-dev-guideline.md)
 - [后端二次开发指南](./tiny-pro-backend-dev-guideline.md)
 
+#### 如何调试
+
+- [ ] nestJs后端
+    - 源码位置: `packages\toolkits\pro\templates\server\nestJs`
+    - 安装nestJs依赖: `npm i`
+    - 启动nestJs本地调试: `npm run start`
+    - [启动MySQL数据库](https://dev.mysql.com/doc/refman/8.4/en/tutorial.html)
+    - [启动Redis](https://redis.io/docs/latest/get-started/)
+- [ ] vue3前端
+    - 源码位置: `packages\toolkits\pro\templates\tinyvue`
+    - 安装nestJs依赖: `npm i`
+    - 启动nestJs本地调试: `npm run start`(默认vite启动)
+      - webpack启动: `npm run dev:wp`
+      - rspack启动: `npm run dev:rp`
+    - [成功启动页面](./images/tiny-pro-show.png)
+
 ## 遇到困难?
 
 加官方小助手微信 opentiny-official，加入技术交流群
