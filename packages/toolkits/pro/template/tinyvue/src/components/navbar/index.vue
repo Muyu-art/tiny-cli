@@ -252,15 +252,9 @@
 
   const switchUser = (e: number) => {
     switch (e) {
-      // case 1:
-      //   switchRoles();
-      //   break;
       case 1:
         router.push({ name: 'Info' });
         break;
-      // case 3:
-      //   router.push({ name: 'Setting' });
-      //   break;
       case 2:
         handlePwdUpdate();
         break;
