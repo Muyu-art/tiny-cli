@@ -191,7 +191,7 @@ packages
 发布私有套件包前，我们假设你拥有npm账号且已经完成了[前置准备](#前置准备)，且已经登陆。如果没有登陆请参考[npm登录](https://docs.npmjs.com/cli/v10/commands/npm-login?v=true)。
 
 1. 替换`packages\toolkits\pro\package.json`中`@opentiny/tiny-toolkit-pro` 为 `@<您的npm名称>/tiny-toolkit-pro`
-2. 运行`npm publish --access=public`
+2. 在`packages\toolkits\pro`下运行`npm publish --access=public`
 3. 修改环境变量`TINY_SCOPE=<第一步骤中您填写的私有scope>`
 4. 安装`npm i -g @opentiny/cli` (如果您安装完成或link了开发产物可忽略该步骤)
 5. `rm -rf ~/.tiny`
