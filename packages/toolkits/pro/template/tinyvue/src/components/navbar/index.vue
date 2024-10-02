@@ -58,11 +58,9 @@
             :value="item.label"
             @click="switchUser(item.value)"
           >
-            <iconReplace v-if="item.value === 1"></iconReplace>
-            <iconUser v-if="item.value === 2"></iconUser>
-            <iconWriting v-if="item.value === 3"></iconWriting>
-            <iconCheckOut v-if="item.value === 4"></iconCheckOut>
-            <iconEdit v-if="item.value === 5"></iconEdit>
+            <iconUser v-if="item.value === 1"></iconUser>
+            <iconCheckOut v-if="item.value === 2"></iconCheckOut>
+            <iconEdit v-if="item.value === 3"></iconEdit>
             {{ $t(item.label) }}
           </li>
         </div>
@@ -225,11 +223,9 @@
 
   // 用户设置
   const userlist = [
-    { label: 'messageBox.switchRoles', value: 1 },
-    { label: 'messageBox.userCenter', value: 2 },
-    { label: 'messageBox.userSettings', value: 3 },
-    { label: 'messageBox.updatePwd', value: 4 },
-    { label: 'messageBox.logout', value: 5 },
+    { label: 'messageBox.userCenter', value: 1 },
+    { label: 'messageBox.updatePwd', value: 2 },
+    { label: 'messageBox.logout', value: 3 },
   ];
 
   // 校验规则
@@ -256,19 +252,19 @@
 
   const switchUser = (e: number) => {
     switch (e) {
+      // case 1:
+      //   switchRoles();
+      //   break;
       case 1:
-        switchRoles();
-        break;
-      case 2:
         router.push({ name: 'Info' });
         break;
-      case 3:
-        router.push({ name: 'Setting' });
-        break;
-      case 4:
+      // case 3:
+      //   router.push({ name: 'Setting' });
+      //   break;
+      case 2:
         handlePwdUpdate();
         break;
-      case 5:
+      case 3:
         logout();
         break;
       default:
@@ -456,7 +452,7 @@
 
     .trigger-user {
       position: absolute;
-      bottom: -102px;
+      bottom: -75px;
       display: none;
       width: 100px;
       margin-left: -43px;
