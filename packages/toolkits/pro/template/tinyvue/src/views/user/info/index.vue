@@ -40,13 +40,10 @@
 
       .general-top {
         display: flex;
-        min-height: 178px;
-        margin-bottom: 20px;
-        overflow: hidden;
-        background-image: url('@/assets/images/blue-bg.png');
-        background-size: 100% 100%;
-        border-radius: 4px;
-        box-shadow: 0 0 8px 8px rgba(169, 174, 184, 0.05);
+        justify-content: space-around;
+        margin: 10px -10px;
+        background-image: url('@/assets/images/step-head.png');
+        background-size: cover;
       }
 
       .general-content {
