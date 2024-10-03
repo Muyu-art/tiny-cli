@@ -3,7 +3,7 @@
     "unauth": "UnAuth",
     "tokenError": "Token invalid",
     "tokenExpire": "Token expire",
-    "forbidden": "Forbidden"
+    "forbidden": "Need `{permission}` permission, but you don't have it"
   },
   "user":{
     "oldPasswordError": "Old password error",

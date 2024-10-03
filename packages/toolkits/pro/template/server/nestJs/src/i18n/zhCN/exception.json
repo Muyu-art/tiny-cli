@@ -3,7 +3,7 @@
     "unauth": "未登录",
     "tokenError": "异常token",
     "tokenExpire": "token过期",
-    "forbidden": "权限不足"
+    "forbidden": "需要`{permission}`权限, 但是您并没有该权限"
   },
   "user":{
     "oldPasswordError": "旧密码错误",

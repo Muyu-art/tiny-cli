@@ -1,5 +1,5 @@
 import { createApp } from 'vue';
-import {registerMap} from 'echarts';
+import { registerMap } from 'echarts';
 import { HwcClient } from '@opentiny/hwc-client';
 import globalComponents from '@/components';
 import router from './router';
@@ -11,7 +11,6 @@ import '@/api/interceptor';
 import '@/assets/style/global.less';
 import config from '../hwc-exports.json';
 import chinaMap from './assets/chaina.json';
-
 
 registerMap('china', chinaMap as any);
 const app = createApp(App);
@@ -25,7 +24,7 @@ HwcClient.configure({
 
 app.use(router);
 app.use(store);
-app.use(i18n({ locale: 'zhCN' }));
+app.use(i18n({ locale: localStorage.getItem('tiny-locale') }));
 app.use(globalComponents);
 app.use(directive);
 

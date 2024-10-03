@@ -105,9 +105,14 @@ export class AppModule implements OnModuleInit {
         Logger.log(`${name} - ${key} save success`);
       }
     }
-    // // TODO: permission
-    const modules = ['user', 'permission', 'role', 'menu', 'i18n', 'lang'];
-    const actions = ['add', 'remove', 'update', 'query'];
+    const permissions = {
+      user: ['add', 'remove', 'update', 'query', 'password::force-update'],
+      permission: ['add', 'remove', 'update', 'query', 'get'],
+      role: ['add', 'remove', 'update', 'query'],
+      menu: ['add', 'remove', 'update', 'query'],
+      i18n: ['add', 'remove', 'update', 'query'],
+      lang: ['add', 'remove', 'update', 'query'],
+    };
     const tasks = [];
     let permission;
     const isInit = true;
@@ -125,7 +130,7 @@ export class AppModule implements OnModuleInit {
       Logger.error(`Please clear the database and try again`);
       process.exit(-1);
     }
-    for (const module of modules) {
+    for (const [module, actions] of Object.entries(permissions)) {
       for (const action of actions) {
         tasks.push(
           this.permission.create(
