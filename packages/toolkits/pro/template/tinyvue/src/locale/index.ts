@@ -16,7 +16,10 @@ export let _i18:
 
 const i18nmode = (option: any) => {
   option.legacy = false;
-  _i18 = createI18n(option);
+  _i18 = createI18n({
+    ...option,
+    missingWarn: false,
+  });
   return _i18;
 };
 
