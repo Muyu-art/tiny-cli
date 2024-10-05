@@ -39,15 +39,27 @@ export class AuthGuard implements CanActivate {
       );
     }
     try {
+      await this.jwt.verify(token);
       const payload = await this.jwt.decode(token);
       req['user'] = payload;
-      return this.authService.getToken(payload.email).then((redisToken) => {
-        // 如果Redis中没有token或者token不匹配，返回false
-        if (!redisToken || redisToken !== token) {
-          return false;
-        }
-        return true;
-      });
+      const cacheToken = await this.authService.getToken(payload.email);
+      if (!cacheToken) {
+        throw new HttpException(
+          i18n.t('exception.common.tokenExpire', {
+            lang: I18nContext.current().lang,
+          }),
+          HttpStatus.UNAUTHORIZED
+        );
+      }
+      if (cacheToken !== token) {
+        throw new HttpException(
+          i18n.t('exception.common.tokenError', {
+            lang: I18nContext.current().lang,
+          }),
+          HttpStatus.UNAUTHORIZED
+        );
+      }
+      return true;
     } catch (err) {
       throw new HttpException(
         i18n.t('exception.common.tokenExpire', {

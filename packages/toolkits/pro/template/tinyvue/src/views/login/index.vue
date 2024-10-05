@@ -28,7 +28,7 @@
   import { TAB_PERSISTENCE_KEYS } from '@/store/modules/tabs';
   import { clearToken } from '@/utils/auth';
   import { useRouter } from 'vue-router';
-  import { onMounted } from 'vue';
+  import { onMounted, nextTick } from 'vue';
   import LoginForm from './components/login-form.vue';
 
   const router = useRouter();
@@ -38,7 +38,9 @@
     localStorage.removeItem(TAB_PERSISTENCE_KEYS.TABS);
     clearToken();
     if (menuStore.menuList.length) {
-      router.go(0);
+      setTimeout(() => {
+        router.go(0);
+      }, 500);
     }
   });
 </script>
