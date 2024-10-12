@@ -100,7 +100,7 @@
               <tiny-col :span="10" label-width="100px">
                 <tiny-form-item
                   :label="$t('userInfo.modal.input.oldPassword')"
-                  prop="newPassword"
+                  prop="oldPassword"
                 >
                   <tiny-input
                     v-model="state.pwdData.oldPassword"
@@ -235,7 +235,7 @@
   };
   const rules = computed(() => {
     return {
-      password: [rulesType],
+      oldPassword: [rulesType],
       newPassword: [rulesType],
       confirmNewPassword: [rulesType],
     };

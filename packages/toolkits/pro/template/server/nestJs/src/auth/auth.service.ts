@@ -22,6 +22,10 @@ export class AuthService {
     return this.redisService.getUserToken(`user:${userId}:token`);
   }
 
+  async kickOut(email: string) {
+    await this.redisService.delUserToken(`user:${email}:token`);
+  }
+
   async logout(token: string): Promise<void> {
     //通过token解析email
     const decoded = await this.jwtService.verify(token);

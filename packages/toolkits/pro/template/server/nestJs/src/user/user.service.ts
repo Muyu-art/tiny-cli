@@ -9,7 +9,7 @@ import { Role, User } from '@app/models';
 import { In, Like, Repository } from 'typeorm';
 import * as crypto from 'crypto';
 import { AuthService } from '../auth/auth.service';
-import { paginate, IPaginationOptions } from 'nestjs-typeorm-paginate';
+import { paginate } from 'nestjs-typeorm-paginate';
 import * as process from 'process';
 import { I18nContext, I18nService } from 'nestjs-i18n';
 import { I18nTranslations } from '../.generate/i18n.generated';
@@ -236,6 +236,10 @@ export class UserService {
       const user = await this.userRep.findOne({
         where: { email },
       });
+      if (!user) {
+        return;
+      }
+      await this.authService.kickOut(email);
       return this.userRep.remove(user);
     }
     throw new HttpException(
@@ -279,6 +283,7 @@ export class UserService {
           ).salt
         );
         await this.userRep.save(await user);
+        await this.authService.kickOut((await user).email);
         return;
       }
     }
@@ -293,6 +298,7 @@ export class UserService {
     if (user) {
       (await user).password = await this.encry(newPassword, (await user).salt);
       await this.userRep.save(await user);
+      await this.authService.kickOut((await user).email);
       return;
     }
   }
@@ -312,12 +318,13 @@ export class UserService {
       status,
       name,
     } = updateUserDto;
-    const user = this.getUserInfo(email);
+    const user = this.getUserInfo(email, ['role']);
     const roles = this.roleRep.find({
       where: {
         id: In(roleIds),
       },
     });
+    const userRoles = (await user).role.map((role) => role.id).join('');
     if (user) {
       (await user).name = name;
       (await user).department = department;
@@ -331,6 +338,10 @@ export class UserService {
       (await user).status = status;
       (await user).role = await roles;
     }
-    return await this.userRep.save(await user);
+    const newProfile = await this.userRep.save(await user);
+    if (userRoles !== roleIds.join('')) {
+      await this.authService.kickOut(email);
+    }
+    return newProfile;
   }
 }

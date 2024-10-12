@@ -1,6 +1,7 @@
 /* eslint-disable prefer-template */
 
 import DefaultLayout from '@/layout/default-layout.vue';
+import { RouteRecordRaw } from 'vue-router';
 
 export default [
   {
@@ -35,4 +36,4 @@ export default [
     path: import.meta.env.VITE_CONTEXT + 'redirect',
     component: () => import('@/views/redirect.vue'),
   },
-];
+] as RouteRecordRaw[];

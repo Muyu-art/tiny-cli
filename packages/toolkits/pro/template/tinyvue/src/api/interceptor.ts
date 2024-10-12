@@ -69,7 +69,7 @@ axios.interceptors.response.use(
       });
     }
     if (status === 400) {
-      data.message = error.response.data.errors[0] ?? data.message;
+      data.message = error.response.data.errors?.[0] ?? data.message;
     }
 
     return Promise.reject(error);
