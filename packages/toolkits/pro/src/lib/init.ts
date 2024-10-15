@@ -79,6 +79,7 @@ const getProjectInfo = (): Promise<ProjectInfo> => {
         { name: 'Vite', value: BuildTool.Vite },
         { name: 'Webpack', value: BuildTool.Webpack },
         { name: 'Rspack', value: BuildTool.Rspack },
+        { name: 'Farm', value: BuildTool.Farm },
       ],
       default: BuildTool.Vite,
       prefix: '*',

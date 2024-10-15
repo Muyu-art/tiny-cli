@@ -24,24 +24,28 @@ export enum BuildTool {
   Vite = 'vite',
   Webpack = 'webpack',
   Rspack = 'rspack',
+  Farm = 'farm',
 }
 
 export const buildConfigs = {
   vite: ['webpack.config.js', 'rspack.config.js'],
   webpack: ['config', 'rspack.config.js'],
   rspack: ['config', 'webpack.config.js'],
+  farm: ['config', 'webpack.config.js', 'rspack.config.js'],
 };
 
 export const buildCommand = {
   vite: 'vite build --config ./config/vite.config.prod.ts',
   webpack: 'webpack --config webpack.config.js',
   rspack: 'rspack build',
+  farm: 'farm build',
 };
 
 export const devCommand = {
   vite: 'vite --config ./config/vite.config.dev.ts --port 3031',
   webpack: 'webpack-dev-server --progress --config webpack.config.js',
   rspack: 'rspack serve',
+  farm: 'farm',
 };
 
 export const removedCommand = [
@@ -50,6 +54,8 @@ export const removedCommand = [
   'build:wp',
   'build:rp',
   'dev',
+  'dev:fr',
+  'build:fr',
 ];
 
 /**
@@ -59,6 +65,7 @@ export const removeDependencies = {
   vite: ['style-resources-loader', 'vue-style-loader'],
   webpack: [],
   rspack: [],
+  farm: [],
 };
 
 /**
@@ -75,6 +82,7 @@ export const devDependencies = {
     'css-loader',
     'core-js',
     'babel-loader',
+    /@farmfe\/.*/,
   ],
   rspack: [
     /@vitejs\/.*/,
@@ -83,8 +91,23 @@ export const devDependencies = {
     'webpack',
     'webpack-cli',
     'webpack-dev-server',
+    /@farmfe\/.*/,
   ],
-  webpack: [/@vitejs\/.*/, /vite-.*/, 'vite', '@rspack/cli', '@rspack/core'],
+  webpack: [
+    /@vitejs\/.*/,
+    /vite-.*/,
+    'vite',
+    '@rspack/cli',
+    '@rspack/core',
+    /@farmfe\/.*/,
+  ],
+  farm: [
+    'webpack',
+    'webpack-cli',
+    'webpack-dev-server',
+    /webpack-.*/,
+    /@rspack\/.*/,
+  ],
 };
 
 /**
