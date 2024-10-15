@@ -27,5 +27,5 @@ ENV EXPIRES_IN ""
 ENV PAGINATION_PAGE ""
 ENV PAGINATION_LIMIT 10
 EXPOSE 3000
-VOLUME [ "./dist/lock" ]
+VOLUME [ "./dist/data" ]
 CMD ["node", "./dist/main.js"]

@@ -15,7 +15,7 @@ import { AuthGuard } from './auth/auth.guard';
 import { PermissionGuard } from './permission/permission.guard';
 import { RoleModule } from './role/role.module';
 import { join } from 'path';
-import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { UserService } from './user/user.service';
 import { RoleService } from './role/role.service';
 import { PermissionService } from './permission/permission.service';
@@ -77,7 +77,11 @@ export class AppModule implements OnModuleInit {
   ) {}
   async onModuleInit() {
     const ROOT = __dirname;
-    const LOCK_FILE = join(ROOT, 'lock');
+    const data = join(ROOT, 'data');
+    if (!existsSync(data)) {
+      mkdirSync(data);
+    }
+    const LOCK_FILE = join(data, 'lock');
     if (existsSync(LOCK_FILE)) {
       Logger.warn(
         'Lock file exists, if you want init agin, please remove dist or dist/lock'
