@@ -28,7 +28,19 @@ export interface ITreeNodeData {
 }
 const reg = /\.vue$/gim;
 let views = {} as any;
-if (BUILD_TOOLS === 'VITE' || BUILD_TOOLS === 'WEBPACK') {
+if (BUILD_TOOLS === 'WEBPACK') {
+  views = import.meta.webpackContext('../../views', {
+    recursive: true,
+    regExp: /\.vue$/,
+    mode: 'sync',
+  });
+  views.keys().forEach((path) => {
+    if (path.endsWith('.vue')) {
+      views[`../../views/${path.replace('./', '')}`] = views(path).default;
+    }
+  });
+}
+if (BUILD_TOOLS === 'VITE') {
   views = import.meta.glob('../../views/**/*.vue');
 } else if (BUILD_TOOLS === 'RSPACK') {
   const components = require.context('../../views', true, reg, 'sync');

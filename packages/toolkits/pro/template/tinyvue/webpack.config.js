@@ -36,10 +36,6 @@ module.exports = {
               transpileOnly: true,
             },
           },
-          {
-            loader: 'import-meta-loader',
-            options: {},
-          },
         ],
         exclude: /node_modules/,
       },
