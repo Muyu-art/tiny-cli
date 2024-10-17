@@ -8,24 +8,6 @@ configDotenv({
   path: './.env',
 });
 
-const proxyConfig = {
-  [loadEnv('', process.cwd()).VITE_BASE_API]: {
-    target: loadEnv('', process.cwd()).VITE_SERVER_HOST,
-    changeOrigin: true,
-    logLevel: 'debug',
-    pathRewrite: (path: string) =>
-      path.replace(
-        new RegExp(`${loadEnv('', process.cwd()).VITE_BASE_API}`),
-        '',
-      ),
-  },
-  [loadEnv('', process.cwd()).VITE_MOCK_SERVER_HOST]: {
-    target: loadEnv('', process.cwd()).VITE_MOCK_HOST,
-    changeOrigin: true,
-    pathRewrite: (path: string) => path.replace(/^\/mock/, ''),
-  },
-};
-
 export default defineConfig({
   vitePlugins: [vue()],
   plugins: [
@@ -37,6 +19,14 @@ export default defineConfig({
     define: {
       'process.env': {},
       'BUILD_TOOLS': '"VITE"',
+      'import.meta.env.VITE_CONTEXT': '"/vue-pro/"',
+      'import.meta.env.VITE_BASE_API': '"/api"',
+      'import.meta.env.VITE_SERVER_HOST': '"http://127.0.0.1:3000"',
+      'import.meta.env.VITE_MOCK_HOST': '"http://127.0.0.1:8848"',
+      'import.meta.env.VITE_USE_MOCK': 'false',
+      'import.meta.env.VITE_MOCK_IGNORE':
+        '"/api/user/userInfo,/api/user/login,/api/user/register,/api/employee/getEmployee"',
+      'import.meta.env.VITE_MOCK_SERVER_HOST': '"/mock"',
     },
     resolve: {
       alias: {
@@ -49,6 +39,27 @@ export default defineConfig({
     },
   },
   server: {
-    proxy: proxyConfig,
+    proxy: {
+      '/mock': {
+        pathFilter(pathname, req) {
+          return Boolean(pathname.match('^/mock'));
+        },
+        pathRewrite: {
+          '^/mock': '',
+        },
+        target: 'http://localhost:8848',
+        logger: console,
+      },
+      '/api': {
+        pathRewrite: {
+          '^/api': '',
+        },
+        target: 'http://localhost:3000',
+        pathFilter(pathname, req) {
+          return Boolean(pathname.match('^/api'));
+        },
+        logger: console,
+      },
+    },
   },
 });
