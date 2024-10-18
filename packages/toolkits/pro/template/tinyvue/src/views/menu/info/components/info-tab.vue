@@ -157,7 +157,11 @@
           });
           return;
         }
-        updateMenu(menuInfo)
+        updateMenu({
+          ...menuInfo,
+          path: menuInfo.url,
+          url: undefined,
+        })
           .then(() => {
             TinyModal.message({
               message: t('baseForm.form.submit.success'),
