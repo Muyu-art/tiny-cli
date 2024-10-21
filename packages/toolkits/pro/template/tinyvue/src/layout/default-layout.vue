@@ -79,6 +79,7 @@
     Modal as tinyModal,
     Tabs,
     TabItem,
+    Modal,
   } from '@opentiny/vue';
   import TinyThemeTool from '@opentiny/vue-theme/theme-tool.js';
   import { useAppStore, useTabStore } from '@/store';
@@ -89,7 +90,9 @@
   import Menu from '@/components/menu/index.vue';
   import { useRouter } from 'vue-router';
   import { useTheme } from '@/hooks/useTheme';
+  import locale from '@opentiny/vue-locale';
   import PageLayout from './page-layout.vue';
+
   // 动态切换
   const router = useRouter();
   const appStore = useAppStore();
@@ -121,7 +124,16 @@
   );
 
   const onClick = (tab: { name: string; link: string }) => {
-    router.replace(tab.name);
+    const routePaths = router.getRoutes().map((routeItem) => routeItem.path);
+    if (!routePaths.includes(tab.name)) {
+      Modal.message({
+        message: locale.t('exception.result.404.description'),
+        status: 'error',
+      });
+      tabStore.delByLink(tab.name);
+    } else {
+      router.replace(tab.name);
+    }
   };
   const onClose = (name: string) => {
     const curName = tabStore.delByLink(name);
