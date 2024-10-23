@@ -20,7 +20,7 @@ const config = {
     publicPath: '/',
   },
   experiments: {
-    css: true,
+    css: false,
   },
   plugins: [
     new VueLoaderPlugin(),
@@ -61,6 +61,9 @@ const config = {
         },
       },
     ],
+    client: {
+      overlay: false,
+    },
   },
   module: {
     rules: [
@@ -72,36 +75,27 @@ const config = {
         },
       },
       {
-        test: /\.ts$/,
-        loader: 'builtin:swc-loader',
-        options: {
-          sourceMap: true,
-          jsc: {
-            parser: {
-              syntax: 'typescript',
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.(ts)$/,
+        use: [
+          {
+            loader: 'ts-loader',
+            options: {
+              appendTsSuffixTo: [/\.vue$/],
+              transpileOnly: true,
             },
           },
-        },
-        type: 'javascript/auto',
-      },
-      {
-        test: /\.less$/,
-        loader: 'less-loader',
-        type: 'css',
-      },
-      {
-        test: /\.svg$/,
-        type: 'asset/resource',
-      },
-      {
-        test: /\.m?js/,
-        resolve: {
-          fullySpecified: false,
-        },
+        ],
+        exclude: /node_modules/,
       },
       {
         test: /\.less$/,
         use: [
+          'style-loader',
+          'css-loader',
           {
             loader: 'less-loader',
             options: {
@@ -109,7 +103,6 @@ const config = {
             },
           },
         ],
-        type: 'css',
       },
       {
         test: /.(png|jpg|jpeg|gif|svg)$/, // 匹配图片文件
@@ -145,6 +138,16 @@ const config = {
         },
         generator: {
           filename: 'static/media/[name].[contenthash:8][ext]', // 文件输出目录和命名
+        },
+      },
+      {
+        test: /\.svg$/,
+        type: 'asset/resource',
+      },
+      {
+        test: /\.m?js/,
+        resolve: {
+          fullySpecified: false,
         },
       },
     ],
