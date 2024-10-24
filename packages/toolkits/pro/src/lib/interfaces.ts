@@ -28,9 +28,9 @@ export enum BuildTool {
 }
 
 export const buildConfigs = {
-  vite: ['webpack.config.js', 'rspack.config.js', 'farm.config.js'],
-  webpack: ['config', 'rspack.config.js', 'farm.config.js'],
-  rspack: ['config', 'webpack.config.js', 'farm.config.js'],
+  vite: ['webpack.config.js', 'rspack.config.js', 'farm.config.ts'],
+  webpack: ['config', 'rspack.config.js', 'farm.config.ts'],
+  rspack: ['config', 'webpack.config.js', 'farm.config.ts'],
   farm: ['config', 'webpack.config.js', 'rspack.config.js'],
 };
 
