@@ -67,7 +67,7 @@ export const useTabStore = defineStore('tabs', {
       return this.data.filter((tab) => tab.link === link);
     },
     delByLink(link: string, endsWith = false) {
-      let curName = '';
+      let curName = this.current.name;
       if (this.data.length === 1) {
         return '';
       }
@@ -77,14 +77,14 @@ export const useTabStore = defineStore('tabs', {
       if (idx === -1) {
         return '';
       }
-      const hasNext = idx < this.data.length - 1;
-      if (hasNext) {
-        curName = this.data[idx + 1].name;
-      } else {
-        const hasPrev = idx > 0;
-        if (hasPrev) {
-          curName = this.data[idx - 1].name;
-        }
+      const currentIdx = this.data.findIndex(
+        (tab) => tab.link === this.current.link,
+      );
+      const isDeleteSelf = currentIdx === idx;
+      const next = this.data[currentIdx + 1];
+      const prev = this.data[currentIdx - 1];
+      if (isDeleteSelf) {
+        curName = next?.name ?? prev?.name;
       }
       this.data.splice(idx, 1);
       localStorage.setItem(

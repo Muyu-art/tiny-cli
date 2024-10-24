@@ -116,6 +116,9 @@
     watch(
       () => tabStore.current,
       () => {
+        if (!tabStore.current) {
+          return;
+        }
         const key = findId(tabStore.current.name, tabStore.current.link);
         tree.value.setCurrentKey(key);
         const { parentId = null } = tree.value.getCurrentNode();
