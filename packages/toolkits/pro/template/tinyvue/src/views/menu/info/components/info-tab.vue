@@ -1,13 +1,13 @@
 <script lang="ts" setup>
   import { createMenu, deleteMenu, getAllMenu, updateMenu } from '@/api/menu';
   import { useI18nMenu } from '@/hooks/useI18nMenu';
-  import { flushRouter, ITreeNodeData, toRoutes } from '@/router/guard/menu';
+  import { flushRouter, ITreeNodeData } from '@/router/guard/menu';
   import {
     Button as TinyButton,
     Modal as TinyModal,
     Loading,
   } from '@opentiny/vue';
-  import { getAllLocalItems, Local } from '@/api/local';
+  import { getAllLocalItems } from '@/api/local';
   import useLoading from '@/hooks/loading';
   import {
     ComponentInstance,
@@ -109,6 +109,18 @@
     activeNode.value = DEFAULT_NODE;
     updateModal.value = false;
   };
+  const flushTabs = () => {
+    const routePaths = router.getRoutes().map((routeItem) => routeItem.path);
+    const removeTabs = tabStore.data.filter(
+      ({ link }) => !routePaths.includes(link),
+    );
+    removeTabs.forEach(({ link }) => tabStore.delByLink(link));
+    if (!tabStore.data.includes(tabStore.current)) {
+      tabStore.$patch({
+        current: tabStore.data[0],
+      });
+    }
+  };
   const onDelete = ({ data }: Node) => {
     setTreeLoading(true);
     const node = useDeepClone(data);
@@ -124,8 +136,10 @@
         return fetchMenu();
       })
       .then(() => {
-        updateUserMenu();
-        tabStore.delByLink(node.url, true);
+        return updateUserMenu();
+      })
+      .then(() => {
+        flushTabs();
       })
       .catch((reason) => {
         const error = reason;
@@ -161,6 +175,7 @@
           ...menuInfo,
           path: menuInfo.url,
           url: undefined,
+          name: menuInfo.oldLabel,
         })
           .then(() => {
             TinyModal.message({
@@ -188,10 +203,10 @@
   };
   const menuStore = useMenuStore();
   const { reloadMenu } = inject<{ reloadMenu: () => void }>('RELOAD');
-  const updateUserMenu = () => {
-    flushRouter(router);
+  const updateUserMenu = async () => {
+    await flushRouter(router);
     reloadMenu();
-    menuStore.getMenuList();
+    return menuStore.getMenuList();
   };
   const fetchLocalItems = () => {
     getAllLocalItems(1, 0, 1).then(({ data }) => {
