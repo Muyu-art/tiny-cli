@@ -182,6 +182,9 @@
               message: t('baseForm.form.submit.success'),
               status: 'success',
             });
+            setTimeout(() => {
+              router.go(0);
+            }, 200);
             setTreeLoading(true);
             return fetchMenu();
           })

@@ -18,7 +18,16 @@ const initTabs = () => {
   const routes = useRouter()
     .getRoutes()
     .map((route) => route.path);
-  return tabs.filter((tab) => routes.includes(tab.link));
+  const i18n = useRouter().getRoutes();
+  return tabs
+    .filter((tab) => routes.includes(tab.link))
+    .map((item) => {
+      const i18route = i18n.filter((route) => route.path === item.link)[0];
+      return {
+        name: i18route.meta.locale ?? item.name ?? '',
+        link: item.link,
+      };
+    });
 };
 const initCurrent = () => {
   const current = JSON.parse(
