@@ -26,7 +26,8 @@
   "lang": {
     "notExists": "{lang} not found",
     "exists": "{name} exists",
-    "notExistsCommon": "Not found"
+    "notExistsCommon": "Not found",
+    "DELETE_LANG_CONFLICT": "Please clear all language records under {name} first"
   },
   "i18":{
     "exists": "I18n field exists",

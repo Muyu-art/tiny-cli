@@ -34,6 +34,7 @@ export type I18nTranslations = {
             "notExists": string;
             "exists": string;
             "notExistsCommon": string;
+            "DELETE_LANG_CONFLICT": string;
         };
         "i18": {
             "exists": string;

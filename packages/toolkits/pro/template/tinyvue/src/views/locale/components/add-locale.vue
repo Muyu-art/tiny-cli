@@ -25,7 +25,7 @@
               :label="item.name"
             />
           </tiny-select>
-          <tiny-popover>
+          <tiny-popover v-model="langPopoverOpen" trigger="manual">
             <div>
               <tiny-form ref="langForm" :model="lang" :rules="langRule">
                 <tiny-form-item :label="$t('lang.add.title')" prop="name">
@@ -41,6 +41,7 @@
                 v-permission="'lang::add'"
                 type="text"
                 :text="$t('locale.add.lang.btn')"
+                @click="langPopoverOpen = !langPopoverOpen"
               ></tiny-button>
               <tiny-button
                 v-permission="'lang::query'"
@@ -59,7 +60,7 @@
       ></tiny-button>
     </tiny-dialog-box>
     <tiny-dialog-box
-      v-model:visible="langTableOPen"
+      v-model:visible="langTableOpen"
       :title="$t('lang.manage.title')"
       width="60%"
     >
@@ -88,8 +89,14 @@
   import { useI18n } from 'vue-i18n';
   import langTable from './lang-table.vue';
 
+  const emits = defineEmits<{
+    langChange: [];
+    localChange: [];
+  }>();
   const { open, onOpen, onClose } = useDisclosure();
-  const { open: langTableOPen, onOpen: setLangTableOpen } = useDisclosure();
+  const { open: langPopoverOpen, onClose: setLangPopoverClose } =
+    useDisclosure();
+  const { open: langTableOpen, onOpen: setLangTableOpen } = useDisclosure();
   const localeForm = ref();
   const langForm = ref();
   const locales = useLocales();
@@ -137,6 +144,7 @@
         createLang({ name: lang.name })
           .then(({ data }) => {
             locales.pushLang(data);
+            emits('langChange');
           })
           .catch((reason) => {
             Notify({
@@ -146,7 +154,7 @@
           })
           .finally(() => {
             lang.name = '';
-            onClose();
+            setLangPopoverClose();
           });
       })
       .catch(() => {});
@@ -167,6 +175,7 @@
             i18.mergeLocaleMessage(data.lang.name, {
               [data.key]: data.content,
             });
+            emits('localChange');
           })
           .catch((reason) => {
             Notify({

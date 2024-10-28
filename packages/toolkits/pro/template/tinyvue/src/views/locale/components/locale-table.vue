@@ -6,8 +6,12 @@
     :edit-config="{ trigger: 'click', mode: 'cell', showStatus: true }"
     :loading="loading"
     remote-filter
+    refresh
     @edit-closed="onEditClosed"
   >
+    <template #toolbar>
+      <tiny-grid-toolbar refresh></tiny-grid-toolbar>
+    </template>
     <tiny-grid-column field="id" title="id" width="60"></tiny-grid-column>
     <tiny-grid-column
       field="key"
@@ -25,6 +29,7 @@
       field="lang"
       title="lang"
       :editor="{ component: 'select', options }"
+      :format-config="{ async: true, data: options, type: 'enum' }"
       :filter="langFilter"
     ></tiny-grid-column>
     <tiny-grid-column>
@@ -41,12 +46,7 @@
 </template>
 
 <script lang="ts" setup>
-  import {
-    getAllLocalItems,
-    Local,
-    patchLocal,
-    deleteLocale,
-  } from '@/api/local';
+  import { getAllLocalItems, patchLocal, deleteLocale } from '@/api/local';
   import useLoading from '@/hooks/loading';
   import { useLocales } from '@/store/modules/locales';
   import { FilterType, InputFilterValue } from '@/types/global';
@@ -55,6 +55,7 @@
     Grid as TinyGrid,
     GridColumn as TinyGridColumn,
     Button as TinyButton,
+    GridToolbar as TinyGridToolbar,
   } from '@opentiny/vue';
   import { computed, ref } from 'vue';
 
@@ -77,12 +78,15 @@
   const langFilter = {
     enumable: true,
     multi: true,
-    values: localeStore.lang.map((language) => ({
-      label: language.name,
-      value: language.id,
-    })),
+    values: () => {
+      return Promise.resolve(
+        localeStore.lang.map((language) => ({
+          label: language.name,
+          value: language.id,
+        })),
+      );
+    },
   };
-
   const pagerConfig = ref({
     attrs: {
       currentPage: 1,
@@ -205,5 +209,10 @@
   const fetchData = ref({
     api: getData,
     filter: true,
+  });
+  defineExpose({
+    reload: () => {
+      grid.value.handleFetch();
+    },
   });
 </script>

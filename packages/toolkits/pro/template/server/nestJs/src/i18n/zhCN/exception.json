@@ -26,7 +26,8 @@
   "lang": {
     "notExists": "{lang} 不存在",
     "exists": "{name} 存在",
-    "notExistsCommon": "语言不存在"
+    "notExistsCommon": "语言不存在",
+    "DELETE_LANG_CONFLICT": "请先清空{name}下的所有国际化词条"
   },
   "i18":{
     "exists": "国际化词条存在",

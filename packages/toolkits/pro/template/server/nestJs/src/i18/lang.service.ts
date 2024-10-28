@@ -20,8 +20,11 @@ export class I18LangService {
     const item = await this.lang.findOneBy({ name });
     if (item) {
       throw new HttpException(
-        this.i18n.t('exception.lang.notExists', {
+        this.i18n.t('exception.lang.exists', {
           lang: I18nContext.current().lang,
+          args: {
+            name,
+          },
         }),
         HttpStatus.CONFLICT
       );
@@ -54,6 +57,18 @@ export class I18LangService {
           lang: I18nContext.current().lang,
         }),
         HttpStatus.NOT_FOUND
+      );
+    }
+    const i18Record = await this.i18.findOneBy({ lang: item });
+    if (i18Record) {
+      throw new HttpException(
+        this.i18n.t('exception.lang.DELETE_LANG_CONFLICT', {
+          lang: I18nContext.current().lang,
+          args: {
+            name: item.name,
+          },
+        }),
+        HttpStatus.CONFLICT
       );
     }
     return await this.lang.remove(item);

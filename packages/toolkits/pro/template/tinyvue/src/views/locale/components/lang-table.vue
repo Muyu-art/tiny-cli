@@ -20,6 +20,7 @@
     Grid as TinyGrid,
     GridColumn as TinyGridColumn,
     Button as TinyButton,
+    Modal,
   } from '@opentiny/vue';
   import { useLocales } from '@/store/modules/locales';
   import { computed, ref } from 'vue';
@@ -38,15 +39,18 @@
   }
   const removeLang = (row: any) => {
     setLoading(true);
-    grid.value
-      .remove(row)
+    deleteLang(row.id)
       .then(() => {
         localeStore.$patch({
           lang: lang.value.filter((language) => language.id !== row.id),
         });
-        deleteLang(row.id);
+        return grid.value.remove(row);
       })
-      .catch(() => {
+      .catch((reason) => {
+        Modal.message({
+          status: 'error',
+          message: reason.response.data.message,
+        });
         grid.value.revertData(row);
       })
       .finally(() => {
