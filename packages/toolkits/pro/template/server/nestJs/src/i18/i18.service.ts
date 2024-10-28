@@ -56,7 +56,6 @@ export class I18Service {
     const i18Item = await this.i18.findOne({
       where: {
         key,
-        content,
         lang: langRecord,
       },
     });
