@@ -228,7 +228,7 @@
                 {{ $t('userInfo.table.operations.delete') }}
               </a>
               <a
-                v-permission="'user::update'"
+                v-permission="'user::password::force-update'"
                 class="operation-pwd-update"
                 @click="handlePwdUpdate(data.row.email)"
               >

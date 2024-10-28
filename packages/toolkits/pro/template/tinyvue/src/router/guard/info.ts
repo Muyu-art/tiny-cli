@@ -50,6 +50,11 @@ export default function setupInfoGuard(router: Router) {
     });
 
     userStore.setInfo(data);
+    userStore.setInfo({
+      role: data.role[0].name,
+      job: data.role[0].name,
+      roleId: data.role[0].id,
+    });
     userStore.rolePermission = (data.role as unknown as Role[])
       .flatMap((role) => role.permission)
       .map((permission) => permission.name);
