@@ -54,6 +54,12 @@ axios.interceptors.response.use(
   },
   (error) => {
     const { status, data } = error.response;
+    if (status === 403 && error.config.method.toLowerCase() === 'get') {
+      Modal.message({
+        message: data.message,
+        status: 'error',
+      });
+    }
     if (status === 401) {
       Modal.message({
         message: locale.t('http.error.TokenExpire'),
