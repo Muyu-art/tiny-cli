@@ -3,7 +3,7 @@
     <div class="tiny-fullscreen-wrapper">
       <div class="user-add-btn">
         <tiny-button
-          v-permission="'role::add'"
+          v-permission="'user::add'"
           type="primary"
           @click="handleAddUser"
           >{{ $t('userInfo.modal.title.add') }}

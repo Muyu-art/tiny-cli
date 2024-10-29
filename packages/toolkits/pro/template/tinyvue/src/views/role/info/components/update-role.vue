@@ -13,10 +13,13 @@
   import { updateRole } from '@/api/role';
   import useLoading from '@/hooks/loading';
   import { useI18n } from 'vue-i18n';
+  import { useRouter, useRoute } from 'vue-router';
   import { RoleAddData } from './add-role.vue';
 
   export type UpdateRoleData = Partial<RoleAddData> & { id: number };
   const { loading, setLoading } = useLoading();
+  const router = useRouter();
+  const route = useRoute();
   const emits = defineEmits<{
     close: [];
     confirm: [UpdateRoleData];
@@ -39,6 +42,7 @@
     { deep: true },
   );
   const { t } = useI18n();
+  const componentKey = ref(0);
   const onUpdate = () => {
     setLoading(true);
     updateRole(updateData.value)
@@ -48,6 +52,16 @@
           status: 'success',
         });
         emits('confirm', data);
+        // 跳转到临时路径，再跳回当前路径以触发刷新
+        router.addRoute({
+          name: 'refresh',
+          path: '/refresh',
+          component: { template: '<div></div>' }, // 空组件或简单的占位模板
+        });
+        router.replace({ path: '/refresh' }).then(() => {
+          router.replace({ path: '/vue-pro/role/allRole' });
+        });
+        router.removeRoute('refresh');
       })
       .finally(() => {
         setLoading(false);
