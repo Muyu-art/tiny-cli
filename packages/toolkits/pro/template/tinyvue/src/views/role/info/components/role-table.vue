@@ -100,7 +100,7 @@
     <tiny-grid-column field="type" :title="$t('roleInfo.table.menu')">
       <template #default="data">
         <a
-          v-permission="'menu::update'"
+          v-permission="'role::update'"
           @click="onMenuUpdate(data.row.menus, data.row.id, data.row)"
         >
           {{ $t('roleInfo.table.bind') }}

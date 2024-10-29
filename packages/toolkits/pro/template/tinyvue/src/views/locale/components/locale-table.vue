@@ -3,7 +3,11 @@
     ref="grid"
     :pager="pagerConfig"
     :fetch-data="fetchData"
-    :edit-config="{ trigger: 'click', mode: 'cell', showStatus: true }"
+    :edit-config="
+      rolePermission.includes('i18n::update')
+        ? { trigger: 'click', mode: 'cell', showStatus: true }
+        : undefined
+    "
     :loading="loading"
     remote-filter
     refresh
@@ -48,6 +52,7 @@
 <script lang="ts" setup>
   import { getAllLocalItems, patchLocal, deleteLocale } from '@/api/local';
   import useLoading from '@/hooks/loading';
+  import { useUserStore } from '@/store';
   import { useLocales } from '@/store/modules/locales';
   import { FilterType, InputFilterValue } from '@/types/global';
   import {
@@ -56,6 +61,7 @@
     GridColumn as TinyGridColumn,
     Button as TinyButton,
     GridToolbar as TinyGridToolbar,
+    TinyModal,
   } from '@opentiny/vue';
   import { computed, ref } from 'vue';
 
@@ -68,6 +74,8 @@
     content: string;
     lang: string;
   };
+  const userStore = useUserStore();
+  const rolePermission = computed(() => userStore.rolePermission);
 
   const keyFilter = {
     inputFilter: true,
@@ -183,6 +191,16 @@
             message: '更新成功',
           });
         })
+        .catch((error) => {
+          grid.value.revertData(row);
+          if (error.response && error.response.data) {
+            const errorMessage = error.response.data.message || '未知错误';
+            TinyModal.message({
+              message: errorMessage,
+              status: 'error',
+            });
+          }
+        })
         .finally(() => {
           setLoading(false);
         });
@@ -190,16 +208,21 @@
   };
   const removeLocale = (row: any) => {
     setLoading(true);
-    grid.value
-      .remove(row)
+    deleteLocale(row.id)
       .then(() => {
         localeStore.$patch({
           locales: localeStore.locales.filter((locale) => locale.id !== row.id),
         });
-        return deleteLocale(row.id);
+        grid.value.remove(row);
       })
-      .catch(() => {
-        grid.value.revertData(row);
+      .catch((error) => {
+        if (error.response && error.response.data) {
+          const errorMessage = error.response.data.message || '未知错误';
+          TinyModal.message({
+            message: errorMessage,
+            status: 'error',
+          });
+        }
       })
       .finally(() => {
         setLoading(false);

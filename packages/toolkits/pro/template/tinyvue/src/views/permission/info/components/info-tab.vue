@@ -3,7 +3,7 @@
     <div class="tiny-fullscreen-wrapper">
       <div class="permission-add-btn">
         <tiny-button
-          v-permission="'menu::remove'"
+          v-permission="'permission::add'"
           type="primary"
           @click="handleAddPermission"
           >{{ $t('permissionInfo.modal.title.add') }}</tiny-button
@@ -45,14 +45,14 @@
           >
             <template #default="data">
               <a
-                v-permission="'menu::update'"
+                v-permission="'permission::update'"
                 class="operation-update"
                 @click="handleUpdate(data.row)"
               >
                 {{ $t('permissionInfo.table.operations.update') }}
               </a>
               <a
-                v-permission="'menu::remove'"
+                v-permission="'permission::remove'"
                 class="operation-delete"
                 @click="handleDelete(data.row)"
               >

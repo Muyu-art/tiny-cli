@@ -44,7 +44,7 @@
                 @click="langPopoverOpen = !langPopoverOpen"
               ></tiny-button>
               <tiny-button
-                v-permission="'lang::query'"
+                v-permission="'lang::update'"
                 type="text"
                 :text="$t('lang.manage.btn')"
                 @click="setLangTableOpen"

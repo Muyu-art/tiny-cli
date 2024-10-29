@@ -62,12 +62,6 @@ axios.interceptors.response.use(
       clearToken();
       router.replace({ name: 'login' });
     }
-    if (status === 403) {
-      Modal.message({
-        message: data.message,
-        status: 'error',
-      });
-    }
     if (status === 400) {
       data.message = error.response.data.errors?.[0] ?? data.message;
     }

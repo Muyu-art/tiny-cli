@@ -189,6 +189,15 @@
             return fetchMenu();
           })
           .then(() => updateUserMenu())
+          .catch((error) => {
+            if (error.response && error.response.data) {
+              const errorMessage = error.response.data.message || '未知错误';
+              TinyModal.message({
+                message: errorMessage,
+                status: 'error',
+              });
+            }
+          })
           .finally(() => {
             setLoading(false);
             setTreeLoading(false);

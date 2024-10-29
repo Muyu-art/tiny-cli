@@ -52,16 +52,16 @@
           status: 'success',
         });
         emits('confirm', data);
-        // 跳转到临时路径，再跳回当前路径以触发刷新
-        router.addRoute({
-          name: 'refresh',
-          path: '/refresh',
-          component: { template: '<div></div>' }, // 空组件或简单的占位模板
-        });
-        router.replace({ path: '/refresh' }).then(() => {
-          router.replace({ path: '/vue-pro/role/allRole' });
-        });
-        router.removeRoute('refresh');
+        router.go(0);
+      })
+      .catch((error) => {
+        if (error.response && error.response.data) {
+          const errorMessage = error.response.data.message || '未知错误';
+          TinyModal.message({
+            message: errorMessage,
+            status: 'error',
+          });
+        }
       })
       .finally(() => {
         setLoading(false);

@@ -6,6 +6,7 @@
     Loading as TinyLoading,
     Modal,
     Pager as TinyPager,
+    TinyModal,
   } from '@opentiny/vue';
   import { Role } from '@/store/modules/user/types';
   import { createRole, getAllRoleDetail, updateRole } from '@/api/role';
@@ -156,6 +157,16 @@
         });
         return flushRouter();
       })
+      .catch((error) => {
+        console.log(error);
+        if (error.response && error.response.data) {
+          const errorMessage = error.response.data.message || '未知错误';
+          TinyModal.message({
+            message: errorMessage,
+            status: 'error',
+          });
+        }
+      })
       .then(() => {
         roleTableRef.value.reload();
         flushTabs();
@@ -179,6 +190,15 @@
           name: data.name,
         });
         roleTableRef.value.reload();
+      })
+      .catch((error) => {
+        if (error.response && error.response.data) {
+          const errorMessage = error.response.data.message || '未知错误';
+          TinyModal.message({
+            message: errorMessage,
+            status: 'error',
+          });
+        }
       })
       .finally(() => {
         onAddHide();
