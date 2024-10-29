@@ -111,7 +111,7 @@ export class AppModule implements OnModuleInit {
     }
     const permissions = {
       user: ['add', 'remove', 'update', 'query', 'password::force-update'],
-      permission: ['add', 'remove', 'update', 'query', 'get'],
+      permission: ['add', 'remove', 'update', 'get'],
       role: ['add', 'remove', 'update', 'query'],
       menu: ['add', 'remove', 'update', 'query'],
       i18n: ['add', 'remove', 'update', 'query'],
